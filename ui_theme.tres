@@ -1,0 +1,8 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://g8ijm1c5d00t"]
+
+[ext_resource type="FontFile" uid="uid://cs2k8fog5xdiw" path="res://assets/kenney_kenney-fonts/Fonts/Kenney Rocket Square.ttf" id="1_touxu"]
+
+[resource]
+default_font = ExtResource("1_touxu")
+Label/colors/font_shadow_color = Color(0, 0, 0, 1)
+Label/constants/shadow_outline_size = 1
