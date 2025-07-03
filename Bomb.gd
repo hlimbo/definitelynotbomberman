@@ -19,6 +19,7 @@ var _hop_time        :float= 0.40           # time from lift-off to next impact
 @onready var _bomb   : Sprite2D = $"BombSprite"
 @onready var _shadow : Sprite2D = $"ShadowSprite"
 
+
 func launch(dir: Vector2, ground_speed: float, max_bounces: int) -> void:
 	_direction  = dir.normalized()
 	_speed      = ground_speed
