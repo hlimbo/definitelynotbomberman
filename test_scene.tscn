@@ -1,10 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://d2t2yd8avamds"]
 
 [ext_resource type="Script" uid="uid://ho55ru8dkukc" path="res://scripts/test_dummy.gd" id="1_uhqqe"]
+[ext_resource type="Texture2D" uid="uid://da4h3jou13i3f" path="res://assets/mindless_blob.png" id="2_coq8p"]
 [ext_resource type="Script" uid="uid://bqkwsx51btvu" path="res://scripts/explosion_test_controller.gd" id="2_ia1lp"]
 [ext_resource type="PackedScene" uid="uid://30i420qrdnkw" path="res://nodes/BaseExplosion.tscn" id="3_sasra"]
-
-[sub_resource type="CanvasTexture" id="CanvasTexture_6adnx"]
 
 [node name="TestScene" type="Node2D"]
 
@@ -13,10 +12,7 @@ position = Vector2(546, 280)
 script = ExtResource("1_uhqqe")
 
 [node name="Sprite2D" type="Sprite2D" parent="TestDummy"]
-modulate = Color(0, 0, 1, 1)
-position = Vector2(19.25, 37.75)
-scale = Vector2(39.5, 76.5)
-texture = SubResource("CanvasTexture_6adnx")
+texture = ExtResource("2_coq8p")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." node_paths=PackedStringArray("scene_root")]
 script = ExtResource("2_ia1lp")
