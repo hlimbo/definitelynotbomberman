@@ -64,5 +64,5 @@ func _update_shadow(h: float) -> void:
 func _explode() -> void:
 	var explosion: BaseExplosion = explosion_node.instantiate()
 	get_tree().current_scene.add_child(explosion)
-	explosion.start(_bomb.position)
+	explosion.start(_bomb.global_position)
 	queue_free()

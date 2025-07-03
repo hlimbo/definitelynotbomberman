@@ -1,12 +1,18 @@
-[gd_scene load_steps=6 format=3 uid="uid://d2t2yd8avamds"]
+[gd_scene load_steps=8 format=3 uid="uid://d2t2yd8avamds"]
 
+[ext_resource type="PackedScene" uid="uid://dyubwq4v4oedp" path="res://nodes/BaseEnemy.tscn" id="1_2nij2"]
 [ext_resource type="Script" uid="uid://ho55ru8dkukc" path="res://scripts/test_dummy.gd" id="1_uhqqe"]
 [ext_resource type="Texture2D" uid="uid://da4h3jou13i3f" path="res://assets/mindless_blob.png" id="2_coq8p"]
 [ext_resource type="Script" uid="uid://bqkwsx51btvu" path="res://scripts/explosion_test_controller.gd" id="2_ia1lp"]
 [ext_resource type="PackedScene" uid="uid://30i420qrdnkw" path="res://nodes/BaseExplosion.tscn" id="3_sasra"]
-[ext_resource type="PackedScene" uid="uid://bxipejrrerf7t" path="res://nodes/EnemyAi.tscn" id="5_2nij2"]
+[ext_resource type="Script" uid="uid://dr71c35bsnkwo" path="res://Player.gd" id="6_7cbxl"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8pr8v"]
 
 [node name="TestScene" type="Node2D"]
+
+[node name="BaseEnemy" parent="." instance=ExtResource("1_2nij2")]
+position = Vector2(269, 224)
 
 [node name="TestDummy" type="Node2D" parent="."]
 position = Vector2(546, 280)
@@ -25,7 +31,18 @@ offset_right = 8.0
 offset_bottom = 8.0
 text = "Spawn Explosion"
 
-[node name="EnemyAi" parent="." instance=ExtResource("5_2nij2")]
-visible = false
-detection_radius = 800.0
-player_path = NodePath("../TestDummy")
+[node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(506, 481)
+script = ExtResource("6_7cbxl")
+max_bounces = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+scale = Vector2(1, 1.14816)
+shape = SubResource("CapsuleShape2D_8pr8v")
+debug_color = Color(0, 0.501961, 0.647059, 1)
+
+[node name="AimLine" type="Line2D" parent="Player"]
+
+[node name="BombContainer" type="Node2D" parent="."]
