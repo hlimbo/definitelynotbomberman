@@ -18,3 +18,6 @@ debug_color = Color(0.949586, 2.88785e-06, 0.572767, 0.42)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_p6qla")
+
+[node name="AimLine" type="Line2D" parent="."]
+width = 2.0
