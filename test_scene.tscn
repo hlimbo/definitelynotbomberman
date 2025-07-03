@@ -26,5 +26,6 @@ offset_bottom = 8.0
 text = "Spawn Explosion"
 
 [node name="EnemyAi" parent="." instance=ExtResource("5_2nij2")]
+visible = false
 detection_radius = 800.0
 player_path = NodePath("../TestDummy")

@@ -9,8 +9,8 @@ class_name BaseExplosion extends Node2D
 @onready var explosion_timer: Timer = $ExplosionTimer
 @onready var collision_shape_2d: CollisionShape2D = $Area2D/CollisionShape2D
 
-@onready var explosion_vfx: Array[Sprite2D] = [
-	$ExplosionVfx2, $ExplosionVfx4, $ExplosionVfx3, $ExplosionVfx5, $ExplosionVfx6
+@onready var explosion_vfx: Array[GPUParticles2D] = [
+	$flare1, $flare2, $flare3, $smoke, $ring, $sparks
 ]
 
 func _ready():
@@ -33,13 +33,12 @@ func start(position: Vector2 = Vector2.ZERO):
 func enable():
 	# enables collision shape at end of frame
 	collision_shape_2d.set_deferred("disabled", false)
-	toggle_vfx(true)
+	play_vfx()
 	
 func disable():
 	# disables collision shape at end of frame
 	collision_shape_2d.set_deferred("disabled", true)
-	toggle_vfx(false)
 
-func toggle_vfx(is_visible: bool):
+func play_vfx():
 	for vfx in explosion_vfx:
-		vfx.visible = is_visible
+		vfx.emitting = true
