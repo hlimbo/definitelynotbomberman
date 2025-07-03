@@ -20,6 +20,10 @@ shape = SubResource("CapsuleShape2D_glv2v")
 disabled = true
 debug_color = Color(0, 0.501961, 0.647059, 1)
 
+[node name="AimLine" type="Line2D" parent="CharacterBody2D"]
+z_index = 2
+width = 5.0
+
 [node name="BombContainer" type="Node2D" parent="."]
 
 [node name="Camera2D" type="Camera2D" parent="."]
