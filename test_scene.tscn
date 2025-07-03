@@ -1,11 +1,17 @@
-[gd_scene load_steps=8 format=3 uid="uid://d2t2yd8avamds"]
+[gd_scene load_steps=10 format=3 uid="uid://d2t2yd8avamds"]
 
 [ext_resource type="PackedScene" uid="uid://dyubwq4v4oedp" path="res://nodes/BaseEnemy.tscn" id="1_2nij2"]
 [ext_resource type="Script" uid="uid://ho55ru8dkukc" path="res://scripts/test_dummy.gd" id="1_uhqqe"]
+[ext_resource type="Shader" uid="uid://caw6qgxxaapj4" path="res://shaders/color_blinking.gdshader" id="2_8pr8v"]
 [ext_resource type="Texture2D" uid="uid://da4h3jou13i3f" path="res://assets/mindless_blob.png" id="2_coq8p"]
 [ext_resource type="Script" uid="uid://bqkwsx51btvu" path="res://scripts/explosion_test_controller.gd" id="2_ia1lp"]
 [ext_resource type="PackedScene" uid="uid://30i420qrdnkw" path="res://nodes/BaseExplosion.tscn" id="3_sasra"]
 [ext_resource type="Script" uid="uid://sngc8tgxramn" path="res://Player.gd" id="6_7cbxl"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_buypi"]
+shader = ExtResource("2_8pr8v")
+shader_parameter/blink_frequency = 3.0
+shader_parameter/color_fill = Color(1, 1, 1, 1)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8pr8v"]
 
@@ -15,10 +21,12 @@
 position = Vector2(269, 224)
 
 [node name="TestDummy" type="Node2D" parent="."]
-position = Vector2(546, 280)
+material = SubResource("ShaderMaterial_buypi")
+position = Vector2(547, 280)
 script = ExtResource("1_uhqqe")
 
 [node name="Sprite2D" type="Sprite2D" parent="TestDummy"]
+use_parent_material = true
 texture = ExtResource("2_coq8p")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." node_paths=PackedStringArray("scene_root")]
