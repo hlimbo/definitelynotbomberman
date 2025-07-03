@@ -1,10 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://30i420qrdnkw"]
+[gd_scene load_steps=8 format=3 uid="uid://bfwwfna2vsv30"]
 
-[ext_resource type="Script" uid="uid://cs02h8ib40hig" path="res://scripts/base_explosion.gd" id="1_bb5nk"]
-[ext_resource type="Texture2D" uid="uid://t1wdmbiidofy" path="res://assets/glow.png" id="2_vcxpt"]
-[ext_resource type="Texture2D" uid="uid://by2rr752grisi" path="res://assets/smoke.png" id="3_1iyps"]
-[ext_resource type="Texture2D" uid="uid://bvqc21p3eh4i1" path="res://assets/smoke2.png" id="4_tn508"]
-[ext_resource type="Texture2D" uid="uid://dk5slhp45a01f" path="res://assets/sparks.png" id="5_o8px0"]
+[ext_resource type="Script" uid="uid://coyimaf1aeov5" path="res://scripts/poison_explosion.gd" id="1_2eg5r"]
+[ext_resource type="Texture2D" uid="uid://t1wdmbiidofy" path="res://assets/glow.png" id="2_rxflh"]
+[ext_resource type="Texture2D" uid="uid://by2rr752grisi" path="res://assets/smoke.png" id="3_xnab7"]
+[ext_resource type="Texture2D" uid="uid://bvqc21p3eh4i1" path="res://assets/smoke2.png" id="4_05no2"]
+[ext_resource type="Texture2D" uid="uid://dk5slhp45a01f" path="res://assets/sparks.png" id="5_fwrvh"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_bu348"]
 blend_mode = 1
@@ -13,8 +13,9 @@ light_mode = 1
 [sub_resource type="CircleShape2D" id="CircleShape2D_1iyps"]
 radius = 50.0
 
-[node name="BaseExplosion" type="Node2D"]
-script = ExtResource("1_bb5nk")
+[node name="PoisonExplosion" type="Node2D"]
+script = ExtResource("1_2eg5r")
+dot_dmg = 4.0
 flat_dmg = 12.0
 explosion_duration = 1.25
 
@@ -27,34 +28,34 @@ visible = false
 modulate = Color(0.211765, 0.262745, 0, 1)
 material = SubResource("CanvasItemMaterial_bu348")
 scale = Vector2(0.75, 0.75)
-texture = ExtResource("2_vcxpt")
+texture = ExtResource("2_rxflh")
 
 [node name="ExplosionVfx4" type="Sprite2D" parent="."]
 visible = false
 modulate = Color(0.94902, 0.698039, 0.462745, 1)
 material = SubResource("CanvasItemMaterial_bu348")
 scale = Vector2(0.9, 0.9)
-texture = ExtResource("3_1iyps")
+texture = ExtResource("3_xnab7")
 
 [node name="ExplosionVfx3" type="Sprite2D" parent="."]
 visible = false
 modulate = Color(0.94902, 0.698039, 0.462745, 1)
 material = SubResource("CanvasItemMaterial_bu348")
 scale = Vector2(0.75, 0.75)
-texture = ExtResource("4_tn508")
+texture = ExtResource("4_05no2")
 
 [node name="ExplosionVfx5" type="Sprite2D" parent="."]
 visible = false
 modulate = Color(1, 0.137255, 0.0352941, 1)
 material = SubResource("CanvasItemMaterial_bu348")
 rotation = -0.721373
-texture = ExtResource("5_o8px0")
+texture = ExtResource("5_fwrvh")
 
 [node name="ExplosionVfx6" type="Sprite2D" parent="."]
 visible = false
 modulate = Color(1, 0.137255, 0.0352941, 1)
 material = SubResource("CanvasItemMaterial_bu348")
-texture = ExtResource("5_o8px0")
+texture = ExtResource("5_fwrvh")
 
 [node name="Area2D" type="Area2D" parent="."]
 

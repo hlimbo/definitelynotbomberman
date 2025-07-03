@@ -4,16 +4,14 @@ class_name BaseExplosion extends Node2D
 @export var event_bus: EventBus = EventBus
 
 @export var flat_dmg: float = 0.0
-@export var dot_dmg: float = 0.0
-@export var slow_factor: float = 0.0
-
 @export var explosion_duration: float = 0.0
-@export var dot_duration: float = 0.0
-@export var slow_duration: float = 0.0
-@export var root_duration: float = 0.0
 
 @onready var explosion_timer: Timer = $ExplosionTimer
-@onready var explosion_vfx: Sprite2D = $ExplosionVfx
+@onready var collision_shape_2d: CollisionShape2D = $Area2D/CollisionShape2D
+
+@onready var explosion_vfx: Array[Sprite2D] = [
+	$ExplosionVfx2, $ExplosionVfx4, $ExplosionVfx3, $ExplosionVfx5, $ExplosionVfx6
+]
 
 func _ready():
 	explosion_timer.wait_time = explosion_duration
@@ -21,9 +19,27 @@ func _ready():
 	
 func on_explosion_finished():
 	print("on explosion finished")
-	explosion_vfx.visible = false
+	disable()
 	event_bus.on_end_explosion.emit(self)
 
-func start():
+func start(position: Vector2 = Vector2.ZERO):
 	print("starting explosion")
+	self.position = position
+	enable()
 	explosion_timer.start()
+	
+	event_bus.on_start_explosion.emit(self)
+	
+func enable():
+	# enables collision shape at end of frame
+	collision_shape_2d.set_deferred("disabled", false)
+	toggle_vfx(true)
+	
+func disable():
+	# disables collision shape at end of frame
+	collision_shape_2d.set_deferred("disabled", true)
+	toggle_vfx(false)
+
+func toggle_vfx(is_visible: bool):
+	for vfx in explosion_vfx:
+		vfx.visible = is_visible
