@@ -1,23 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://dp2iuab5tvmej"]
+[gd_scene load_steps=3 format=3 uid="uid://da4uagos15nl6"]
 
-[ext_resource type="Script" uid="uid://dr71c35bsnkwo" path="res://Player.gd" id="1_glv2v"]
+[ext_resource type="Script" uid="uid://dr71c35bsnkwo" path="res://Player.gd" id="1_x5sur"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_glv2v"]
-radius = 16.0
-height = 50.5154
 
 [node name="Main" type="Node2D"]
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="."]
-script = ExtResource("1_glv2v")
+script = ExtResource("1_x5sur")
 
 [node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
-scale = Vector2(1.00981, 1.00407)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
 scale = Vector2(1, 1.14816)
 shape = SubResource("CapsuleShape2D_glv2v")
-disabled = true
 debug_color = Color(0, 0.501961, 0.647059, 1)
 
 [node name="BombContainer" type="Node2D" parent="."]

@@ -3,6 +3,7 @@ extends CharacterBody2D
 const SPEED := 200.0
 @export var max_charge_time := 1.2            # seconds
 @export var max_launch_speed := 800.0         # px/s
+@export var max_bounces := 4         # num bounces before exploding
 
 var _charge := 0.0
 var _charging := false
@@ -28,7 +29,8 @@ func _throw_bomb():
 	
 	var bomb := _bomb_scene.instantiate()
 	bomb.position = global_position + dir * 20      # spawn in front of player
-	bomb.linear_velocity = dir * speed
+	#bomb.linear_velocity = dir * speed
+	bomb.launch(dir, speed, max_bounces)
 	get_tree().current_scene.get_node("BombContainer").add_child(bomb)
 	
 func _physics_process(delta):

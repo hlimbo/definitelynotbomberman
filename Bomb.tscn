@@ -1,9 +1,22 @@
-[gd_scene format=3 uid="uid://7dg1s0bl6woe"]
+[gd_scene load_steps=4 format=3 uid="uid://7dg1s0bl6woe"]
+
+[ext_resource type="Texture2D" uid="uid://c6qr7h2ptogfd" path="res://bomb.png" id="1_1e1di"]
+[ext_resource type="Script" uid="uid://kojp0r002ovt" path="res://Bomb.gd" id="1_lmso4"]
+[ext_resource type="Texture2D" uid="uid://bbikxbgmcxqxh" path="res://bomb_shadow.png" id="2_a4im0"]
 
 [node name="RigidBody2D" type="RigidBody2D"]
+gravity_scale = 0.0
+script = ExtResource("1_lmso4")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="BombSprite" type="Sprite2D" parent="."]
+scale = Vector2(0.08, 0.08)
+texture = ExtResource("1_1e1di")
 
 [node name="Timer" type="Timer" parent="."]
+
+[node name="ShadowSprite" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+z_index = -1
+position = Vector2(1, 1)
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("2_a4im0")
