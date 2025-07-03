@@ -1,5 +1,7 @@
 extends Node2D
 
+@export var explosion_node: PackedScene
+
 var _amplitude : float       # current hop height
 var _t         : float = 0.0 # time inside current hop
 var _bounces   : int   = 0
@@ -60,4 +62,7 @@ func _update_shadow(h: float) -> void:
 	_shadow.modulate.a = lerp(0.6, 0.15, t)
 
 func _explode() -> void:
+	var explosion: BaseExplosion = explosion_node.instantiate()
+	get_tree().current_scene.add_child(explosion)
+	explosion.start(_bomb.position)
 	queue_free()
