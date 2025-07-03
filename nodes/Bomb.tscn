@@ -1,12 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://b37kn8slg4afs"]
+[gd_scene load_steps=6 format=3 uid="uid://b37kn8slg4afs"]
 
-[ext_resource type="Script" path="res://scripts/Bomb.gd" id="1_4f8ai"]
+[ext_resource type="Script" uid="uid://gbk5fu6oyv6x" path="res://scripts/Bomb.gd" id="1_4f8ai"]
 [ext_resource type="PackedScene" uid="uid://30i420qrdnkw" path="res://nodes/BaseExplosion.tscn" id="2_qf65r"]
 [ext_resource type="Texture2D" uid="uid://c6qr7h2ptogfd" path="res://assets/bomb.png" id="3_tkkff"]
 [ext_resource type="Texture2D" uid="uid://bbikxbgmcxqxh" path="res://assets/bomb_shadow.png" id="4_ma0oj"]
 
-[node name="RigidBody2D" type="RigidBody2D"]
-gravity_scale = 0.0
+[sub_resource type="CircleShape2D" id="CircleShape2D_4f8ai"]
+radius = 35.0143
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+collision_layer = 2
 script = ExtResource("1_4f8ai")
 explosion_node = ExtResource("2_qf65r")
 
@@ -22,3 +25,8 @@ z_index = -1
 position = Vector2(1, 1)
 scale = Vector2(0.1, 0.1)
 texture = ExtResource("4_ma0oj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2)
+scale = Vector2(0.5, 0.5)
+shape = SubResource("CircleShape2D_4f8ai")
