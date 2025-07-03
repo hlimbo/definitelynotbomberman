@@ -14,6 +14,10 @@ config/name="DefinitelyNotBomberman"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+EventBus="*res://scripts/event_bus.gd"
+
 [input]
 
 move_left={
