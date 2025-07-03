@@ -1,4 +1,4 @@
-extends Node2D
+extends CharacterBody2D
 
 @export var explosion_node: PackedScene
 
@@ -32,18 +32,29 @@ func _ready() -> void:
 	pass
 
 func _physics_process(delta: float) -> void:
-	# -- Ground motion (shadow) ------------------------------------
-	_bomb.position += _direction * _speed * delta
-	_shadow.position += _direction * _speed * delta
+	# ── 1. ground motion ─────────────────────────────────────────
+	var vel : Vector2 = _direction * _speed
+	var collision : KinematicCollision2D = move_and_collide(vel * delta)
+	if collision: #with walls
+		# reflect and damp
+		var n := collision.get_normal()              # wall normal
+		vel = vel.bounce(n) * _ground_restitution
+		_direction = vel.normalized();
+		# optional: count wall hits toward the bounce limit
+		if _bounces >= _max_bounces:
+			_explode()
 
-	# -- Vertical motion (bomb sprite) -----------------------------
+	# ── 2. vertical motion (unchanged) ───────────────────────────
 	_t += delta
-	var phase := _t / _hop_time # 0 .. 1
+	var phase  := _t / _hop_time
 	if phase >= 1.0:
 		_next_bounce()
-		phase = _t / _hop_time # recompute after reset
+		phase = _t / _hop_time
 	var height := sin(phase * PI) * _amplitude
-	_bomb.position.y = _shadow.position.y -height - Y_OFFSET # sprite above shadow
+
+	_bomb.position  = Vector2(0, -height - Y_OFFSET)
+	_shadow.position = Vector2.ZERO
+
 	_update_shadow(height)
 
 func _next_bounce() -> void:
@@ -64,5 +75,5 @@ func _update_shadow(h: float) -> void:
 func _explode() -> void:
 	var explosion: BaseExplosion = explosion_node.instantiate()
 	get_tree().current_scene.add_child(explosion)
-	explosion.start(_bomb.global_position)
+	explosion.start(_shadow.global_position)
 	queue_free()

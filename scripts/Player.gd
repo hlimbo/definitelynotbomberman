@@ -7,7 +7,7 @@ const SPEED := 200.0
 
 var _charge := 0.0
 var _charging := false
-var _bomb_scene := preload("res://Bomb.tscn")
+var _bomb_scene := preload("res://nodes/Bomb.tscn")
 
 @onready var aim_line : Line2D = $"AimLine"
 var _aim_dir : Vector2 = Vector2.ZERO
