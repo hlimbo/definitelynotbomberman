@@ -49,4 +49,4 @@ text = "Spawn Explosion"
 
 [node name="Player" parent="." instance=ExtResource("7_8pr8v")]
 position = Vector2(531, 486)
-max_bounces = 1
+max_bounces = 3

@@ -160,7 +160,7 @@ func _launch_bomb() -> void:
 	var power: float = _charge / max_charge_time  # 0–1
 	var speed: float = lerp(min_launch_speed, max_launch_speed, power)
 
-	var bomb: Node2D = _bomb_scene.instantiate()
+	var bomb: Bomb = _bomb_scene.instantiate()
 	bomb.position = global_position + _aim_dir * 20.0
 	bomb.launch(_aim_dir, speed, max_bounces)
 	get_tree().current_scene.get_node("BombContainer").add_child(bomb)
@@ -185,8 +185,7 @@ func _update_aim_line(delta: float) -> void:
 
 	# increase aim line length when charging
 	if _charging:
-		var speed: float = lerp(min_launch_speed, max_launch_speed, pct)
-		var charge_distance: float = _charge * speed * delta * 1000.0
+		var charge_distance: float = lerp(min_launch_speed, max_launch_speed, pct)
 		_aim_line.points = [Vector2.ZERO, _aim_dir * charge_distance]
 
 	# Flip sprite based on aim x‑direction.
