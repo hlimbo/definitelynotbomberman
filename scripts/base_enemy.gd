@@ -14,6 +14,7 @@ enum AI_State
 @export var starting_hp: float = 1000.0
 @export var hp: float
 @export var follow_speed: float = 100.0
+@export var follow_distance: float = 32.0
 @export var ai_state: AI_State = AI_State.IDLE
 var prev_ai_state: AI_State = ai_state
 @export var target: Node2D
@@ -54,7 +55,6 @@ func _ready():
 	hp = starting_hp
 	
 func on_body_entered(body: Node2D):
-	print("on body entered: %s" % body.name)
 	if body.name == "Player" and not [AI_State.DEATH, AI_State.HURT].has(ai_state):
 		ai_state = AI_State.FOLLOW
 		prev_ai_state = ai_state
@@ -94,11 +94,8 @@ func on_enter_impact_area(explosion: BaseExplosion, actor: Node):
 		return
 		
 	if explosion.is_disabled:
-		print("disabled")
 		return
-	
-	print("explosion enter name: %s" % explosion.name)
-	
+		
 	# random damage numbers for fun
 	var flat_dmg: float = randf_range(12.0, 512.0) # explosion.flat_dmg
 	
@@ -124,10 +121,10 @@ func on_exit_impact_area(explosion: BaseExplosion, actor: Node):
 	if actor != self:
 		return
 	
-	print("explosion exit name: %s" % explosion.name)
-
 func follow(delta_time: float):
-	var dir: Vector2 = (target.position - position).normalized()
-	curr_move_velocity = dir * follow_speed * delta_time
+	var diff: Vector2 = target.position - position
+	var distance: float = Vector2.ZERO.distance_to(diff)
+	var dir: Vector2 = diff.normalized()
+	curr_move_velocity = Vector2.ZERO if distance < follow_distance else dir * follow_speed * delta_time
 	position = position + curr_move_velocity
 #endregion
