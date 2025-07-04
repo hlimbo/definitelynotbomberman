@@ -11,12 +11,15 @@ enum AI_State
 	DEATH,
 }
 
+@export var starting_hp: float = 1000.0
+@export var hp: float
 @export var follow_speed: float = 100.0
 @export var ai_state: AI_State = AI_State.IDLE
 var prev_ai_state: AI_State = ai_state
 @export var target: Node2D
 @export var damage_text_node: PackedScene
 @export var hurt_shader: Shader
+@export var death_shader: Shader
 
 @export var curr_move_velocity: Vector2 = Vector2(0.0, 0.0)
 
@@ -25,12 +28,13 @@ var prev_ai_state: AI_State = ai_state
 @onready var hit_area: Area2D = $HitArea
 @onready var damage_text_root: Node2D = $DamageTextRoot
 @onready var hurt_timer: Timer = $hurt_timer
-
-
+@onready var death_timer: Timer = $death_timer
 
 @onready var aim_line : Line2D = $"AimLine"
 var _aim_dir : Vector2 = Vector2.RIGHT
 @export var aim_line_length := 32.0
+
+var curr_death_time: float = 0.0
 
 func set_shader(shader: Shader):
 	var shader_mat = ShaderMaterial.new()
@@ -45,10 +49,13 @@ func _ready():
 	event_bus.on_enter_impact_area.connect(on_enter_impact_area)
 	event_bus.on_exit_impact_area.connect(on_exit_impact_area)
 	hurt_timer.timeout.connect(on_iframes_completed)
+	death_timer.timeout.connect(on_death_completed)
+	
+	hp = starting_hp
 	
 func on_body_entered(body: Node2D):
 	print("on body entered: %s" % body.name)
-	if body.name == "Player":
+	if body.name == "Player" and not [AI_State.DEATH, AI_State.HURT].has(ai_state):
 		ai_state = AI_State.FOLLOW
 		prev_ai_state = ai_state
 		target = body
@@ -56,6 +63,9 @@ func on_body_entered(body: Node2D):
 func on_iframes_completed():
 	ai_state = prev_ai_state
 	clear_shader()
+	
+func on_death_completed():
+	queue_free()
 
 func _physics_process(delta_time: float):
 	if ai_state == AI_State.FOLLOW:
@@ -68,6 +78,14 @@ func _physics_process(delta_time: float):
 	]
 	
 	sprite_2d.flip_h = _aim_dir.x > 0
+	
+func _process(delta: float):
+	if ai_state == AI_State.DEATH:
+		var shader_mat: ShaderMaterial = (material as ShaderMaterial)
+		if is_instance_valid(shader_mat):
+			var t: float = 1.0 - curr_death_time / death_timer.wait_time
+			shader_mat.set_shader_parameter("alpha", t)
+			curr_death_time += delta
 
 #region overridable functions
 func on_enter_impact_area(explosion: BaseExplosion, actor: Node):
@@ -77,12 +95,22 @@ func on_enter_impact_area(explosion: BaseExplosion, actor: Node):
 	
 	print("explosion enter name: %s" % explosion.name)
 	
-	ai_state = AI_State.HURT
-	set_shader(hurt_shader)
-	hurt_timer.start()
-	
 	# random damage numbers for fun
 	var flat_dmg: float = randf_range(12.0, 512.0) # explosion.flat_dmg
+	
+	hp -= flat_dmg
+	
+	if hp > 0:
+		ai_state = AI_State.HURT
+		set_shader(hurt_shader)
+		hurt_timer.start()
+	else:
+		ai_state = AI_State.DEATH
+		set_shader(death_shader)
+		hit_area.queue_free()
+		detection_area.queue_free()
+		death_timer.start()
+	
 	var damage_text: DamageText = damage_text_node.instantiate()
 	damage_text_root.add_child(damage_text)
 	damage_text.play_animation(flat_dmg) 

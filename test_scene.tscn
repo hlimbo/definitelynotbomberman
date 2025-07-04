@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://d2t2yd8avamds"]
+[gd_scene load_steps=9 format=3 uid="uid://d2t2yd8avamds"]
 
 [ext_resource type="PackedScene" uid="uid://dyubwq4v4oedp" path="res://nodes/BaseEnemy.tscn" id="1_2nij2"]
 [ext_resource type="Script" uid="uid://ho55ru8dkukc" path="res://scripts/test_dummy.gd" id="1_uhqqe"]
@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://da4h3jou13i3f" path="res://assets/mindless_blob.png" id="2_coq8p"]
 [ext_resource type="Script" uid="uid://bqkwsx51btvu" path="res://scripts/explosion_test_controller.gd" id="2_ia1lp"]
 [ext_resource type="PackedScene" uid="uid://30i420qrdnkw" path="res://nodes/BaseExplosion.tscn" id="3_sasra"]
-[ext_resource type="Script" uid="uid://1exh2jhj3f7n" path="res://scripts/Player.gd" id="7_8pr8v"]
+[ext_resource type="PackedScene" path="res://nodes/Player.tscn" id="7_8pr8v"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_buypi"]
 shader = ExtResource("2_8pr8v")
@@ -14,8 +14,6 @@ shader_parameter/alpha = 1.0
 shader_parameter/color_tint = Color(1, 0, 0, 1)
 shader_parameter/wave_frequency = 64.0
 shader_parameter/wave_threshold = 0.5
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8pr8v"]
 
 [node name="TestScene" type="Node2D"]
 
@@ -47,19 +45,7 @@ offset_right = 8.0
 offset_bottom = 8.0
 text = "Spawn Explosion"
 
-[node name="Player" type="CharacterBody2D" parent="."]
-position = Vector2(506, 481)
-collision_layer = 2
-script = ExtResource("7_8pr8v")
-max_bounces = 1
-
-[node name="Sprite2D" type="Sprite2D" parent="Player"]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
-scale = Vector2(1, 1.14816)
-shape = SubResource("CapsuleShape2D_8pr8v")
-debug_color = Color(0, 0.501961, 0.647059, 1)
-
-[node name="AimLine" type="Line2D" parent="Player"]
-
 [node name="BombContainer" type="Node2D" parent="."]
+
+[node name="Player" parent="." instance=ExtResource("7_8pr8v")]
+position = Vector2(531, 486)

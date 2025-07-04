@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://dyubwq4v4oedp"]
+[gd_scene load_steps=8 format=3 uid="uid://dyubwq4v4oedp"]
 
 [ext_resource type="Script" uid="uid://bydjmwa1oxxwt" path="res://scripts/base_enemy.gd" id="1_tsmau"]
+[ext_resource type="Shader" uid="uid://b1cldd7wx5mnx" path="res://shaders/wave_death.gdshader" id="1_u2ds8"]
 [ext_resource type="Texture2D" uid="uid://dv6re8a0stc2o" path="res://assets/mindless_blob2.png" id="2_p6qla"]
 [ext_resource type="PackedScene" uid="uid://dlryu3u30yhb3" path="res://nodes/DamageText.tscn" id="3_iqw6n"]
 [ext_resource type="Shader" uid="uid://caw6qgxxaapj4" path="res://shaders/color_blinking.gdshader" id="4_dbob3"]
@@ -15,6 +16,7 @@ radius = 182.222
 script = ExtResource("1_tsmau")
 damage_text_node = ExtResource("3_iqw6n")
 hurt_shader = ExtResource("4_dbob3")
+death_shader = ExtResource("1_u2ds8")
 
 [node name="DamageTextRoot" type="Node2D" parent="."]
 z_index = 20
@@ -43,4 +45,7 @@ texture = ExtResource("2_p6qla")
 width = 2.0
 
 [node name="hurt_timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="death_timer" type="Timer" parent="."]
 one_shot = true
