@@ -16,6 +16,9 @@ Player controller
 @export var dash_duration: float  = 0.20   # seconds
 @export var dash_cooldown: float  = 0.60   # seconds
 
+@onready var move_particles: GPUParticles2D = $MoveParticles
+@onready var particle_process_mat: ParticleProcessMaterial = ($MoveParticles.process_material as ParticleProcessMaterial)
+
 var _is_dashing: bool      = false
 var _dash_timer: float     = 0.0
 var _cooldown_timer: float = 0.0
@@ -117,9 +120,26 @@ func _update_walk(_delta: float) -> void:
 	var move_dir: Vector2 = _get_move_input()
 	velocity = move_dir * walk_speed
 
+	# walking particle effects direction
+	particle_process_mat.direction = Vector3(-move_dir.x, -move_dir.y, 0.0);
+	particle_process_mat.emission_shape_offset = Vector3(-move_dir.x * 24.0, 40.0, 0.0)
+	# hide particles behind player if moving down; otherwise show in front of player
+	if move_dir.y > 0:
+		move_particles.z_index = 2
+	else:
+		move_particles.z_index = 10
+	
+	if move_dir.x == 0.0:
+		move_particles.z_index = 2
+		particle_process_mat.emission_shape_offset.y = 20.0
+
+
 	# Slow while charging a bomb.
 	if _charging:
 		velocity *= 0.5
+		move_particles.amount = 2
+	else:
+		move_particles.amount = 12
 
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Bomb logic ──
@@ -180,5 +200,7 @@ func _update_animation() -> void:
 		_anim.play("dash")
 	elif velocity.length() > 0.1:
 		_anim.play("walk")
+		move_particles.emitting = true
 	else:
 		_anim.stop()
+		move_particles.emitting = false
