@@ -5,6 +5,9 @@ class_name BaseExplosion extends Node2D
 
 @export var flat_dmg: float = 0.0
 @export var explosion_duration: float = 0.0
+# used to determine if more collision events should be sent through event bus
+# since toggling off collision happens at the end of the frame causing some delays
+@export var is_disabled: bool = false
 
 @onready var explosion_timer: Timer = $ExplosionTimer
 @onready var collision_shape_2d: CollisionShape2D = $Area2D/CollisionShape2D
@@ -37,22 +40,28 @@ func start(position: Vector2 = Vector2.ZERO):
 func enable():
 	# enables collision shape at end of frame
 	collision_shape_2d.set_deferred("disabled", false)
+	is_disabled = false
 	play_vfx()
 	
 func disable():
 	# disables collision shape at end of frame
-	print("disabled!")
 	collision_shape_2d.set_deferred("disabled", true)
-	area_2d.monitoring = false
+	is_disabled = true
 
 func play_vfx():
 	for vfx in explosion_vfx:
 		vfx.emitting = true
 		
 func on_area_entered(area: Area2D):
+	if is_disabled:
+		return
+		
 	print("explosion entered")
 	event_bus.on_enter_impact_area.emit(self, area.owner)
 	
 func on_area_exited(area: Area2D):
+	if is_disabled:
+		return
+	
 	print("explosion exited")
 	event_bus.on_exit_impact_area.emit(self, area.owner)

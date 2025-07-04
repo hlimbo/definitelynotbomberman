@@ -92,6 +92,10 @@ func on_enter_impact_area(explosion: BaseExplosion, actor: Node):
 	# if same actor that received impact, handle the signal, otherwise don't handle it
 	if actor != self:
 		return
+		
+	if explosion.is_disabled:
+		print("disabled")
+		return
 	
 	print("explosion enter name: %s" % explosion.name)
 	
