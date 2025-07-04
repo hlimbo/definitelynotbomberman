@@ -46,7 +46,7 @@ _data = {
 &"walk": SubResource("Animation_cm0pq")
 }
 
-[node name="CharacterBody2D" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D"]
 collision_layer = 2
 script = ExtResource("1_d16bx")
 
