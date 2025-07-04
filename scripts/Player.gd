@@ -13,6 +13,9 @@ var _bomb_scene := preload("res://nodes/Bomb.tscn")
 var _aim_dir : Vector2 = Vector2.ZERO
 @export var aim_line_length := 32.0
 
+@onready var _sprite = $"Sprite2D"
+@onready var _animation_player = $"AnimationPlayer"
+
 func _input(event):
 	if event.is_action_pressed("throw_bomb"):
 		_charging = true
@@ -44,6 +47,14 @@ func _process(delta):
 		var blend  := (phase + 1.0) * 0.5            # 0 – 1 pulse
 		aim_line.modulate = Color.WHITE.lerp(Color.RED, blend)
 		
+	#update animation based on aim direction
+	if _aim_dir.x >= 0 and _sprite.flip_h == true:
+		_sprite.flip_h = false
+	elif _aim_dir.x < 0 and _sprite.flip_h == false:
+		_sprite.flip_h = true
+		
+	
+		
 func _throw_bomb():
 	var power := _charge / max_charge_time          # 0 → 1
 	var speed : float = lerp(200.0, max_launch_speed, power)
@@ -61,3 +72,8 @@ func _physics_process(delta):
 	).normalized()
 	velocity = move_dir * SPEED
 	move_and_slide()
+	
+	if move_dir.length() > 0:
+		_animation_player.play("walk")
+	else:
+		_animation_player.stop()
