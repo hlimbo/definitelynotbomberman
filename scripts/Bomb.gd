@@ -1,6 +1,7 @@
 class_name Bomb extends CharacterBody2D
 
 @export var explosion_node: PackedScene
+@onready var blink_shader_mat: ShaderMaterial
 
 var _amplitude : float       # current hop height
 var _t         : float = 0.0 # time inside current hop
@@ -21,15 +22,14 @@ var _hop_time        :float= 0.40           # time from lift-off to next impact
 @onready var _bomb   : Sprite2D = $"BombSprite"
 @onready var _shadow : Sprite2D = $"ShadowSprite"
 
+func _ready():
+	blink_shader_mat = material as ShaderMaterial
 
 func launch(dir: Vector2, ground_speed: float, max_bounces: int) -> void:
 	_direction  = dir.normalized()
 	_speed      = ground_speed
 	_max_bounces = max_bounces
 	_amplitude = _first_amplitude
-
-func _ready() -> void:
-	pass
 
 func _physics_process(delta: float) -> void:
 	# ── 1. ground motion ─────────────────────────────────────────
@@ -56,6 +56,13 @@ func _physics_process(delta: float) -> void:
 	_shadow.position = Vector2.ZERO
 
 	_update_shadow(height)
+	
+	# increase flash frequency the more bounces the bomb makes
+	var t: float = clampf(float(_bounces) / float(_max_bounces), 0.0, 1.0)
+	var min_blink_frequency: float = 3.0
+	var max_blink_frequency: float = 8.0
+	var curr_blink_frequency: float = lerpf(min_blink_frequency, max_blink_frequency, t)
+	blink_shader_mat.set_shader_parameter(&"blink_frequency", floorf(curr_blink_frequency))
 
 func _next_bounce() -> void:
 	_t = 0.0
