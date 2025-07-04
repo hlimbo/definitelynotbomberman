@@ -26,6 +26,7 @@ var _dash_dir: Vector2     = Vector2.ZERO
 # ─────────────────────────────────────────────────────────────────────────────
 @export var max_charge_time: float = 1.2     # seconds
 @export var max_launch_speed: float = 800.0  # px/s
+@export var min_launch_speed: float = 200.0  # px/s
 @export var max_bounces: int = 4
 
 var _charge: float    = 0.0
@@ -36,7 +37,7 @@ var _bomb_scene: PackedScene = preload("res://nodes/Bomb.tscn")
 #   ── Aim reticle ──
 # ─────────────────────────────────────────────────────────────────────────────
 @onready var _aim_line: Line2D = $"AimLine"
-@export var aim_line_length: float = 32.0
+@export var aim_line_length: float = 64.0
 var _aim_dir: Vector2 = Vector2.ZERO
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -81,7 +82,7 @@ func _physics_process(delta: float) -> void:
 
 func _process(delta: float) -> void:
 	_update_charge(delta)
-	_update_aim_line()
+	_update_aim_line(delta)
 
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Dash logic ──
@@ -137,7 +138,7 @@ func _launch_bomb() -> void:
 	_charging = false
 
 	var power: float = _charge / max_charge_time  # 0–1
-	var speed: float = lerp(200.0, max_launch_speed, power)
+	var speed: float = lerp(min_launch_speed, max_launch_speed, power)
 
 	var bomb: Node2D = _bomb_scene.instantiate()
 	bomb.position = global_position + _aim_dir * 20.0
@@ -147,11 +148,13 @@ func _launch_bomb() -> void:
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Aim & reticle ──
 # ─────────────────────────────────────────────────────────────────────────────
-func _update_aim_line() -> void:
-	_aim_dir = (get_global_mouse_position() - global_position).normalized()
+func _update_aim_line(delta: float) -> void:
+	var center_to_mouse_diff: Vector2 = get_global_mouse_position() - global_position
+	_aim_dir = center_to_mouse_diff.normalized()
+	#aim_line_length = Vector2.ZERO.distance_to(center_to_mouse_diff)
 
 	_aim_line.points = [Vector2.ZERO, _aim_dir * aim_line_length]
-	_aim_line.width  = 2.0
+	# _aim_line.width  = 2.0
 
 	var pct: float = clampf(_charge / max_charge_time, 0.0, 1.0)
 	if pct < 1.0:
@@ -159,6 +162,12 @@ func _update_aim_line() -> void:
 	else:
 		var phase: float = sin(Time.get_ticks_msec() * TAU * 8.0 / 1000.0)
 		_aim_line.modulate = Color.WHITE.lerp(Color.RED, (phase + 1.0) * 0.5)
+
+	# increase aim line length when charging
+	if _charging:
+		var speed: float = lerp(min_launch_speed, max_launch_speed, pct)
+		var charge_distance: float = _charge * speed * delta * 1000.0
+		_aim_line.points = [Vector2.ZERO, _aim_dir * charge_distance]
 
 	# Flip sprite based on aim x‑direction.
 	_sprite.flip_h = _aim_dir.x < 0

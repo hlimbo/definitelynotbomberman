@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://ct4c8hb3j50oo"]
+[gd_scene load_steps=8 format=3 uid="uid://deh3txb4jfjc5"]
 
 [ext_resource type="Script" uid="uid://1exh2jhj3f7n" path="res://scripts/Player.gd" id="1_d16bx"]
 [ext_resource type="Texture2D" uid="uid://l2n5jbqr3omq" path="res://assets/2d_animation_player-run.webp" id="2_x4r3j"]
+[ext_resource type="Texture2D" uid="uid://dawsa4m4h64vx" path="res://assets/kenney/dot_large.png" id="3_x4r3j"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_glv2v"]
 radius = 16.0
@@ -64,7 +65,13 @@ debug_color = Color(0, 0.501961, 0.647059, 1)
 
 [node name="AimLine" type="Line2D" parent="."]
 z_index = 2
-width = 5.0
+texture_repeat = 2
+width = 20.0
+texture = ExtResource("3_x4r3j")
+texture_mode = 1
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
