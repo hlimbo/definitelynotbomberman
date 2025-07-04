@@ -73,7 +73,7 @@ func _physics_process(delta):
 	velocity = move_dir * SPEED
 	move_and_slide()
 	
-	if move_dir.length() > 0:
-		_animation_player.play("walk")
-	else:
-		_animation_player.stop()
+	#if move_dir.length() > 0:
+		#_animation_player.play("walk")
+	#else:
+		#_animation_player.stop()

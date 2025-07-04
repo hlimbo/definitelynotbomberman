@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://da4h3jou13i3f" path="res://assets/mindless_blob.png" id="2_coq8p"]
 [ext_resource type="Script" uid="uid://bqkwsx51btvu" path="res://scripts/explosion_test_controller.gd" id="2_ia1lp"]
 [ext_resource type="PackedScene" uid="uid://30i420qrdnkw" path="res://nodes/BaseExplosion.tscn" id="3_sasra"]
-[ext_resource type="Script" uid="uid://sngc8tgxramn" path="res://Player.gd" id="6_7cbxl"]
+[ext_resource type="Script" uid="uid://1exh2jhj3f7n" path="res://scripts/Player.gd" id="7_8pr8v"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_buypi"]
 shader = ExtResource("2_8pr8v")
@@ -50,7 +50,7 @@ text = "Spawn Explosion"
 [node name="Player" type="CharacterBody2D" parent="."]
 position = Vector2(506, 481)
 collision_layer = 2
-script = ExtResource("6_7cbxl")
+script = ExtResource("7_8pr8v")
 max_bounces = 1
 
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
