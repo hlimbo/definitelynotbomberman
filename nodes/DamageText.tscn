@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://c8hevyryvttsu"]
+[gd_scene load_steps=3 format=3 uid="uid://dlryu3u30yhb3"]
 
 [ext_resource type="AnimationLibrary" uid="uid://m6j3y17kkny6" path="res://animation/damage_text/damage_text_animation.res" id="1_yhasi"]
 [ext_resource type="Theme" uid="uid://g8ijm1c5d00t" path="res://ui_theme.tres" id="2_ylolu"]

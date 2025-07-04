@@ -1,11 +1,50 @@
-[gd_scene load_steps=6 format=4 uid="uid://dp2iuab5tvmej"]
+[gd_scene load_steps=10 format=4 uid="uid://dp2iuab5tvmej"]
 
 [ext_resource type="Script" uid="uid://1exh2jhj3f7n" path="res://scripts/Player.gd" id="1_glv2v"]
+[ext_resource type="Texture2D" uid="uid://l2n5jbqr3omq" path="res://assets/2d_animation_player-run.webp" id="2_r0du0"]
 [ext_resource type="Texture2D" uid="uid://c7kqrfslmxvdn" path="res://assets/tileset x1.png" id="2_uu6xs"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_glv2v"]
 radius = 16.0
-height = 50.5154
+height = 55.7414
+
+[sub_resource type="Animation" id="Animation_fos0i"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_cm0pq"]
+resource_name = "walk"
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_3dxm6"]
+_data = {
+&"RESET": SubResource("Animation_fos0i"),
+&"walk": SubResource("Animation_cm0pq")
+}
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_r0du0"]
 texture = ExtResource("2_uu6xs")
@@ -126,9 +165,14 @@ collision_layer = 2
 script = ExtResource("1_glv2v")
 
 [node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
-scale = Vector2(1.00981, 1.00407)
+z_index = 5
+scale = Vector2(3, 2.982)
+texture = ExtResource("2_r0du0")
+hframes = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+visible = false
+position = Vector2(-3, 13)
 scale = Vector2(1, 1.14816)
 shape = SubResource("CapsuleShape2D_glv2v")
 debug_color = Color(0, 0.501961, 0.647059, 1)
@@ -136,6 +180,11 @@ debug_color = Color(0, 0.501961, 0.647059, 1)
 [node name="AimLine" type="Line2D" parent="CharacterBody2D"]
 z_index = 2
 width = 5.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterBody2D"]
+libraries = {
+&"": SubResource("AnimationLibrary_3dxm6")
+}
 
 [node name="BombContainer" type="Node2D" parent="."]
 
