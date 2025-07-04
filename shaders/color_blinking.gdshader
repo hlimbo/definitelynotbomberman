@@ -1,6 +1,6 @@
 shader_type canvas_item;
 
-uniform float blink_frequency: hint_range(1.0, 4.0, 1.0) = 2.0;
+uniform float blink_frequency: hint_range(1.0, 8.0, 1.0) = 6.0;
 uniform vec3 color_fill: source_color = vec3(1.0, 1.0, 1.0);
 
 

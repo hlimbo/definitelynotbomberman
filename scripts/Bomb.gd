@@ -1,4 +1,4 @@
-extends CharacterBody2D
+class_name Bomb extends CharacterBody2D
 
 @export var explosion_node: PackedScene
 

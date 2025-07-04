@@ -14,15 +14,15 @@ vec2 wave_field_uv(vec2 uv, vec2 texture_pixel_size) {
 	float x = wave_frequency * texture_pixel_size.y * sin(period + offset);
 	float can_wave = mod(uv.y + TIME, 1.0);
 	vec2 uv_offset = vec2(x, 0.0);
-	
+
 	return can_wave < wave_threshold ? uv + uv_offset : uv;
 }
 
 void fragment() {
-	
+
 	vec2 uv = wave_field_uv(UV, TEXTURE_PIXEL_SIZE);
 	vec4 color = texture(TEXTURE, uv);
-	
+
 	float alpha_lines = smoothstep(0.0, 1.0, sin(fract(UV.x * 16.0)));
 	COLOR = vec4(color.rgb + color_tint, color.a * alpha * alpha_lines);
 }
