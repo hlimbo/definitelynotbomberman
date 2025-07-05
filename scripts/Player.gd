@@ -54,6 +54,7 @@ var _aim_dir: Vector2 = Vector2.ZERO
 
 @onready var shader_mat: ShaderMaterial
 @export var blinking_shader: Shader
+@export var death_shader: Shader
 
 @onready var move_particles: GPUParticles2D = $Sprite2D/MoveParticles
 @onready var particle_process_mat: ParticleProcessMaterial = ($Sprite2D/MoveParticles.process_material as ParticleProcessMaterial)
@@ -64,24 +65,33 @@ var _aim_dir: Vector2 = Vector2.ZERO
 @export var knockback_force: float = 250.0
 @export var knockback_force_vector: Vector2 = Vector2.ZERO
 
+@export var swirl_ratio: float = 1.0
+@export var curr_death_timer: float = 0.0
+
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Stats ──
 # ─────────────────────────────────────────────────────────────────────────────
 @export var starting_hp: float = 1000.0
-@export var current_hp: float = starting_hp
+@export var current_hp: float
 @export var is_hurt: bool = false
+@export var is_dead: bool = false
+@export var is_alive: bool = true
 
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Timers ──
 # ─────────────────────────────────────────────────────────────────────────────
 @onready var hurt_timer: Timer = $HurtTimer
+@onready var death_timer: Timer = $DeathTimer
+
+@onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Input helpers ──
 # ─────────────────────────────────────────────────────────────────────────────
 func _get_move_input() -> Vector2:
 	"""Return normalized WASD / arrow‑key vector."""
-	return Vector2(
+	return float(is_alive) * float(!is_dead) * Vector2(
 		Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
 		Input.get_action_strength("move_down")  - Input.get_action_strength("move_up")
 	).normalized()
@@ -93,7 +103,9 @@ func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	event_bus.on_start_attack.connect(_on_attacked)
 	hurt_timer.timeout.connect(_on_hurt_finished)
+	death_timer.timeout.connect(_on_death_finished)
 	shader_mat = (material as ShaderMaterial)
+	current_hp = starting_hp
 
 func _input(event: InputEvent) -> void:
 	# Bomb charge / release handling
@@ -112,11 +124,11 @@ func _physics_process(delta: float) -> void:
 	_update_walk(delta)
 	_update_knockback(delta)
 	move_and_slide()
-	_update_animation()
 
 func _process(delta: float) -> void:
 	_update_charge(delta)
 	_update_aim_line(delta)
+	_update_animation()
 
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Dash logic ──
@@ -178,30 +190,35 @@ func _update_walk(_delta: float) -> void:
 var _current_hop_time: float = 0.0 # seconds
 var _hop_time: float = 1.0 # time from lift-off to next impact
 func _update_knockback(_delta: float) -> void:
-	if !is_hurt:
+	if !is_alive or (!is_hurt and !is_dead):
 		return
 	
-	var knockback_decay: float = 0.1
-	# Exponential decay with max speed limit quadratic
-	var squared: float = (1.0 - knockback_decay * _delta) * (1.0 - knockback_decay * _delta)
-	var decaying_force: float = knockback_force_vector.length() * squared
-	knockback_force_vector = knockback_force_vector.normalized() * min(decaying_force, knockback_force)
-	
-	# -- vertical motion of player sprite -- #
-	var _amplitude: float = 64.0 # apex-height of the player's perceived vertical when knocked back
-	const Y_OFFSET: int = -20 # y-pivot offset of the player's sprite2D asset
-	_current_hop_time += _delta
-	var phase  := clampf(_current_hop_time / _hop_time, 0.0, 1.0)
-	# currently feels floaty when getting knocked back... for polish purposes can use easing functions later...
-	var height := sin(phase * PI) * _amplitude
+	if is_dead:
+		var t: float = curr_death_timer / death_timer.wait_time
+		swirl_ratio = clampf(1.0 - lerpf(0.0, 1.0, t), 0.0 ,1.0)
+		shader_mat.set_shader_parameter(&"ratio", swirl_ratio)
+		curr_death_timer += _delta
+	else:
+		var knockback_decay: float = 0.1
+		# Exponential decay with max speed limit quadratic
+		var squared: float = (1.0 - knockback_decay * _delta) * (1.0 - knockback_decay * _delta)
+		var decaying_force: float = knockback_force_vector.length() * squared
+		knockback_force_vector = knockback_force_vector.normalized() * min(decaying_force, knockback_force)
+		
+		# -- vertical motion of player sprite -- #
+		var _amplitude: float = 64.0 # apex-height of the player's perceived vertical when knocked back
+		const Y_OFFSET: int = -20 # y-pivot offset of the player's sprite2D asset
+		_current_hop_time += _delta
+		var phase  := clampf(_current_hop_time / _hop_time, 0.0, 1.0)
+		# currently feels floaty when getting knocked back... for polish purposes can use easing functions later...
+		var height := sin(phase * PI) * _amplitude
 
-	_sprite.position  = Vector2(0, -height - Y_OFFSET)
-	
-	# Shadow Shrink & lighten as player rises
-	var t : float = clamp(height / _amplitude, 0.0, 1.0)
-	var s : float = lerp(0.5, 0.2, t)
-	_shadow.scale = Vector2.ONE * s * 0.1
-	_shadow.modulate.a = lerp(0.6, 0.15, t)
+		_sprite.position  = Vector2(0, -height - Y_OFFSET)
+		# Shadow Shrink & lighten as player rises
+		var t : float = clamp(height / _amplitude, 0.0, 1.0)
+		var s : float = lerp(0.5, 0.2, t)
+		_shadow.scale = Vector2.ONE * s * 0.1
+		_shadow.modulate.a = lerp(0.6, 0.15, t)
 	
 	velocity += knockback_force_vector
 
@@ -259,18 +276,24 @@ func _update_aim_line(delta: float) -> void:
 #   ── Animation ──
 # ─────────────────────────────────────────────────────────────────────────────
 func _update_animation() -> void:
-	if _is_dashing:
-		move_particles.emitting = true
-	elif is_hurt:
+	if is_hurt:
 		_anim.play(&"hurt")
 		move_particles.emitting = false
+	elif is_dead:
+		_anim.play(&"death")
+		move_particles.emitting = false
+	elif !is_alive:
+		_anim.play(&"invisible")
+		move_particles.emitting = false
+	elif _is_dashing:
+		move_particles.emitting = true
 	elif velocity.length() > 0.1:
 		_anim.play("walk")
 		move_particles.emitting = true
 	else:
 		_anim.stop()
 		move_particles.emitting = false
-
+		
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Signal Callbacks ──
 # ─────────────────────────────────────────────────────────────────────────────
@@ -280,7 +303,7 @@ func _on_attacked(enemy: BaseEnemy, target: Node2D):
 	if target != self:
 		return
 	
-	if is_hurt:
+	if !is_alive or is_hurt or is_dead:
 		return
 
 	# display damage above player
@@ -288,30 +311,35 @@ func _on_attacked(enemy: BaseEnemy, target: Node2D):
 	damage_text_root.add_child(damage_text)
 	damage_text.play_animation(enemy.base_damage)
 	
-	# if hp above 0, play hurt blinking animation, give player iframes for X seconds, then turn off once complete
-	# otherwise play death animation
-	# Death Animation options
-	# option 1: puff of smoke particles where player's sprite is invisible
-	# option 2: - stretch along y, squash along x, modulate color from white to target color, mess with alpha transparency
-	#   2a (animation player) 
-	#   2b (tweening)
-	# option 3: shader to twist player around like a washing machine
-		# challenge for this one is that the shader will need to know which frame in the sprite to apply it to
-		# as the shader code applies to the ENTIRE SPRITESHEET
-	is_hurt = true
 	current_hp -= enemy.base_damage
+	
 	if current_hp > 0:
+		is_hurt = true
 		shader_mat.shader = blinking_shader
 		# compute knockback force
 		var player_from_enemy_dir: Vector2 = (global_position - enemy.global_position).normalized()
 		knockback_force_vector = player_from_enemy_dir * knockback_force
 		hurt_timer.start()
-		
+	else:
+		is_dead = true
+		shader_mat.shader = death_shader
+		death_timer.start()
 	
 func _on_hurt_finished():
 	is_hurt = false
 	_current_hop_time = 0.0
-	#_shadow.scale = Vector2(0.075, 0.075)
-	#_shadow.modulate.a = 0.565
 	_anim.play(&"RESET")
 	shader_mat.shader = null
+
+func _on_death_finished():
+	# destroy this gameobject
+	print("ded")
+	# _shadow.scale = Vector2.ZERO
+	
+	is_dead = false
+	is_alive = false
+	_current_hop_time = 0.0
+	velocity = Vector2(0.0, 0.0)
+	
+	collision_shape_2d.set_deferred("disabled", true)
+	# queue_free()
