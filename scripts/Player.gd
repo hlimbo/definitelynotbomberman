@@ -193,18 +193,19 @@ func _update_knockback(_delta: float) -> void:
 	if !is_alive or (!is_hurt and !is_dead):
 		return
 	
+	var knockback_decay: float = 0.1
+	# Exponential decay with max speed limit quadratic
+	var squared: float = (1.0 - knockback_decay * _delta) * (1.0 - knockback_decay * _delta)
+	var decaying_force: float = knockback_force_vector.length() * squared
+	knockback_force_vector = knockback_force_vector.normalized() * min(decaying_force, knockback_force)
+	
+	
 	if is_dead:
 		var t: float = curr_death_timer / death_timer.wait_time
 		swirl_ratio = clampf(1.0 - lerpf(0.0, 1.0, t), 0.0 ,1.0)
 		shader_mat.set_shader_parameter(&"ratio", swirl_ratio)
 		curr_death_timer += _delta
 	else:
-		var knockback_decay: float = 0.1
-		# Exponential decay with max speed limit quadratic
-		var squared: float = (1.0 - knockback_decay * _delta) * (1.0 - knockback_decay * _delta)
-		var decaying_force: float = knockback_force_vector.length() * squared
-		knockback_force_vector = knockback_force_vector.normalized() * min(decaying_force, knockback_force)
-		
 		# -- vertical motion of player sprite -- #
 		var _amplitude: float = 64.0 # apex-height of the player's perceived vertical when knocked back
 		const Y_OFFSET: int = -20 # y-pivot offset of the player's sprite2D asset
@@ -312,14 +313,14 @@ func _on_attacked(enemy: BaseEnemy, target: Node2D):
 	damage_text.play_animation(enemy.base_damage)
 	
 	current_hp -= enemy.base_damage
+	# compute knockback force
+	var player_from_enemy_dir: Vector2 = (global_position - enemy.global_position).normalized()
+	knockback_force_vector = player_from_enemy_dir * knockback_force
+	hurt_timer.start()
 	
 	if current_hp > 0:
 		is_hurt = true
 		shader_mat.shader = blinking_shader
-		# compute knockback force
-		var player_from_enemy_dir: Vector2 = (global_position - enemy.global_position).normalized()
-		knockback_force_vector = player_from_enemy_dir * knockback_force
-		hurt_timer.start()
 	else:
 		is_dead = true
 		shader_mat.shader = death_shader
