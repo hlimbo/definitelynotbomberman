@@ -9,6 +9,7 @@ enum AI_State
 	FOLLOW,
 	HURT,
 	DEATH,
+	ATTACK,
 }
 
 @export var starting_hp: float = 1000.0
@@ -37,6 +38,8 @@ var _aim_dir : Vector2 = Vector2.RIGHT
 
 var curr_death_time: float = 0.0
 
+@export var base_damage: float = 50.0
+
 func set_shader(shader: Shader):
 	var shader_mat = ShaderMaterial.new()
 	shader_mat.shader = shader
@@ -44,6 +47,9 @@ func set_shader(shader: Shader):
 	
 func clear_shader():
 	self.material = null
+
+func can_attack() -> bool:
+	return ai_state != AI_State.ATTACK and (is_instance_valid(target) and position.distance_to(target.position) < follow_distance)
 
 func _ready():
 	detection_area.body_entered.connect(on_body_entered)
@@ -78,6 +84,9 @@ func _physics_process(delta_time: float):
 	]
 	
 	sprite_2d.flip_h = _aim_dir.x > 0
+	
+	if can_attack():
+		start_attack()
 	
 func _process(delta: float):
 	if ai_state == AI_State.DEATH:
@@ -127,4 +136,16 @@ func follow(delta_time: float):
 	var dir: Vector2 = diff.normalized()
 	curr_move_velocity = Vector2.ZERO if distance < follow_distance else dir * follow_speed * delta_time
 	position = position + curr_move_velocity
+
+func start_attack():
+	prev_ai_state = ai_state
+	ai_state = AI_State.ATTACK
+	
+	# send message to target that they are attacked
+	event_bus.on_start_attack.emit(self, target)
+	
+	# can play an attack animation here....
+	# once animation finished move back to prev ai state
+	ai_state = prev_ai_state
+	
 #endregion
