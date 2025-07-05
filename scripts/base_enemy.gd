@@ -75,8 +75,11 @@ func on_death_completed():
 
 func _physics_process(delta_time: float):
 	if ai_state == AI_State.FOLLOW:
-		_aim_dir = (target.position - position).normalized()
-		follow(delta_time)
+		if not is_instance_valid(target):
+			ai_state = AI_State.IDLE
+		else:
+			_aim_dir = (target.position - position).normalized()
+			follow(delta_time)
 	
 	aim_line.points = [
 		Vector2.ZERO,                          # start at player origin

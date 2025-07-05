@@ -343,4 +343,4 @@ func _on_death_finished():
 	velocity = Vector2(0.0, 0.0)
 	
 	collision_shape_2d.set_deferred("disabled", true)
-	# queue_free()
+	queue_free()
