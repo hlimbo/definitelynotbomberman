@@ -260,16 +260,15 @@ func _update_aim_line(delta: float) -> void:
 # ─────────────────────────────────────────────────────────────────────────────
 func _update_animation() -> void:
 	if _is_dashing:
-		print("will dash")
-		# _anim.play("dash")
+		move_particles.emitting = true
+	elif is_hurt:
+		_anim.play(&"hurt")
+		move_particles.emitting = false
 	elif velocity.length() > 0.1:
 		_anim.play("walk")
 		move_particles.emitting = true
 	else:
 		_anim.stop()
-		move_particles.emitting = false
-		
-	if is_hurt:
 		move_particles.emitting = false
 
 # ─────────────────────────────────────────────────────────────────────────────
