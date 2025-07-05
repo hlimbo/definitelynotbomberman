@@ -61,7 +61,7 @@ func _ready():
 	hp = starting_hp
 	
 func on_body_entered(body: Node2D):
-	if body.name == "Player" and not [AI_State.DEATH, AI_State.HURT].has(ai_state):
+	if body.name == "Player" and ai_state == AI_State.IDLE:
 		ai_state = AI_State.FOLLOW
 		prev_ai_state = ai_state
 		target = body

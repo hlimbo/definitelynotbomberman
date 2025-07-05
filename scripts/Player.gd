@@ -189,7 +189,7 @@ func _update_knockback(_delta: float) -> void:
 	
 	# -- vertical motion of player sprite -- #
 	var _amplitude: float = 64.0 # apex-height of the player's perceived vertical when knocked back
-	const Y_OFFSET: int = -47 # y-pivot offset of the player's sprite2D asset
+	const Y_OFFSET: int = -20 # y-pivot offset of the player's sprite2D asset
 	_current_hop_time += _delta
 	var phase  := clampf(_current_hop_time / _hop_time, 0.0, 1.0)
 	# currently feels floaty when getting knocked back... for polish purposes can use easing functions later...
@@ -260,7 +260,8 @@ func _update_aim_line(delta: float) -> void:
 # ─────────────────────────────────────────────────────────────────────────────
 func _update_animation() -> void:
 	if _is_dashing:
-		_anim.play("dash")
+		print("will dash")
+		# _anim.play("dash")
 	elif velocity.length() > 0.1:
 		_anim.play("walk")
 		move_particles.emitting = true
@@ -311,5 +312,7 @@ func _on_attacked(enemy: BaseEnemy, target: Node2D):
 func _on_hurt_finished():
 	is_hurt = false
 	_current_hop_time = 0.0
-	_shadow.scale = Vector2.ONE * 0.075
+	#_shadow.scale = Vector2(0.075, 0.075)
+	#_shadow.modulate.a = 0.565
+	_anim.play(&"RESET")
 	shader_mat.shader = null
