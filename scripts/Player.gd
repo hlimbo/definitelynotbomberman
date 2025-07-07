@@ -102,6 +102,7 @@ func _get_move_input() -> Vector2:
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	event_bus.on_start_attack.connect(_on_attacked)
+	event_bus.on_projectile_hit.connect(_on_projectile_hit)
 	hurt_timer.timeout.connect(_on_hurt_finished)
 	death_timer.timeout.connect(_on_death_finished)
 	shader_mat = (material as ShaderMaterial)
@@ -316,16 +317,36 @@ func _on_attacked(enemy: BaseEnemy, target: Node2D):
 	# compute knockback force
 	var player_from_enemy_dir: Vector2 = (global_position - enemy.global_position).normalized()
 	knockback_force_vector = player_from_enemy_dir * knockback_force
-	hurt_timer.start()
 	
 	if current_hp > 0:
 		is_hurt = true
 		shader_mat.shader = blinking_shader
+		hurt_timer.start()
 	else:
 		is_dead = true
 		shader_mat.shader = death_shader
 		death_timer.start()
+
+func _on_projectile_hit(projectile: Projectile, target: Node2D):
+	# if not the same target, skip
+	if self != target:
+		return
 	
+	# display damage above player
+	var damage_text: DamageText = damage_text_node.instantiate()
+	damage_text_root.add_child(damage_text)
+	damage_text.play_animation(projectile.base_damage)
+	
+	current_hp -= projectile.base_damage
+	if current_hp > 0:
+		is_hurt = true
+		shader_mat.shader = blinking_shader
+		hurt_timer.start()
+	else:
+		is_dead = true
+		shader_mat.shader = death_shader
+		death_timer.start()
+
 func _on_hurt_finished():
 	is_hurt = false
 	_current_hop_time = 0.0

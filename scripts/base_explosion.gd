@@ -55,8 +55,7 @@ func play_vfx():
 func on_area_entered(area: Area2D):
 	if is_disabled:
 		return
-		
-	print("explosion entered")
+	
 	event_bus.on_enter_impact_area.emit(self, area.owner)
 	
 func on_area_exited(area: Area2D):

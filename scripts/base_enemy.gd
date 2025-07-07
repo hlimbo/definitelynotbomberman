@@ -18,7 +18,6 @@ enum AI_State
 @export var follow_speed: float = 100.0 # pixels per second
 @export var follow_distance: float = 32.0
 @export var ai_state: AI_State = AI_State.IDLE
-var prev_ai_state: AI_State = ai_state
 @export var target: Node2D
 @export var damage_text_node: PackedScene
 @export var hurt_shader: Shader
@@ -65,15 +64,15 @@ func _ready():
 func on_body_entered(body: Node2D):
 	if body.name == "Player" and ai_state == AI_State.IDLE:
 		ai_state = AI_State.FOLLOW
-		prev_ai_state = ai_state
 		target = body
 		
 func on_iframes_completed():
-	ai_state = prev_ai_state
+	ai_state = AI_State.FOLLOW
 	clear_shader()
 	
 func on_death_completed():
-	queue_free()
+	print("done")
+	# queue_free()
 
 func _physics_process(delta_time: float):
 	self.handle_states()
@@ -99,6 +98,8 @@ func _process(delta: float):
 			var t: float = 1.0 - curr_death_time / death_timer.wait_time
 			shader_mat.set_shader_parameter("alpha", t)
 			curr_death_time += delta
+			if curr_death_time >= death_timer.wait_time:
+				queue_free()
 			
 func update_ai_state_label():
 	match ai_state:
@@ -120,6 +121,7 @@ func handle_states():
 	if ai_state == AI_State.FOLLOW:
 		if not is_instance_valid(target):
 			ai_state = AI_State.IDLE
+			self.velocity = Vector2.ZERO
 		else:
 			_aim_dir = (target.position - position).normalized()
 			follow()
@@ -132,7 +134,11 @@ func on_enter_impact_area(explosion: BaseExplosion, actor: Node):
 		
 	if explosion.is_disabled:
 		return
-		
+	
+	# enemies have i-frames
+	if [AI_State.HURT, AI_State.DEATH].has(ai_state):
+		return
+	
 	# random damage numbers for fun
 	var flat_dmg: float = randf_range(12.0, 512.0) # explosion.flat_dmg
 	
@@ -168,7 +174,6 @@ func follow():
 	self.velocity = curr_move_velocity
 
 func start_attack():
-	prev_ai_state = ai_state
 	ai_state = AI_State.ATTACK
 	
 	# send message to target that they are attacked
@@ -176,6 +181,6 @@ func start_attack():
 	
 	# can play an attack animation here....
 	# once animation finished move back to prev ai state
-	ai_state = prev_ai_state
+	ai_state = AI_State.FOLLOW
 	
 #endregion

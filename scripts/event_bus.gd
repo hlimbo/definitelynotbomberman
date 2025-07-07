@@ -9,3 +9,4 @@ signal on_end_explosion(explosion: BaseExplosion)
 signal on_attach_to_entity()
 
 signal on_start_attack(enemy: BaseEnemy, target: Node2D)
+signal on_projectile_hit(projectile: Projectile, target: Node2D)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://d2t2yd8avamds"]
+[gd_scene load_steps=11 format=3 uid="uid://d2t2yd8avamds"]
 
 [ext_resource type="PackedScene" uid="uid://dyubwq4v4oedp" path="res://nodes/BaseEnemy.tscn" id="1_2nij2"]
 [ext_resource type="Script" uid="uid://ho55ru8dkukc" path="res://scripts/test_dummy.gd" id="1_uhqqe"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://30i420qrdnkw" path="res://nodes/BaseExplosion.tscn" id="3_sasra"]
 [ext_resource type="PackedScene" uid="uid://deh3txb4jfjc5" path="res://nodes/Player.tscn" id="7_8pr8v"]
 [ext_resource type="PackedScene" uid="uid://n7630g0ehwof" path="res://nodes/DashingEnemy.tscn" id="8_buypi"]
+[ext_resource type="PackedScene" uid="uid://b7vl0o5ey7gae" path="res://nodes/RangedEnemy.tscn" id="9_njel3"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_buypi"]
 shader = ExtResource("2_8pr8v")
@@ -51,3 +52,6 @@ text = "Spawn Explosion"
 [node name="Player" parent="." instance=ExtResource("7_8pr8v")]
 position = Vector2(531, 486)
 starting_hp = 150.0
+
+[node name="RangedEnemy" parent="." instance=ExtResource("9_njel3")]
+position = Vector2(137, 633)

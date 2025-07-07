@@ -36,7 +36,6 @@ func complete_dash():
 	self.velocity = Vector2(0.0, 0.0)
 	dash_line.visible = false
 	ai_state = AI_State.FOLLOW
-	prev_ai_state = AI_State.IDLE
 	cooldown_timer.start()
 
 #region overridable functions
@@ -58,10 +57,9 @@ func handle_states():
 		
 func start_attack():
 	# if dash attack on cooldown, don't dash
-	if not can_dash:
+	if not can_dash or [AI_State.HURT, AI_State.DEATH].has(ai_state):
 		return
 	
-	prev_ai_state = ai_state
 	ai_state = AI_State.PREP_ATTACK
 	can_dash = false
 	
