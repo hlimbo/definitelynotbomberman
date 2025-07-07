@@ -1,24 +1,24 @@
-[gd_scene load_steps=9 format=3 uid="uid://dyubwq4v4oedp"]
+[gd_scene load_steps=10 format=3 uid="uid://dyubwq4v4oedp"]
 
 [ext_resource type="Script" uid="uid://bydjmwa1oxxwt" path="res://scripts/base_enemy.gd" id="1_tsmau"]
 [ext_resource type="Shader" uid="uid://b1cldd7wx5mnx" path="res://shaders/wave_death.gdshader" id="1_u2ds8"]
 [ext_resource type="Texture2D" uid="uid://dv6re8a0stc2o" path="res://assets/mindless_blob2.png" id="2_p6qla"]
 [ext_resource type="PackedScene" uid="uid://dlryu3u30yhb3" path="res://nodes/DamageText.tscn" id="3_iqw6n"]
 [ext_resource type="Shader" uid="uid://caw6qgxxaapj4" path="res://shaders/color_blinking.gdshader" id="4_dbob3"]
+[ext_resource type="Theme" uid="uid://g8ijm1c5d00t" path="res://ui_theme.tres" id="5_khcju"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dbob3"]
-radius = 36.0139
+radius = 36.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_u2ds8"]
-radius = 42.0119
+radius = 42.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1msfx"]
-radius = 182.222
+radius = 180.0
 
-[node name="BaseEnemy" type="RigidBody2D"]
+[node name="BaseEnemy" type="CharacterBody2D"]
 collision_layer = 4
 collision_mask = 5
-gravity_scale = 0.0
 script = ExtResource("1_tsmau")
 damage_text_node = ExtResource("3_iqw6n")
 hurt_shader = ExtResource("4_dbob3")
@@ -32,6 +32,15 @@ debug_color = Color(1, 0.655003, 0.237995, 0.42)
 z_index = 20
 z_as_relative = false
 position = Vector2(0, -69)
+
+[node name="DebugTextRoot" type="Node2D" parent="."]
+position = Vector2(0, 46)
+
+[node name="AIStateLabel" type="Label" parent="DebugTextRoot"]
+offset_right = 40.0
+offset_bottom = 23.0
+theme = ExtResource("5_khcju")
+text = "IDLE"
 
 [node name="HitArea" type="Area2D" parent="."]
 collision_mask = 3
