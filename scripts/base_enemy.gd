@@ -32,6 +32,8 @@ enum AI_State
 @onready var ai_state_label: Label = $DebugTextRoot/AIStateLabel
 @onready var hurt_timer: Timer = $hurt_timer
 @onready var death_timer: Timer = $death_timer
+@onready var debuff_timer: Timer = $debuff_timer
+@onready var debuff_frequency_timer: Timer = $debuff_frequency_timer
 
 @onready var aim_line : Line2D = $"AimLine"
 var _aim_dir : Vector2 = Vector2.RIGHT
@@ -49,8 +51,13 @@ func set_shader(shader: Shader):
 func clear_shader():
 	self.material = null
 
+func remove_all_signal_connections(signal_ref: Signal):
+	var connections: Array = signal_ref.get_connections()
+	for connection in connections:
+		signal_ref.disconnect(connection["callable"])
+
 func can_attack() -> bool:
-	return ![AI_State.ATTACK, AI_State.PREP_ATTACK].has(ai_state) and (is_instance_valid(target) and position.distance_to(target.position) < follow_distance)
+	return AI_State.FOLLOW == ai_state and (is_instance_valid(target) and position.distance_to(target.position) < follow_distance)
 
 func _ready():
 	detection_area.body_entered.connect(on_body_entered)
@@ -71,8 +78,28 @@ func on_iframes_completed():
 	clear_shader()
 	
 func on_death_completed():
-	print("done")
-	# queue_free()
+	queue_free()
+	
+func on_debuff_applied(dmg: float):
+	print("apply debuff with dmg: %f" % dmg)
+	var damage_text: DamageText = damage_text_node.instantiate()
+	damage_text_root.add_child(damage_text)
+	damage_text.play_animation(dmg)
+	
+	hp -= dmg
+	
+	if hp <= 0.0:
+		ai_state = AI_State.DEATH
+		self.velocity = Vector2(0.0, 0.0)
+		set_shader(death_shader)
+		death_timer.start()
+		self.disable()
+	
+	# final tick
+	var is_debuff_complete: bool = debuff_timer.time_left <= 0.0
+	if is_debuff_complete:
+		debuff_frequency_timer.stop()
+		remove_all_signal_connections(debuff_frequency_timer.timeout)
 
 func _physics_process(delta_time: float):
 	self.handle_states()
@@ -98,8 +125,6 @@ func _process(delta: float):
 			var t: float = 1.0 - curr_death_time / death_timer.wait_time
 			shader_mat.set_shader_parameter("alpha", t)
 			curr_death_time += delta
-			if curr_death_time >= death_timer.wait_time:
-				queue_free()
 			
 func update_ai_state_label():
 	match ai_state:
@@ -116,7 +141,48 @@ func update_ai_state_label():
 		AI_State.PREP_ATTACK:
 			ai_state_label.text = "PREP_ATTACK"
 
+func handle_enter_explosion_area(explosion: BaseExplosion):
+	if explosion is PoisonExplosion:
+		var poison_explosion = explosion as PoisonExplosion
+		debuff_timer.wait_time = poison_explosion.debuff_duration
+		debuff_frequency_timer.wait_time = poison_explosion.debuff_frequency
+		
+		debuff_frequency_timer.timeout.connect(on_debuff_applied.bind(poison_explosion.dot_dmg))
+		debuff_timer.start()
+		debuff_frequency_timer.start()
+	else:
+		# random damage numbers for fun
+		var flat_dmg: float = randf_range(12.0, 512.0) # explosion.flat_dmg
+		
+		var damage_text: DamageText = damage_text_node.instantiate()
+		damage_text_root.add_child(damage_text)
+		damage_text.play_animation(flat_dmg) 
+		
+		hp -= flat_dmg
+	
+	# default hurt and death logic
+	if hp > 0:
+		ai_state = AI_State.HURT
+		self.velocity = Vector2(0.0, 0.0)
+		set_shader(hurt_shader)
+		hurt_timer.start()
+	else:
+		ai_state = AI_State.DEATH
+		self.velocity = Vector2(0.0, 0.0)
+		set_shader(death_shader)
+		death_timer.start()
+		self.disable()
+	
+func handle_exit_explosion_area(explosion: BaseExplosion):
+	pass
+
 #region overridable functions
+func disable():
+	hit_area.queue_free()
+	detection_area.queue_free()
+	debuff_timer.stop()
+	debuff_frequency_timer.stop()
+
 func handle_states():
 	if ai_state == AI_State.FOLLOW:
 		if not is_instance_valid(target):
@@ -125,7 +191,6 @@ func handle_states():
 		else:
 			_aim_dir = (target.position - position).normalized()
 			follow()
-
 
 func on_enter_impact_area(explosion: BaseExplosion, actor: Node):
 	# if same actor that received impact, handle the signal, otherwise don't handle it
@@ -139,32 +204,15 @@ func on_enter_impact_area(explosion: BaseExplosion, actor: Node):
 	if [AI_State.HURT, AI_State.DEATH].has(ai_state):
 		return
 	
-	# random damage numbers for fun
-	var flat_dmg: float = randf_range(12.0, 512.0) # explosion.flat_dmg
-	
-	hp -= flat_dmg
-	
-	if hp > 0:
-		ai_state = AI_State.HURT
-		self.velocity = Vector2(0.0, 0.0)
-		set_shader(hurt_shader)
-		hurt_timer.start()
-	else:
-		ai_state = AI_State.DEATH
-		self.velocity = Vector2(0.0, 0.0)
-		set_shader(death_shader)
-		hit_area.queue_free()
-		detection_area.queue_free()
-		death_timer.start()
-	
-	var damage_text: DamageText = damage_text_node.instantiate()
-	damage_text_root.add_child(damage_text)
-	damage_text.play_animation(flat_dmg) 
+	# handle specific explosion type
+	handle_enter_explosion_area(explosion)
 	
 func on_exit_impact_area(explosion: BaseExplosion, actor: Node):
 	# if same actor that received impact, handle the signal, otherwise don't handle it
 	if actor != self:
 		return
+		
+	handle_exit_explosion_area(explosion)
 	
 func follow():
 	var diff: Vector2 = target.position - position

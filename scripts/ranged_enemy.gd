@@ -26,6 +26,13 @@ func on_attack_start():
 	range_line.visible = false
 	
 #region overridable functions
+func disable():
+	super()
+	range_line.visible = false
+	can_shoot = false
+	shoot_timer.stop()
+	attack_anim_timer.stop()
+	
 func start_attack():
 	if not can_shoot:
 		return

@@ -355,13 +355,8 @@ func _on_hurt_finished():
 
 func _on_death_finished():
 	# destroy this gameobject
-	print("ded")
-	# _shadow.scale = Vector2.ZERO
-	
 	is_dead = false
 	is_alive = false
 	_current_hop_time = 0.0
 	velocity = Vector2(0.0, 0.0)
-	
-	collision_shape_2d.set_deferred("disabled", true)
 	queue_free()

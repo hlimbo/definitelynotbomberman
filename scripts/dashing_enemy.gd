@@ -39,6 +39,13 @@ func complete_dash():
 	cooldown_timer.start()
 
 #region overridable functions
+func disable():
+	super()
+	dash_line.visible = false
+	dash_attack_timer.stop()
+	cooldown_timer.stop()
+	attack_area.queue_free()
+
 func handle_states():
 	super()
 	
@@ -54,7 +61,7 @@ func handle_states():
 		# if reached or exceeded dash attack distance switch back to follow state
 		if curr_dash_distance >= dash_attack_distance:
 			complete_dash()
-		
+
 func start_attack():
 	# if dash attack on cooldown, don't dash
 	if not can_dash or [AI_State.HURT, AI_State.DEATH].has(ai_state):

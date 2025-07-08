@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://gbk5fu6oyv6x" path="res://scripts/Bomb.gd" id="1_4f8ai"]
 [ext_resource type="Shader" uid="uid://caw6qgxxaapj4" path="res://shaders/color_blinking.gdshader" id="1_qf65r"]
-[ext_resource type="PackedScene" uid="uid://30i420qrdnkw" path="res://nodes/BaseExplosion.tscn" id="2_qf65r"]
+[ext_resource type="PackedScene" uid="uid://bfwwfna2vsv30" path="res://nodes/PoisonExplosion.tscn" id="3_qf65r"]
 [ext_resource type="Texture2D" uid="uid://c6qr7h2ptogfd" path="res://assets/bomb.png" id="3_tkkff"]
 [ext_resource type="Texture2D" uid="uid://bbikxbgmcxqxh" path="res://assets/bomb_shadow.png" id="4_ma0oj"]
 
@@ -18,7 +18,7 @@ radius = 35.0143
 material = SubResource("ShaderMaterial_4f8ai")
 collision_layer = 2
 script = ExtResource("1_4f8ai")
-explosion_node = ExtResource("2_qf65r")
+explosion_node = ExtResource("3_qf65r")
 
 [node name="BombSprite" type="Sprite2D" parent="."]
 use_parent_material = true

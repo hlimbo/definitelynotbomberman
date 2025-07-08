@@ -3,8 +3,8 @@ class_name BaseExplosion extends Node2D
 ### dependencies
 @export var event_bus: EventBus = EventBus
 
-@export var flat_dmg: float = 0.0
-@export var explosion_duration: float = 0.0
+@export var flat_dmg: float = 12.0
+@export var explosion_duration: float = 0.3
 # used to determine if more collision events should be sent through event bus
 # since toggling off collision happens at the end of the frame causing some delays
 @export var is_disabled: bool = false
@@ -20,6 +20,9 @@ class_name BaseExplosion extends Node2D
 
 func _ready():
 	explosion_timer.wait_time = explosion_duration
+	for vfx in explosion_vfx:
+		vfx.lifetime = explosion_duration
+	
 	explosion_timer.timeout.connect(on_explosion_finished)
 	area_2d.area_entered.connect(on_area_entered)
 	area_2d.area_exited.connect(on_area_exited)

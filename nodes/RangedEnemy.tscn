@@ -34,7 +34,7 @@ debug_color = Color(1, 0.655003, 0.237995, 0.42)
 [node name="DamageTextRoot" type="Node2D" parent="."]
 z_index = 20
 z_as_relative = false
-position = Vector2(0, -69)
+position = Vector2(0, -92)
 
 [node name="DebugTextRoot" type="Node2D" parent="."]
 position = Vector2(0, 46)
@@ -76,6 +76,11 @@ one_shot = true
 
 [node name="death_timer" type="Timer" parent="."]
 one_shot = true
+
+[node name="debuff_timer" type="Timer" parent="."]
+one_shot = true
+
+[node name="debuff_frequency_timer" type="Timer" parent="."]
 
 [node name="shoot_timer" type="Timer" parent="."]
 process_callback = 0
