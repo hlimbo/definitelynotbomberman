@@ -78,3 +78,7 @@ one_shot = true
 process_callback = 0
 wait_time = 3.0
 one_shot = true
+
+[node name="root_timer" type="Timer" parent="."]
+process_callback = 0
+one_shot = true

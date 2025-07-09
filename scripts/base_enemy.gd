@@ -42,6 +42,7 @@ enum AI_State
 @onready var debuff_timer: Timer = $debuff_timer
 @onready var debuff_frequency_timer: Timer = $debuff_frequency_timer
 @onready var gravity_timer: Timer = $gravity_timer
+@onready var root_timer: Timer = $root_timer
 
 @onready var aim_line : Line2D = $"AimLine"
 var _aim_dir : Vector2 = Vector2.RIGHT
@@ -84,6 +85,7 @@ func _ready():
 	death_timer.timeout.connect(on_death_completed)
 	debuff_timer.timeout.connect(on_debuff_completed)
 	gravity_timer.timeout.connect(on_gravity_completed)
+	root_timer.timeout.connect(on_root_completed)
 	
 	hp = starting_hp
 	
@@ -121,6 +123,9 @@ func on_gravity_completed():
 	
 	accumulated_pull_force = Vector2.ZERO
 	find_and_remove_status_effect(GRAVITY)
+
+func on_root_completed():
+	find_and_remove_status_effect(ROOT)
 
 func on_debuff_applied(dmg: float):
 	print("apply debuff with dmg: %f" % dmg)
@@ -176,6 +181,9 @@ func _physics_process(delta_time: float):
 		# reduce gravity force per physics step by a percentage
 		var kept_force_percentage: float = 1.0 - gravity_decay_percentage
 		gravity_force_per_physics_step *= kept_force_percentage
+	
+	if applied_status_effects.has(ROOT):
+		self.velocity = Vector2.ZERO
 	
 	aim_line.points = [
 		Vector2.ZERO,                         
@@ -240,6 +248,12 @@ func handle_enter_explosion_area(explosion: BaseExplosion):
 		print("GooExplosion")
 	elif explosion is RootExplosion:
 		print("RootExplosion")
+		if not applied_status_effects.has(ROOT):
+			applied_status_effects.append(ROOT)
+			var root_explosion = explosion as RootExplosion
+			root_timer.wait_time = root_explosion.root_duration
+			print("%s rooted!"  % self.name)
+			root_timer.start()
 		
 	
 	# Default Explosion Behavior
