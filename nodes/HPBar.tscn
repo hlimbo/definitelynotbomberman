@@ -1,0 +1,73 @@
+[gd_scene load_steps=5 format=3 uid="uid://dwryu2l051w1y"]
+
+[ext_resource type="Texture2D" uid="uid://ycvq7xb2trok" path="res://atlas_textures/hp_bar_background.tres" id="1_mel6g"]
+[ext_resource type="Texture2D" uid="uid://dhbheughjcm47" path="res://atlas_textures/hp_bar_over.tres" id="2_0i2me"]
+[ext_resource type="Texture2D" uid="uid://bbia7b60wprcs" path="res://atlas_textures/hp_bar_foreground.tres" id="2_3qq0l"]
+[ext_resource type="Theme" uid="uid://g8ijm1c5d00t" path="res://ui_theme.tres" id="4_0i2me"]
+
+[node name="HpBar" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+size_flags_horizontal = 0
+
+[node name="Background" type="TextureProgressBar" parent="."]
+layout_mode = 0
+offset_top = 27.0
+offset_right = 52.0
+offset_bottom = 35.0
+scale = Vector2(5, 5)
+value = 100.0
+texture_under = ExtResource("1_mel6g")
+texture_progress_offset = Vector2(1, 0)
+
+[node name="Damage_Progress" type="TextureProgressBar" parent="."]
+layout_mode = 0
+offset_top = 27.0
+offset_right = 52.0
+offset_bottom = 35.0
+scale = Vector2(5, 5)
+value = 80.0
+texture_progress = ExtResource("2_0i2me")
+texture_progress_offset = Vector2(1, 0)
+
+[node name="HP_Progress" type="TextureProgressBar" parent="."]
+layout_mode = 0
+offset_top = 27.0
+offset_right = 52.0
+offset_bottom = 35.0
+scale = Vector2(5, 5)
+value = 60.0
+texture_progress = ExtResource("2_3qq0l")
+texture_progress_offset = Vector2(1, 0)
+
+[node name="HP_Label_Container" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_top = 2.0
+offset_right = 133.0
+offset_bottom = 25.0
+
+[node name="CurrentHP" type="Label" parent="HP_Label_Container"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme = ExtResource("4_0i2me")
+theme_override_font_sizes/font_size = 18
+text = "60"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Divider" type="Label" parent="HP_Label_Container"]
+layout_mode = 2
+theme = ExtResource("4_0i2me")
+theme_override_font_sizes/font_size = 18
+text = "/"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MaxHP" type="Label" parent="HP_Label_Container"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme = ExtResource("4_0i2me")
+theme_override_font_sizes/font_size = 18
+text = "100"
+horizontal_alignment = 1
+vertical_alignment = 1
