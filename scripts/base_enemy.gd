@@ -3,6 +3,13 @@ class_name BaseEnemy extends CharacterBody2D
 ### dependencies
 @export var event_bus: EventBus = EventBus
 
+#region Status Effects
+const POISON: String = "POISON"
+const GRAVITY: String = "GRAVITY"
+const SLOW: String = "SLOW"
+const ROOT: String = "ROOT"
+#endregion
+
 enum AI_State
 {
 	IDLE,
@@ -34,6 +41,7 @@ enum AI_State
 @onready var death_timer: Timer = $death_timer
 @onready var debuff_timer: Timer = $debuff_timer
 @onready var debuff_frequency_timer: Timer = $debuff_frequency_timer
+@onready var gravity_timer: Timer = $gravity_timer
 
 @onready var aim_line : Line2D = $"AimLine"
 var _aim_dir : Vector2 = Vector2.RIGHT
@@ -42,6 +50,15 @@ var _aim_dir : Vector2 = Vector2.RIGHT
 var curr_death_time: float = 0.0
 
 @export var base_damage: float = 50.0
+
+@export var applied_status_effects: Array[String] = []
+
+var gravity_center_position: Vector2 = Vector2.ZERO
+var gravity_max_force_scalar: float = 0
+var gravity_decay_percentage: float = 0
+var gravity_force_per_physics_step: float = 0
+var gravity_radius: float = 0
+var accumulated_pull_force: Vector2 = Vector2.ZERO
 
 func set_shader(shader: Shader):
 	var shader_mat = ShaderMaterial.new()
@@ -65,6 +82,8 @@ func _ready():
 	event_bus.on_exit_impact_area.connect(on_exit_impact_area)
 	hurt_timer.timeout.connect(on_iframes_completed)
 	death_timer.timeout.connect(on_death_completed)
+	debuff_timer.timeout.connect(on_debuff_completed)
+	gravity_timer.timeout.connect(on_gravity_completed)
 	
 	hp = starting_hp
 	
@@ -79,7 +98,30 @@ func on_iframes_completed():
 	
 func on_death_completed():
 	queue_free()
+
+func find_and_remove_status_effect(status_effect: String):
+	var effect_index: int = -1
+	for i in range(len(applied_status_effects)):
+		if applied_status_effects[i] == status_effect:
+			effect_index = i
+			break
+			
+	if effect_index != -1:
+		applied_status_effects.remove_at(effect_index)
+
+func on_debuff_completed():
+	find_and_remove_status_effect(POISON)
+
+func on_gravity_completed():
+	# remove the accumulated pull force from this enemy
+	if not self.velocity.is_zero_approx():
+		self.velocity -= accumulated_pull_force
+	else:
+		self.velocity = Vector2.ZERO
 	
+	accumulated_pull_force = Vector2.ZERO
+	find_and_remove_status_effect(GRAVITY)
+
 func on_debuff_applied(dmg: float):
 	print("apply debuff with dmg: %f" % dmg)
 	var damage_text: DamageText = damage_text_node.instantiate()
@@ -103,6 +145,37 @@ func on_debuff_applied(dmg: float):
 
 func _physics_process(delta_time: float):
 	self.handle_states()
+	
+	# handle status effects
+	if applied_status_effects.has(GRAVITY):
+		var diff: Vector2 = gravity_center_position - position
+		var dist_to_center: float = diff.length()
+		var pull_dir: Vector2 = diff.normalized()
+		
+		
+		# the closer it is to the center, the less influence it has
+		# the further away it is from the center, the more influence it has
+		var dist_factor: float = dist_to_center / gravity_radius
+		# note: goto desmos graphing calculator to visualize 1.0 + e^x
+		var acceleration_factor: float = (1.0 + exp(dist_to_center)) * gravity_force_per_physics_step
+		var pull_vector: Vector2 = pull_dir * acceleration_factor
+		var temp_pull_force: Vector2 = accumulated_pull_force + pull_vector
+		
+		# cap accumulated_pull_force to max pull force scalar
+		var pull_length: float = temp_pull_force.length()
+		if pull_length > gravity_max_force_scalar:
+			accumulated_pull_force = pull_dir * gravity_max_force_scalar * delta_time
+		else:
+			accumulated_pull_force += pull_vector * delta_time
+		
+		# sets accumulated force to zero if exactly at center of explosion
+		accumulated_pull_force *= dist_factor
+		
+		self.velocity = accumulated_pull_force
+		
+		# reduce gravity force per physics step by a percentage
+		var kept_force_percentage: float = 1.0 - gravity_decay_percentage
+		gravity_force_per_physics_step *= kept_force_percentage
 	
 	aim_line.points = [
 		Vector2.ZERO,                         
@@ -143,22 +216,41 @@ func update_ai_state_label():
 
 func handle_enter_explosion_area(explosion: BaseExplosion):
 	if explosion is PoisonExplosion:
-		var poison_explosion = explosion as PoisonExplosion
-		debuff_timer.wait_time = poison_explosion.debuff_duration
-		debuff_frequency_timer.wait_time = poison_explosion.debuff_frequency
+		# if already poisoned don't apply it again for simplicity... would need to implement a stacking system and reset timer when new poison stack is given
+		if not applied_status_effects.has(POISON):
+			applied_status_effects.append(POISON)
+			var poison_explosion = explosion as PoisonExplosion
+			debuff_timer.wait_time = poison_explosion.debuff_duration
+			debuff_frequency_timer.wait_time = poison_explosion.debuff_frequency
+			
+			debuff_frequency_timer.timeout.connect(on_debuff_applied.bind(poison_explosion.dot_dmg))
+			debuff_timer.start()
+			debuff_frequency_timer.start()
+	elif explosion is GravityExplosion:
+		if not applied_status_effects.has(GRAVITY):
+			applied_status_effects.append(GRAVITY)
+			var gravity_explosion = explosion as GravityExplosion
+			gravity_center_position = gravity_explosion.position
+			gravity_max_force_scalar = gravity_explosion.max_pull_force
+			gravity_force_per_physics_step = gravity_explosion.pull_force_per_physics_step
+			gravity_decay_percentage = gravity_explosion.pull_decay
+			gravity_radius = gravity_explosion.gravity_radius
+			gravity_timer.start(gravity_explosion.explosion_duration)
+	elif explosion is GooExplosion:
+		print("GooExplosion")
+	elif explosion is RootExplosion:
+		print("RootExplosion")
 		
-		debuff_frequency_timer.timeout.connect(on_debuff_applied.bind(poison_explosion.dot_dmg))
-		debuff_timer.start()
-		debuff_frequency_timer.start()
-	else:
-		# random damage numbers for fun
-		var flat_dmg: float = randf_range(12.0, 512.0) # explosion.flat_dmg
-		
-		var damage_text: DamageText = damage_text_node.instantiate()
-		damage_text_root.add_child(damage_text)
-		damage_text.play_animation(flat_dmg) 
-		
-		hp -= flat_dmg
+	
+	# Default Explosion Behavior
+	# random damage numbers for fun
+	var flat_dmg: float = randf_range(12.0, 512.0) # explosion.flat_dmg
+	
+	var damage_text: DamageText = damage_text_node.instantiate()
+	damage_text_root.add_child(damage_text)
+	damage_text.play_animation(flat_dmg) 
+	
+	hp -= flat_dmg
 	
 	# default hurt and death logic
 	if hp > 0:
@@ -166,6 +258,7 @@ func handle_enter_explosion_area(explosion: BaseExplosion):
 		self.velocity = Vector2(0.0, 0.0)
 		set_shader(hurt_shader)
 		hurt_timer.start()
+		self.interrupt()
 	else:
 		ai_state = AI_State.DEATH
 		self.velocity = Vector2(0.0, 0.0)
@@ -183,14 +276,20 @@ func disable():
 	debuff_timer.stop()
 	debuff_frequency_timer.stop()
 
+# used to stop timers that aren't in the BaseEnemy class such as DashingEnemy timers
+func interrupt():
+	pass
+
 func handle_states():
 	if ai_state == AI_State.FOLLOW:
 		if not is_instance_valid(target):
 			ai_state = AI_State.IDLE
-			self.velocity = Vector2.ZERO
 		else:
 			_aim_dir = (target.position - position).normalized()
 			follow()
+	elif ai_state == AI_State.IDLE:
+		self.velocity = Vector2.ZERO
+		accumulated_pull_force = Vector2.ZERO
 
 func on_enter_impact_area(explosion: BaseExplosion, actor: Node):
 	# if same actor that received impact, handle the signal, otherwise don't handle it

@@ -32,7 +32,13 @@ func disable():
 	can_shoot = false
 	shoot_timer.stop()
 	attack_anim_timer.stop()
-	
+
+func interrupt():
+	range_line.visible = false
+	can_shoot = true
+	shoot_timer.stop()
+	attack_anim_timer.stop()
+
 func start_attack():
 	if not can_shoot:
 		return

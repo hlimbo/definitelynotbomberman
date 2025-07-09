@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://gbk5fu6oyv6x" path="res://scripts/Bomb.gd" id="1_4f8ai"]
 [ext_resource type="Shader" uid="uid://caw6qgxxaapj4" path="res://shaders/color_blinking.gdshader" id="1_qf65r"]
-[ext_resource type="PackedScene" uid="uid://bfwwfna2vsv30" path="res://nodes/PoisonExplosion.tscn" id="3_qf65r"]
+[ext_resource type="PackedScene" uid="uid://det30hgwc4rft" path="res://nodes/GravityExplosion.tscn" id="3_qf65r"]
 [ext_resource type="Texture2D" uid="uid://c6qr7h2ptogfd" path="res://assets/bomb.png" id="3_tkkff"]
 [ext_resource type="Texture2D" uid="uid://bbikxbgmcxqxh" path="res://assets/bomb_shadow.png" id="4_ma0oj"]
 

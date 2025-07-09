@@ -46,6 +46,12 @@ func disable():
 	cooldown_timer.stop()
 	attack_area.queue_free()
 
+func interrupt():
+	can_dash = true
+	dash_attack_timer.stop()
+	cooldown_timer.stop()
+	dash_line.visible = false
+
 func handle_states():
 	super()
 	
