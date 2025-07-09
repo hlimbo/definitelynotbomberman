@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://d2t2yd8avamds"]
+[gd_scene load_steps=13 format=3 uid="uid://d2t2yd8avamds"]
 
 [ext_resource type="PackedScene" uid="uid://dyubwq4v4oedp" path="res://nodes/BaseEnemy.tscn" id="1_2nij2"]
 [ext_resource type="Script" uid="uid://ho55ru8dkukc" path="res://scripts/test_dummy.gd" id="1_uhqqe"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://n7630g0ehwof" path="res://nodes/DashingEnemy.tscn" id="8_buypi"]
 [ext_resource type="PackedScene" uid="uid://dwryu2l051w1y" path="res://nodes/HPBar.tscn" id="8_vr1i5"]
 [ext_resource type="PackedScene" uid="uid://b7vl0o5ey7gae" path="res://nodes/RangedEnemy.tscn" id="9_njel3"]
+[ext_resource type="PackedScene" uid="uid://4k3yawlmr7qu" path="res://nodes/BombUIPicker.tscn" id="9_rpuu0"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_buypi"]
 shader = ExtResource("2_8pr8v")
@@ -62,10 +63,23 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -127.0
+offset_left = -78.0
 offset_top = -73.0
-offset_right = -127.0
+offset_right = -78.0
 offset_bottom = -73.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="BombUiPicker" parent="CanvasLayer" instance=ExtResource("9_rpuu0")]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -255.0
+offset_top = -126.0
+offset_right = -255.0
+offset_bottom = -126.0
 grow_horizontal = 2
 grow_vertical = 0
 

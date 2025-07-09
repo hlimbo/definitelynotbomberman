@@ -1,9 +1,112 @@
-[gd_scene format=3 uid="uid://4k3yawlmr7qu"]
+[gd_scene load_steps=9 format=3 uid="uid://4k3yawlmr7qu"]
+
+[ext_resource type="Texture2D" uid="uid://c6qr7h2ptogfd" path="res://assets/bomb.png" id="1_y0l40"]
+[ext_resource type="Theme" uid="uid://g8ijm1c5d00t" path="res://ui_theme.tres" id="2_u88me"]
+[ext_resource type="Texture2D" uid="uid://dk5slhp45a01f" path="res://assets/sparks.png" id="3_blt6c"]
+[ext_resource type="Texture2D" uid="uid://bal1mky00pmnb" path="res://atlas_textures/button_normal.tres" id="6_41iq3"]
+[ext_resource type="Texture2D" uid="uid://cbe2sma3jt5sk" path="res://atlas_textures/button_pressed.tres" id="7_sbvno"]
+[ext_resource type="Texture2D" uid="uid://dapnfalgc31fh" path="res://atlas_textures/button_hover.tres" id="8_sy60e"]
+[ext_resource type="Texture2D" uid="uid://domhjm4vgdktc" path="res://atlas_textures/arrow_icon.tres" id="9_sbvno"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_aogir"]
+blend_mode = 1
 
 [node name="BombUiPicker" type="Control"]
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchors_preset = 0
+
+[node name="BombTexture" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 49.0
+offset_top = 1.0
+offset_right = 99.0
+offset_bottom = 51.0
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("1_y0l40")
+expand_mode = 3
+
+[node name="CrossXTexture" type="TextureRect" parent="."]
+modulate = Color(1, 0.313726, 0.172549, 1)
+material = SubResource("CanvasItemMaterial_aogir")
+layout_mode = 2
+offset_left = 115.0
+offset_top = 1.0
+offset_right = 132.0
+offset_bottom = 17.0
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("3_blt6c")
+expand_mode = 1
+
+[node name="ArrowsContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 8.00001
+offset_right = 20.0
+offset_bottom = 42.0
+scale = Vector2(3.5, 3.5)
+
+[node name="UpArrowButton" type="TextureButton" parent="ArrowsContainer"]
+layout_mode = 2
+texture_normal = ExtResource("6_41iq3")
+texture_pressed = ExtResource("7_sbvno")
+texture_hover = ExtResource("8_sy60e")
+stretch_mode = 5
+
+[node name="ArrowIcon" type="TextureRect" parent="ArrowsContainer/UpArrowButton"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3.5
+offset_top = -5.0
+offset_right = 4.5
+offset_bottom = 2.0
 grow_horizontal = 2
 grow_vertical = 2
+rotation = 1.5708
+pivot_offset = Vector2(3.4087, 3.74904)
+texture = ExtResource("9_sbvno")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="DownArrowButton" type="TextureButton" parent="ArrowsContainer"]
+layout_mode = 2
+texture_normal = ExtResource("6_41iq3")
+texture_pressed = ExtResource("7_sbvno")
+texture_hover = ExtResource("8_sy60e")
+stretch_mode = 5
+
+[node name="ArrowIcon" type="TextureRect" parent="ArrowsContainer/DownArrowButton"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3.5
+offset_top = -5.0
+offset_right = 3.5
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = 1.5708
+pivot_offset = Vector2(3.4087, 3.74904)
+texture = ExtResource("9_sbvno")
+expand_mode = 3
+stretch_mode = 5
+flip_h = true
+
+[node name="CounterLabel" type="Label" parent="."]
+custom_minimum_size = Vector2(73, 0)
+layout_mode = 0
+offset_left = 94.0
+offset_top = 88.0
+offset_right = 167.0
+offset_bottom = 118.0
+theme = ExtResource("2_u88me")
+theme_override_font_sizes/font_size = 24
+text = "1"
+horizontal_alignment = 2
+vertical_alignment = 1
