@@ -100,7 +100,7 @@ func _get_move_input() -> Vector2:
 #   ── Life‑cycle ──
 # ─────────────────────────────────────────────────────────────────────────────
 func _ready() -> void:
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	#Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	event_bus.on_start_attack.connect(_on_attacked)
 	event_bus.on_projectile_hit.connect(_on_projectile_hit)
 	hurt_timer.timeout.connect(_on_hurt_finished)
