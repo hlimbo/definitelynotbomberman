@@ -48,6 +48,7 @@ func view_next_bomb(is_arrow_up: bool):
 		view_index = len(bomb_inventory) - 1
 	
 	set_bomb_type(view_index)
+	event_bus.on_bomb_switched.emit(view_index)
 
 func set_bomb_type(view_index: int):
 	print("bomb type: %s" % bomb_inventory[view_index].name)

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bydjmwa1oxxwt" path="res://scripts/base_enemy.gd" id="1_tsmau"]
 [ext_resource type="Shader" uid="uid://b1cldd7wx5mnx" path="res://shaders/wave_death.gdshader" id="1_u2ds8"]
 [ext_resource type="Texture2D" uid="uid://dv6re8a0stc2o" path="res://assets/mindless_blob2.png" id="2_p6qla"]
-[ext_resource type="PackedScene" uid="uid://dlryu3u30yhb3" path="res://nodes/DamageText.tscn" id="3_iqw6n"]
+[ext_resource type="PackedScene" uid="uid://dlryu3u30yhb3" path="res://nodes/ui/DamageText.tscn" id="3_iqw6n"]
 [ext_resource type="Shader" uid="uid://caw6qgxxaapj4" path="res://shaders/color_blinking.gdshader" id="4_dbob3"]
 [ext_resource type="Theme" uid="uid://g8ijm1c5d00t" path="res://ui_theme.tres" id="5_khcju"]
 

@@ -1,6 +1,17 @@
 class_name Bomb extends CharacterBody2D
 
+### dependencies
+@export var event_bus: EventBus = EventBus
+
 @export var explosion_node: PackedScene
+
+@export var explosion_nodes: Array[PackedScene] = [
+	preload("res://nodes/explosions/BaseExplosion.tscn"),
+	preload("res://nodes/explosions/PoisonExplosion.tscn"),
+	preload("res://nodes/explosions/GravityExplosion.tscn"),
+	preload("res://nodes/explosions/GooExplosion.tscn"),
+	preload("res://nodes/explosions/RootExplosion.tscn")
+]
 
 var _amplitude : float       # current hop height
 var _t         : float = 0.0 # time inside current hop
@@ -17,15 +28,17 @@ var _direction : Vector2 = Vector2.ZERO
 var _damage          :float= 50
 var _max_bounces : int = 4              # after this → explode
 var _hop_time        :float= 0.40           # time from lift-off to next impact
+var _explosion_index :int = 0 # used to pick which explosion to instantiate
 
 @onready var _bomb   : Sprite2D = $"BombSprite"
 @onready var _shadow : Sprite2D = $"ShadowSprite"
 
-func launch(dir: Vector2, ground_speed: float, max_bounces: int) -> void:
+func launch(dir: Vector2, ground_speed: float, max_bounces: int, explosion_index: int) -> void:
 	_direction  = dir.normalized()
 	_speed      = ground_speed
 	_max_bounces = max_bounces
 	_amplitude = _first_amplitude
+	_explosion_index = explosion_index
 
 func _physics_process(delta: float) -> void:
 	# ── 1. ground motion ─────────────────────────────────────────
@@ -76,7 +89,7 @@ func _update_shadow(h: float) -> void:
 	_shadow.modulate.a = lerp(0.6, 0.15, t)
 
 func _explode() -> void:
-	var explosion: BaseExplosion = explosion_node.instantiate()
+	var explosion: BaseExplosion = explosion_nodes[_explosion_index].instantiate()
 	get_tree().current_scene.add_child(explosion)
 	explosion.start(_shadow.global_position)
 	queue_free()

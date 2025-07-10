@@ -8,9 +8,6 @@ var event_bus: EventBus = EventBus
 @onready var current_hp_label: Label = $HP_Label_Container/CurrentHP
 @onready var max_hp_label: Label = $HP_Label_Container/MaxHP
 
-@onready var deduct_button: Button = $DeductButton
-@onready var reset_button: Button = $ResetButton
-
 @export var current_hp: float = 0.0
 @export var max_hp: float = 0.0
 
@@ -25,21 +22,8 @@ func initialize(current_hp: float, max_hp: float):
 	set_progress_values(ratio)
 
 func _ready():
-	event_bus.on_start_attack.connect(on_update_hp)
-	initialize(current_hp, max_hp)
-	
-	deduct_button.pressed.connect(func():
-		var damage: float = randf_range(1.0, current_hp)
-		self.deduct_hp(damage)
-	)
-	
-	reset_button.pressed.connect(func():
-		self.set_hp(max_hp)
-		self.set_progress_values(1.0)
-	)
-	
-func on_update_hp(enemy: BaseEnemy, target: Node2D):
-	pass
+	event_bus.on_initialize_player_hp.connect(initialize)
+	event_bus.on_player_hp_updated.connect(deduct_hp)
 	
 func deduct_hp(damage: float):
 	var new_hp: float = maxf(current_hp - damage, 0.0)

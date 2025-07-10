@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://1exh2jhj3f7n" path="res://scripts/Player.gd" id="1_d16bx"]
 [ext_resource type="Shader" uid="uid://caw6qgxxaapj4" path="res://shaders/color_blinking.gdshader" id="2_1ockd"]
-[ext_resource type="PackedScene" uid="uid://dlryu3u30yhb3" path="res://nodes/DamageText.tscn" id="2_b5sd1"]
+[ext_resource type="PackedScene" uid="uid://dlryu3u30yhb3" path="res://nodes/ui/DamageText.tscn" id="2_b5sd1"]
 [ext_resource type="Texture2D" uid="uid://l2n5jbqr3omq" path="res://assets/2d_animation_player-run.webp" id="2_x4r3j"]
 [ext_resource type="Texture2D" uid="uid://dawsa4m4h64vx" path="res://assets/kenney/dot_large.png" id="3_x4r3j"]
 [ext_resource type="Texture2D" uid="uid://by2rr752grisi" path="res://assets/smoke.png" id="4_1b2qv"]

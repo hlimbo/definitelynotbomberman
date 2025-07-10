@@ -1,12 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://b7vl0o5ey7gae"]
+[gd_scene load_steps=11 format=3 uid="uid://n7630g0ehwof"]
 
-[ext_resource type="Script" uid="uid://brnbeliuhlboh" path="res://scripts/ranged_enemy.gd" id="1_oqdl1"]
-[ext_resource type="PackedScene" uid="uid://dlryu3u30yhb3" path="res://nodes/DamageText.tscn" id="2_87mjh"]
-[ext_resource type="PackedScene" uid="uid://csk101tbck5f0" path="res://nodes/Projectile.tscn" id="2_xx71m"]
-[ext_resource type="Shader" uid="uid://caw6qgxxaapj4" path="res://shaders/color_blinking.gdshader" id="3_xx71m"]
-[ext_resource type="Shader" uid="uid://b1cldd7wx5mnx" path="res://shaders/wave_death.gdshader" id="4_4favd"]
-[ext_resource type="Theme" uid="uid://g8ijm1c5d00t" path="res://ui_theme.tres" id="5_l3v88"]
-[ext_resource type="Texture2D" uid="uid://dv6re8a0stc2o" path="res://assets/mindless_blob2.png" id="6_iv11w"]
+[ext_resource type="Script" uid="uid://b0dw3tatxpru6" path="res://scripts/dashing_enemy.gd" id="1_xc3d4"]
+[ext_resource type="PackedScene" uid="uid://dlryu3u30yhb3" path="res://nodes/ui/DamageText.tscn" id="2_ijalk"]
+[ext_resource type="Shader" uid="uid://caw6qgxxaapj4" path="res://shaders/color_blinking.gdshader" id="3_tc80p"]
+[ext_resource type="Shader" uid="uid://b1cldd7wx5mnx" path="res://shaders/wave_death.gdshader" id="4_hlsnw"]
+[ext_resource type="Theme" uid="uid://g8ijm1c5d00t" path="res://ui_theme.tres" id="5_ijalk"]
+[ext_resource type="Texture2D" uid="uid://da4h3jou13i3f" path="res://assets/mindless_blob.png" id="6_ijalk"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dbob3"]
 radius = 36.0
@@ -15,17 +14,20 @@ radius = 36.0
 radius = 42.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1msfx"]
-radius = 340.0
+radius = 360.0
 
-[node name="RangedEnemy" type="CharacterBody2D"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_xc3d4"]
+radius = 42.0
+
+[node name="DashingEnemy" type="CharacterBody2D"]
 collision_layer = 4
 collision_mask = 5
-script = ExtResource("1_oqdl1")
-projectile_node = ExtResource("2_xx71m")
-follow_distance = 300.0
-damage_text_node = ExtResource("2_87mjh")
-hurt_shader = ExtResource("3_xx71m")
-death_shader = ExtResource("4_4favd")
+script = ExtResource("1_xc3d4")
+dash_attack_distance = 500.0
+follow_distance = 200.0
+damage_text_node = ExtResource("2_ijalk")
+hurt_shader = ExtResource("3_tc80p")
+death_shader = ExtResource("4_hlsnw")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_dbob3")
@@ -34,7 +36,7 @@ debug_color = Color(1, 0.655003, 0.237995, 0.42)
 [node name="DamageTextRoot" type="Node2D" parent="."]
 z_index = 20
 z_as_relative = false
-position = Vector2(0, -92)
+position = Vector2(0, -122)
 
 [node name="DebugTextRoot" type="Node2D" parent="."]
 position = Vector2(0, 46)
@@ -42,7 +44,7 @@ position = Vector2(0, 46)
 [node name="AIStateLabel" type="Label" parent="DebugTextRoot"]
 offset_right = 40.0
 offset_bottom = 23.0
-theme = ExtResource("5_l3v88")
+theme = ExtResource("5_ijalk")
 text = "IDLE"
 
 [node name="HitArea" type="Area2D" parent="."]
@@ -59,17 +61,24 @@ monitorable = false
 shape = SubResource("CircleShape2D_1msfx")
 debug_color = Color(0.949586, 2.88785e-06, 0.572767, 0.42)
 
+[node name="AttackArea" type="Area2D" parent="."]
+collision_mask = 3
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
+shape = SubResource("CircleShape2D_xc3d4")
+debug_color = Color(0.268192, 0.633042, 3.85046e-07, 0.42)
+
 [node name="Sprite2D" type="Sprite2D" parent="."]
-self_modulate = Color(1, 0.341176, 1, 1)
 use_parent_material = true
-texture = ExtResource("6_iv11w")
+texture = ExtResource("6_ijalk")
 
 [node name="AimLine" type="Line2D" parent="."]
 width = 2.0
 
-[node name="RangeLine" type="Line2D" parent="."]
+[node name="DashLine" type="Line2D" parent="."]
 width = 2.0
-default_color = Color(1, 0, 0, 1)
+default_color = Color(0.984577, 0, 0.328501, 1)
 
 [node name="hurt_timer" type="Timer" parent="."]
 one_shot = true
@@ -87,12 +96,12 @@ process_callback = 0
 wait_time = 3.0
 one_shot = true
 
-[node name="shoot_timer" type="Timer" parent="."]
+[node name="dash_attack_timer" type="Timer" parent="."]
 process_callback = 0
-wait_time = 0.5
 one_shot = true
 
-[node name="attack_anim_timer" type="Timer" parent="."]
+[node name="cooldown_timer" type="Timer" parent="."]
+process_callback = 0
 one_shot = true
 
 [node name="root_timer" type="Timer" parent="."]

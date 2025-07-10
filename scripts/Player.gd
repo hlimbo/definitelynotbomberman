@@ -6,6 +6,8 @@ Player controller
 - Clear separation of responsibilities for maintainability
 """
 
+const EXPLOSION_TYPE_COUNT = 5
+
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Dependencies ──
 # ─────────────────────────────────────────────────────────────────────────────
@@ -37,6 +39,7 @@ var _dash_dir: Vector2     = Vector2.ZERO
 var _charge: float    = 0.0
 var _charging: bool   = false
 var _bomb_scene: PackedScene = preload("res://nodes/Bomb.tscn")
+var explosion_index: int = 0 # used to pick which explosion to use when swapping between different bombs
 
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Aim reticle ──
@@ -103,10 +106,13 @@ func _ready() -> void:
 	#Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	event_bus.on_start_attack.connect(_on_attacked)
 	event_bus.on_projectile_hit.connect(_on_projectile_hit)
+	event_bus.on_bomb_switched.connect(_on_bomb_switched)
 	hurt_timer.timeout.connect(_on_hurt_finished)
 	death_timer.timeout.connect(_on_death_finished)
 	shader_mat = (material as ShaderMaterial)
 	current_hp = starting_hp
+	
+	event_bus.on_initialize_player_hp.emit(starting_hp, starting_hp)
 
 func _input(event: InputEvent) -> void:
 	# Bomb charge / release handling
@@ -246,7 +252,7 @@ func _launch_bomb() -> void:
 	var bomb: Bomb = _bomb_scene.instantiate()
 	bomb.position = global_position + _aim_dir * 20.0
 	get_tree().current_scene.get_node("BombContainer").add_child(bomb)
-	bomb.launch(_aim_dir, speed, max_bounces)
+	bomb.launch(_aim_dir, speed, max_bounces, explosion_index)
 
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Aim & reticle ──
@@ -314,6 +320,8 @@ func _on_attacked(enemy: BaseEnemy, target: Node2D):
 	damage_text.play_animation(enemy.base_damage)
 	
 	current_hp -= enemy.base_damage
+	event_bus.on_player_hp_updated.emit(enemy.base_damage)
+	
 	# compute knockback force
 	var player_from_enemy_dir: Vector2 = (global_position - enemy.global_position).normalized()
 	knockback_force_vector = player_from_enemy_dir * knockback_force
@@ -338,6 +346,7 @@ func _on_projectile_hit(projectile: Projectile, target: Node2D):
 	damage_text.play_animation(projectile.base_damage)
 	
 	current_hp -= projectile.base_damage
+	event_bus.on_player_hp_updated.emit(projectile.base_damage)
 	if current_hp > 0:
 		is_hurt = true
 		shader_mat.shader = blinking_shader
@@ -346,6 +355,10 @@ func _on_projectile_hit(projectile: Projectile, target: Node2D):
 		is_dead = true
 		shader_mat.shader = death_shader
 		death_timer.start()
+
+func _on_bomb_switched(explosion_index: int):
+	assert(explosion_index >= 0 and explosion_index < EXPLOSION_TYPE_COUNT)
+	self.explosion_index = explosion_index
 
 func _on_hurt_finished():
 	is_hurt = false
