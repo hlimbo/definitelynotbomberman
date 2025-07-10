@@ -251,8 +251,8 @@ func _launch_bomb() -> void:
 
 	var bomb: Bomb = _bomb_scene.instantiate()
 	bomb.position = global_position + _aim_dir * 20.0
-	get_tree().current_scene.get_node("BombContainer").add_child(bomb)
 	bomb.launch(_aim_dir, speed, max_bounces, explosion_index)
+	get_tree().current_scene.get_node("BombContainer").add_child(bomb)
 
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Aim & reticle ──

@@ -30,6 +30,15 @@ var _max_bounces : int = 4              # after this → explode
 var _hop_time        :float= 0.40           # time from lift-off to next impact
 var _explosion_index :int = 0 # used to pick which explosion to instantiate
 
+# used to visually determine which kind of bomb is being thrown
+var colors: Array[Color] = [
+	Color.WHITE, # default bomb
+	Color.VIOLET, # poison bomb
+	Color.DARK_SLATE_BLUE, # gravity bomb
+	Color.GREEN, # goo bomb
+	Color.GOLDENROD, # root bomb
+]
+
 @onready var _bomb   : Sprite2D = $"BombSprite"
 @onready var _shadow : Sprite2D = $"ShadowSprite"
 
@@ -39,6 +48,9 @@ func launch(dir: Vector2, ground_speed: float, max_bounces: int, explosion_index
 	_max_bounces = max_bounces
 	_amplitude = _first_amplitude
 	_explosion_index = explosion_index
+
+func _ready():
+	_bomb.modulate = colors[_explosion_index]
 
 func _physics_process(delta: float) -> void:
 	# ── 1. ground motion ─────────────────────────────────────────

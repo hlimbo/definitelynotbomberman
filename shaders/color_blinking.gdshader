@@ -10,13 +10,11 @@ uniform vec3 color_fill: source_color = vec3(1.0, 1.0, 1.0);
 
 
 void fragment() {
-	vec4 color = texture(TEXTURE, UV);
-	
 	// use blink_frequency_instance if bigger than 0, otherwise use blink_frequency to apply to ALL nodes that rely on this shader
 	float frequency = step(0.0, blink_frequency_instance) * blink_frequency_instance + step(blink_frequency_instance, 0.0) * blink_frequency;
 	
 	float switch_value = abs(sin(frequency * PI * TIME));
-	vec3 main_color = (switch_value > 0.5) ? color_fill : color.rgb;
+	vec3 main_color = (switch_value > 0.5) ? color_fill : COLOR.rgb;
 
-	COLOR = vec4(main_color, color.a);
+	COLOR = vec4(main_color, COLOR.a);
 }
