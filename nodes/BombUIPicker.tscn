@@ -1,5 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://4k3yawlmr7qu"]
+[gd_scene load_steps=10 format=3 uid="uid://4k3yawlmr7qu"]
 
+[ext_resource type="Script" uid="uid://dmsn3ljaq8pau" path="res://scripts/bomb_ui_picker_view.gd" id="1_41iq3"]
 [ext_resource type="Texture2D" uid="uid://c6qr7h2ptogfd" path="res://assets/bomb.png" id="1_y0l40"]
 [ext_resource type="Theme" uid="uid://g8ijm1c5d00t" path="res://ui_theme.tres" id="2_u88me"]
 [ext_resource type="Texture2D" uid="uid://dk5slhp45a01f" path="res://assets/sparks.png" id="3_blt6c"]
@@ -14,6 +15,7 @@ blend_mode = 1
 [node name="BombUiPicker" type="Control"]
 layout_mode = 3
 anchors_preset = 0
+script = ExtResource("1_41iq3")
 
 [node name="BombTexture" type="TextureRect" parent="."]
 layout_mode = 0
