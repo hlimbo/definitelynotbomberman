@@ -367,6 +367,8 @@ func _on_hurt_finished():
 	shader_mat.shader = null
 
 func _on_death_finished():
+	event_bus.on_game_end.emit("GameOver")
+	
 	# destroy this gameobject
 	is_dead = false
 	is_alive = false

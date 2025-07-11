@@ -1,16 +1,13 @@
-[gd_scene load_steps=40 format=3 uid="uid://d2t2yd8avamds"]
+[gd_scene load_steps=38 format=3 uid="uid://d2t2yd8avamds"]
 
 [ext_resource type="PackedScene" uid="uid://dyubwq4v4oedp" path="res://nodes/enemies/BaseEnemy.tscn" id="1_2nij2"]
 [ext_resource type="Script" uid="uid://ho55ru8dkukc" path="res://scripts/test_dummy.gd" id="1_uhqqe"]
 [ext_resource type="Shader" uid="uid://b1cldd7wx5mnx" path="res://shaders/wave_death.gdshader" id="2_8pr8v"]
 [ext_resource type="Texture2D" uid="uid://da4h3jou13i3f" path="res://assets/mindless_blob.png" id="2_coq8p"]
-[ext_resource type="Script" uid="uid://bqkwsx51btvu" path="res://scripts/explosion_test_controller.gd" id="2_ia1lp"]
-[ext_resource type="PackedScene" uid="uid://30i420qrdnkw" path="res://nodes/explosions/BaseExplosion.tscn" id="3_sasra"]
+[ext_resource type="Script" uid="uid://ca2851eh2yeph" path="res://scripts/ui_canvas_layer_controller.gd" id="7_6m80x"]
 [ext_resource type="PackedScene" uid="uid://deh3txb4jfjc5" path="res://nodes/Player.tscn" id="7_8pr8v"]
-[ext_resource type="PackedScene" uid="uid://n7630g0ehwof" path="res://nodes/enemies/DashingEnemy.tscn" id="8_buypi"]
 [ext_resource type="PackedScene" uid="uid://dwryu2l051w1y" path="res://nodes/ui/HPBar.tscn" id="8_vr1i5"]
 [ext_resource type="AnimationLibrary" uid="uid://5i1cfqludin2" path="res://animation/ui_canvas_layer/ui_canvas_layer.res" id="9_cqn77"]
-[ext_resource type="PackedScene" uid="uid://b7vl0o5ey7gae" path="res://nodes/enemies/RangedEnemy.tscn" id="9_njel3"]
 [ext_resource type="PackedScene" uid="uid://4k3yawlmr7qu" path="res://nodes/ui/BombUIPicker.tscn" id="9_rpuu0"]
 [ext_resource type="Texture2D" uid="uid://c6qr7h2ptogfd" path="res://assets/bomb.png" id="10_6h1ut"]
 [ext_resource type="Theme" uid="uid://g8ijm1c5d00t" path="res://ui_theme.tres" id="10_hiucn"]
@@ -22,6 +19,7 @@
 [ext_resource type="Texture2D" uid="uid://mmxqphhb16n7" path="res://atlas_textures/rect_button_hover.tres" id="13_2dw41"]
 [ext_resource type="Texture2D" uid="uid://dapnfalgc31fh" path="res://atlas_textures/button_hover.tres" id="13_ykxp3"]
 [ext_resource type="Texture2D" uid="uid://cxbkcu3uype26" path="res://assets/mouse-icons/Mouse right click.png" id="16_g6y4b"]
+[ext_resource type="AnimationLibrary" uid="uid://coh8ge25dmuqo" path="res://animation/ui_canvas_layer/game_hud.res" id="17_g6y4b"]
 [ext_resource type="Texture2D" uid="uid://dqf8c4w5qyelg" path="res://assets/mouse-icons/Mouse scroll.png" id="17_pvxhv"]
 [ext_resource type="Texture2D" uid="uid://bx3tr4di3066b" path="res://atlas_textures/paper.tres" id="19_6h1ut"]
 
@@ -31,182 +29,6 @@ shader_parameter/alpha = 1.0
 shader_parameter/color_tint = Color(1, 0, 0, 1)
 shader_parameter/wave_frequency = 64.0
 shader_parameter/wave_threshold = 0.5
-
-[sub_resource type="Animation" id="Animation_cqn77"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("GameHUD:visible")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("StartGameScreen/TitleBorder:visible")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("StartGameScreen/TitleBorder:anchor_bottom")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [1.5]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("StartGameScreen/TitleBorder:anchor_top")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [1.0]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("StartGameScreen/HowToPlayLabel:anchor_top")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [-0.1]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("StartGameScreen/RightMouse:anchor_top")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [-0.5]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("StartGameScreen/MiddleMouse:anchor_top")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [-0.5]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("StartGameScreen/SwitchBombLabel:anchor_top")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [-1.0]
-}
-tracks/8/type = "value"
-tracks/8/imported = false
-tracks/8/enabled = true
-tracks/8/path = NodePath("StartGameScreen/ThrowBombLabel:anchor_top")
-tracks/8/interp = 1
-tracks/8/loop_wrap = true
-tracks/8/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [-1.0]
-}
-tracks/9/type = "value"
-tracks/9/imported = false
-tracks/9/enabled = true
-tracks/9/path = NodePath("StartGameScreen/WASD_Controls:anchor_top")
-tracks/9/interp = 1
-tracks/9/loop_wrap = true
-tracks/9/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [-0.5]
-}
-tracks/10/type = "value"
-tracks/10/imported = false
-tracks/10/enabled = true
-tracks/10/path = NodePath("StartGameScreen/DashLabel:anchor_top")
-tracks/10/interp = 1
-tracks/10/loop_wrap = true
-tracks/10/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [-1.0]
-}
-tracks/11/type = "value"
-tracks/11/imported = false
-tracks/11/enabled = true
-tracks/11/path = NodePath("StartGameScreen/MoveLabel:anchor_top")
-tracks/11/interp = 1
-tracks/11/loop_wrap = true
-tracks/11/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [-1.0]
-}
-tracks/12/type = "value"
-tracks/12/imported = false
-tracks/12/enabled = true
-tracks/12/path = NodePath("StartGameScreen/SpacebarContainer:anchor_top")
-tracks/12/interp = 1
-tracks/12/loop_wrap = true
-tracks/12/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [-0.5]
-}
-tracks/13/type = "value"
-tracks/13/imported = false
-tracks/13/enabled = true
-tracks/13/path = NodePath("StartGameScreen:visible")
-tracks/13/interp = 1
-tracks/13/loop_wrap = true
-tracks/13/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [false]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_22oil"]
-_data = {
-&"RESET": SubResource("Animation_cqn77")
-}
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_cqn77"]
 blend_mode = 1
@@ -291,23 +113,39 @@ animations = [{
 "speed": 6.0
 }]
 
+[sub_resource type="Animation" id="Animation_g6y4b"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:anchor_bottom")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.25]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_pvxhv"]
+_data = {
+&"RESET": SubResource("Animation_g6y4b")
+}
+
 [node name="TestScene" type="Node2D"]
-
-[node name="BaseEnemy" parent="." instance=ExtResource("1_2nij2")]
-visible = false
-position = Vector2(269, 224)
-
-[node name="BaseEnemy3" parent="." instance=ExtResource("1_2nij2")]
-visible = false
-position = Vector2(177, 259)
-
-[node name="DashingEnemy" parent="." instance=ExtResource("8_buypi")]
-visible = false
-position = Vector2(951, 634)
-
-[node name="RangedEnemy" parent="." instance=ExtResource("9_njel3")]
-visible = false
-position = Vector2(137, 633)
 
 [node name="TestDummy" type="Node2D" parent="."]
 visible = false
@@ -319,16 +157,8 @@ script = ExtResource("1_uhqqe")
 use_parent_material = true
 texture = ExtResource("2_coq8p")
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." node_paths=PackedStringArray("scene_root")]
-script = ExtResource("2_ia1lp")
-scene_root = NodePath("..")
-explosion_node = ExtResource("3_sasra")
-
-[node name="CanvasAnimationPlayer" type="AnimationPlayer" parent="CanvasLayer"]
-libraries = {
-&"": SubResource("AnimationLibrary_22oil"),
-&"ui_canvas_layer": ExtResource("9_cqn77")
-}
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+script = ExtResource("7_6m80x")
 
 [node name="SpawnExplosion" type="Button" parent="CanvasLayer"]
 visible = false
@@ -338,7 +168,6 @@ focus_mode = 0
 text = "Spawn Explosion"
 
 [node name="StartGameScreen" type="Control" parent="CanvasLayer"]
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -346,12 +175,18 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/StartGameScreen"]
+root_node = NodePath("../..")
+libraries = {
+&"ui_canvas_layer": ExtResource("9_cqn77")
+}
+
 [node name="TitleBorder" type="NinePatchRect" parent="CanvasLayer/StartGameScreen"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 1.0
+anchor_top = 0.844
 anchor_right = 1.003
-anchor_bottom = 1.5
+anchor_bottom = 1.0
 offset_left = 1.0
 offset_top = 0.319946
 offset_right = -0.599976
@@ -451,7 +286,6 @@ vertical_alignment = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
-anchor_top = -0.1
 anchor_right = 0.5
 offset_left = -196.5
 offset_top = 13.0
@@ -462,14 +296,13 @@ theme = ExtResource("10_hiucn")
 theme_override_colors/font_shadow_color = Color(0.501961, 0.501961, 0.501961, 1)
 theme_override_constants/shadow_offset_y = 8
 theme_override_constants/outline_size = 18
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 48
 text = "How to play?"
 
 [node name="MoveLabel" type="Label" parent="CanvasLayer/StartGameScreen"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
-anchor_top = -1.0
 anchor_right = 0.5
 offset_left = -183.0
 offset_top = 126.125
@@ -489,7 +322,6 @@ vertical_alignment = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
-anchor_top = -1.0
 anchor_right = 0.5
 offset_left = -183.0
 offset_top = 194.125
@@ -509,7 +341,6 @@ vertical_alignment = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
-anchor_top = -1.0
 anchor_right = 0.5
 offset_left = 230.0
 offset_top = 125.0
@@ -529,7 +360,6 @@ vertical_alignment = 1
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
-anchor_top = -1.0
 anchor_right = 0.5
 offset_left = 234.0
 offset_top = 227.0
@@ -547,13 +377,14 @@ autowrap_mode = 3
 
 [node name="SpacebarContainer" type="Control" parent="CanvasLayer/StartGameScreen"]
 layout_mode = 1
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = -0.5
 anchor_right = 0.5
 offset_left = -458.0
 offset_top = 193.0
 offset_right = -418.0
 offset_bottom = 233.0
+grow_horizontal = 2
 
 [node name="Spacebar" type="TextureButton" parent="CanvasLayer/StartGameScreen/SpacebarContainer"]
 layout_mode = 1
@@ -588,13 +419,14 @@ vertical_alignment = 1
 
 [node name="WASD_Controls" type="Control" parent="CanvasLayer/StartGameScreen"]
 layout_mode = 1
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = -0.5
 anchor_right = 0.5
 offset_left = -415.0
 offset_top = 67.125
 offset_right = -219.0
 offset_bottom = 241.125
+grow_horizontal = 2
 scale = Vector2(0.75, 0.75)
 
 [node name="Button" type="TextureButton" parent="CanvasLayer/StartGameScreen/WASD_Controls"]
@@ -723,8 +555,8 @@ vertical_alignment = 1
 
 [node name="RightMouse" type="Control" parent="CanvasLayer/StartGameScreen"]
 layout_mode = 1
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = -0.5
 anchor_right = 0.5
 offset_left = 74.0
 offset_top = 38.0
@@ -737,12 +569,12 @@ position = Vector2(78, 92)
 scale = Vector2(0.8, 0.8)
 sprite_frames = SubResource("SpriteFrames_mfkbt")
 autoplay = "default"
-frame_progress = 0.684813
+frame_progress = 0.393262
 
 [node name="MiddleMouse" type="Control" parent="CanvasLayer/StartGameScreen"]
 layout_mode = 1
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = -0.5
 anchor_right = 0.5
 offset_left = 74.0
 offset_top = 160.0
@@ -755,7 +587,7 @@ position = Vector2(79, 92)
 scale = Vector2(0.8, 0.8)
 sprite_frames = SubResource("SpriteFrames_8fq6b")
 autoplay = "default"
-frame_progress = 0.927122
+frame_progress = 0.282799
 
 [node name="GameOverScreen" type="Control" parent="CanvasLayer"]
 visible = false
@@ -766,6 +598,51 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Label" type="Label" parent="CanvasLayer/GameOverScreen"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -268.0
+offset_right = 268.0
+offset_bottom = 80.0
+grow_horizontal = 2
+theme = ExtResource("10_hiucn")
+theme_override_constants/outline_size = 24
+theme_override_font_sizes/font_size = 64
+text = "GAME OVER"
+
+[node name="PlayAgainButton" type="TextureButton" parent="CanvasLayer/GameOverScreen"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -172.0
+offset_top = 79.0
+offset_right = 172.0
+offset_bottom = 190.0
+grow_horizontal = 2
+focus_mode = 0
+texture_normal = ExtResource("11_hiucn")
+texture_pressed = ExtResource("12_k6its")
+texture_hover = ExtResource("13_2dw41")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="CanvasLayer/GameOverScreen/PlayAgainButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 5.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("10_hiucn")
+theme_override_font_sizes/font_size = 32
+text = "Play Again"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="GameWonScreen" type="Control" parent="CanvasLayer"]
 visible = false
 layout_mode = 3
@@ -775,15 +652,73 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="Label" type="Label" parent="CanvasLayer/GameWonScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -196.0
+offset_top = -40.0
+offset_right = 196.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("10_hiucn")
+theme_override_constants/outline_size = 24
+theme_override_font_sizes/font_size = 64
+text = "YOU WIN!"
+
+[node name="PlayAgainButton" type="TextureButton" parent="CanvasLayer/GameWonScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -172.0
+offset_top = 56.0
+offset_right = 172.0
+offset_bottom = 167.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 0
+texture_normal = ExtResource("11_hiucn")
+texture_pressed = ExtResource("12_k6its")
+texture_hover = ExtResource("13_2dw41")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="CanvasLayer/GameWonScreen/PlayAgainButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 5.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("10_hiucn")
+theme_override_font_sizes/font_size = 32
+text = "Play Again"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="GameHUD" type="Control" parent="CanvasLayer"]
 visible = false
 layout_mode = 3
 anchor_top = 0.82
 anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_bottom = 1.25
 offset_top = -6.10352e-05
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/GameHUD"]
+libraries = {
+&"": SubResource("AnimationLibrary_pvxhv"),
+&"game_hud": ExtResource("17_g6y4b")
+}
 
 [node name="HpBar" parent="CanvasLayer/GameHUD" instance=ExtResource("8_vr1i5")]
 layout_mode = 1
@@ -818,3 +753,6 @@ grow_vertical = 0
 [node name="Player" parent="." instance=ExtResource("7_8pr8v")]
 position = Vector2(531, 486)
 starting_hp = 150.0
+
+[node name="BaseEnemy" parent="." instance=ExtResource("1_2nij2")]
+position = Vector2(979, 491)
