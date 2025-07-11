@@ -4,6 +4,7 @@ class_name DashingEnemy extends BaseEnemy
 @onready var cooldown_timer: Timer = $cooldown_timer
 @onready var attack_area: Area2D = $AttackArea
 @onready var dash_line: Line2D = $DashLine
+@onready var dash_audio_player: AudioStreamPlayer2D = $dash_audio_player
 
 @export var dash_attack_distance: float = 90.0 # units
 @export var max_dash_velocity: float = 1000.0
@@ -28,6 +29,7 @@ func start_dash_attack():
 		return
 		
 	ai_state = AI_State.ATTACK
+	dash_audio_player.play()
 
 func on_refresh_cooldown():
 	can_dash = true

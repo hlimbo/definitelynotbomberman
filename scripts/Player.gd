@@ -88,6 +88,20 @@ var _aim_dir: Vector2 = Vector2.ZERO
 
 @onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
 
+# ─────────────────────────────────────────────────────────────────────────────
+#   ── Audio ──
+# ─────────────────────────────────────────────────────────────────────────────
+@onready var dash_audio_player: AudioStreamPlayer2D = $dash_audio_player
+@onready var hurt_audio_player: AudioStreamPlayer2D = $hurt_audio_player
+@onready var death_audio_player: AudioStreamPlayer2D = $death_audio_player
+@onready var throw_audio_player: AudioStreamPlayer2D = $throw_audio_player
+
+# tradeoff: can only play 1 sfx at a time for 1 audio stream player
+# to support playing different hurt sfx simultaneously, have different AudioStreamPlayer2D
+@export var ranged_enemy_hurt_sfx: AudioStream
+@export var dashing_enemy_hurt_sfx: AudioStream
+@export var normal_enemy_hurt_sfx: AudioStream
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Input helpers ──
@@ -103,6 +117,8 @@ func _get_move_input() -> Vector2:
 #   ── Life‑cycle ──
 # ─────────────────────────────────────────────────────────────────────────────
 func _ready() -> void:
+	death_timer.wait_time = death_audio_player.stream.get_length() + 1.0
+	
 	#Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	event_bus.on_start_attack.connect(_on_attacked)
 	event_bus.on_projectile_hit.connect(_on_projectile_hit)
@@ -119,11 +135,18 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("throw_bomb"):
 		_start_charging()
 	elif event.is_action_released("throw_bomb") and _charging:
+		# reset audio player to play from beginning if already playing
+		# useful when spamming the throw bomb action
+		if throw_audio_player.playing:
+			throw_audio_player.seek(0.0)
+		else:
+			throw_audio_player.play()
 		_launch_bomb()
 
 	# Dash detection must NOT call missing event methods –
 	# use the Input singleton instead of the event.
 	if Input.is_action_just_pressed("dash") and _can_dash():
+		dash_audio_player.play()
 		_begin_dash()
 
 func _physics_process(delta: float) -> void:
@@ -326,6 +349,14 @@ func _on_attacked(enemy: BaseEnemy, target: Node2D):
 	var player_from_enemy_dir: Vector2 = (global_position - enemy.global_position).normalized()
 	knockback_force_vector = player_from_enemy_dir * knockback_force
 	
+	# determine which hurt sfx to play based on enemy type
+	if enemy is DashingEnemy:
+		hurt_audio_player.set_stream(dashing_enemy_hurt_sfx)
+	else:
+		hurt_audio_player.set_stream(normal_enemy_hurt_sfx)
+	
+	hurt_audio_player.play()
+	
 	if current_hp > 0:
 		is_hurt = true
 		shader_mat.shader = blinking_shader
@@ -333,6 +364,7 @@ func _on_attacked(enemy: BaseEnemy, target: Node2D):
 	else:
 		is_dead = true
 		shader_mat.shader = death_shader
+		death_audio_player.play()
 		death_timer.start()
 
 func _on_projectile_hit(projectile: Projectile, target: Node2D):
@@ -347,6 +379,10 @@ func _on_projectile_hit(projectile: Projectile, target: Node2D):
 	
 	current_hp -= projectile.base_damage
 	event_bus.on_player_hp_updated.emit(projectile.base_damage)
+	
+	hurt_audio_player.set_stream(ranged_enemy_hurt_sfx)
+	hurt_audio_player.play()
+	
 	if current_hp > 0:
 		is_hurt = true
 		shader_mat.shader = blinking_shader
@@ -354,6 +390,7 @@ func _on_projectile_hit(projectile: Projectile, target: Node2D):
 	else:
 		is_dead = true
 		shader_mat.shader = death_shader
+		death_audio_player.play()
 		death_timer.start()
 
 func _on_bomb_switched(explosion_index: int):

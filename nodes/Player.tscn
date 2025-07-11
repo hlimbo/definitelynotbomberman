@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=3 uid="uid://deh3txb4jfjc5"]
+[gd_scene load_steps=47 format=3 uid="uid://deh3txb4jfjc5"]
 
 [ext_resource type="Script" uid="uid://1exh2jhj3f7n" path="res://scripts/Player.gd" id="1_d16bx"]
 [ext_resource type="Shader" uid="uid://caw6qgxxaapj4" path="res://shaders/color_blinking.gdshader" id="2_1ockd"]
@@ -6,10 +6,16 @@
 [ext_resource type="Texture2D" uid="uid://l2n5jbqr3omq" path="res://assets/2d_animation_player-run.webp" id="2_x4r3j"]
 [ext_resource type="Texture2D" uid="uid://dawsa4m4h64vx" path="res://assets/kenney/dot_large.png" id="3_x4r3j"]
 [ext_resource type="Texture2D" uid="uid://by2rr752grisi" path="res://assets/smoke.png" id="4_1b2qv"]
+[ext_resource type="AudioStream" uid="uid://of5gsstvs5r4" path="res://assets/Shapeforms Audio Free Sound Effects/Hit and Punch Preview/HIT_SHORT_04.wav" id="5_e7i14"]
 [ext_resource type="Texture2D" uid="uid://bbikxbgmcxqxh" path="res://assets/bomb_shadow.png" id="5_u71v6"]
+[ext_resource type="AudioStream" uid="uid://c3aw7dnevrjmq" path="res://assets/Shapeforms Audio Free Sound Effects/Hit and Punch Preview/PUNCH_DESIGNED_HEAVY_23.wav" id="6_sw78d"]
 [ext_resource type="Texture2D" uid="uid://cvgw5kt3ow462" path="res://assets/ring.png" id="7_2yb4q"]
+[ext_resource type="AudioStream" uid="uid://7x6r0i7n6wm0" path="res://assets/Shapeforms Audio Free Sound Effects/Hit and Punch Preview/PUNCH_DESIGNED_HEAVY_74.wav" id="7_ok34x"]
 [ext_resource type="Texture2D" uid="uid://dk5slhp45a01f" path="res://assets/sparks.png" id="8_586vk"]
 [ext_resource type="Shader" uid="uid://byua1e4pl8whg" path="res://shaders/swirl.gdshader" id="8_nisan"]
+[ext_resource type="AudioStream" uid="uid://co2r7c14dl4ti" path="res://assets/Shapeforms Audio Free Sound Effects/Hit and Punch Preview/WHOOSH_AIRY_FLUTTER_01.wav" id="11_pgw6w"]
+[ext_resource type="AudioStream" uid="uid://ba8ij1nyuc4mp" path="res://assets/JDSherbert-PixelExplosionsSFXPackFree/JDSherbert - Pixel Explosions SFX Pack - Flashbang (2).ogg" id="12_a66cn"]
+[ext_resource type="AudioStream" uid="uid://0lsa613mow71" path="res://assets/JDSherbert-UltimateUISFXPack/JDSherbert - Ultimate UI SFX Pack - Swipe - 2.ogg" id="16_sw78d"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_b5sd1"]
 
@@ -416,6 +422,9 @@ blinking_shader = ExtResource("2_1ockd")
 death_shader = ExtResource("8_nisan")
 damage_text_node = ExtResource("2_b5sd1")
 starting_hp = 50.0
+ranged_enemy_hurt_sfx = ExtResource("5_e7i14")
+dashing_enemy_hurt_sfx = ExtResource("6_sw78d")
+normal_enemy_hurt_sfx = ExtResource("7_ok34x")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = 5
@@ -510,3 +519,19 @@ one_shot = true
 
 [node name="DeathTimer" type="Timer" parent="."]
 one_shot = true
+
+[node name="dash_audio_player" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("11_pgw6w")
+volume_db = 18.0
+attenuation = 0.420448
+
+[node name="hurt_audio_player" type="AudioStreamPlayer2D" parent="."]
+volume_db = 6.0
+
+[node name="death_audio_player" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("12_a66cn")
+volume_db = 6.0
+
+[node name="throw_audio_player" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("16_sw78d")
+volume_db = 6.0

@@ -12,6 +12,7 @@ class_name BaseExplosion extends Node2D
 @onready var explosion_timer: Timer = $ExplosionTimer
 @onready var collision_shape_2d: CollisionShape2D = $Area2D/CollisionShape2D
 @onready var area_2d: Area2D = $Area2D
+@onready var audio_stream_player_2d: AudioStreamPlayer2D = $AudioStreamPlayer2D
 
 
 @onready var explosion_vfx: Array[GPUParticles2D] = [

@@ -44,6 +44,8 @@ enum AI_State
 @onready var gravity_timer: Timer = $gravity_timer
 @onready var root_timer: Timer = $root_timer
 @onready var slow_timer: Timer = $slow_timer
+@onready var hurt_audio_player: AudioStreamPlayer2D = $hurt_audio_player
+@onready var death_audio_player: AudioStreamPlayer2D = $death_audio_player
 
 @onready var aim_line : Line2D = $"AimLine"
 var _aim_dir : Vector2 = Vector2.RIGHT
@@ -149,6 +151,7 @@ func on_debuff_applied(dmg: float):
 		self.velocity = Vector2(0.0, 0.0)
 		set_shader(death_shader)
 		death_timer.start()
+		death_audio_player.play()
 		self.disable()
 	
 	# final tick
@@ -290,11 +293,13 @@ func handle_enter_explosion_area(explosion: BaseExplosion):
 		set_shader(hurt_shader)
 		hurt_timer.start()
 		self.interrupt()
+		hurt_audio_player.play()
 	else:
 		ai_state = AI_State.DEATH
 		self.velocity = Vector2(0.0, 0.0)
 		set_shader(death_shader)
 		death_timer.start()
+		death_audio_player.play()
 		self.disable()
 	
 func handle_exit_explosion_area(explosion: BaseExplosion):
