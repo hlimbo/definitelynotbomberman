@@ -19,6 +19,7 @@ class BombUIData:
 @onready var up_arrow_button: TextureButton = $ArrowsContainer/UpArrowButton
 @onready var down_arrow_button: TextureButton = $ArrowsContainer/DownArrowButton
 @onready var counter_label: Label = $CounterLabel
+@onready var audio_stream_player: AudioStreamPlayer = $AudioStreamPlayer
 
 @export var view_index = 0
 var bomb_inventory: Array[BombUIData] = [
@@ -49,6 +50,7 @@ func view_next_bomb(is_arrow_up: bool):
 	
 	set_bomb_type(view_index)
 	event_bus.on_bomb_switched.emit(view_index)
+	audio_stream_player.play()
 
 func set_bomb_type(view_index: int):
 	print("bomb type: %s" % bomb_inventory[view_index].name)

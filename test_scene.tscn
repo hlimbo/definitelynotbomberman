@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://d2t2yd8avamds"]
+[gd_scene load_steps=42 format=3 uid="uid://d2t2yd8avamds"]
 
 [ext_resource type="PackedScene" uid="uid://dyubwq4v4oedp" path="res://nodes/enemies/BaseEnemy.tscn" id="1_2nij2"]
 [ext_resource type="Script" uid="uid://ho55ru8dkukc" path="res://scripts/test_dummy.gd" id="1_uhqqe"]
@@ -17,11 +17,15 @@
 [ext_resource type="Texture2D" uid="uid://cbe2sma3jt5sk" path="res://atlas_textures/button_pressed.tres" id="12_2dw41"]
 [ext_resource type="Texture2D" uid="uid://mvfn4lhv8dxl" path="res://atlas_textures/rect_button_pressed.tres" id="12_k6its"]
 [ext_resource type="Texture2D" uid="uid://mmxqphhb16n7" path="res://atlas_textures/rect_button_hover.tres" id="13_2dw41"]
+[ext_resource type="Script" uid="uid://cjhhr5ig8p0ig" path="res://scripts/play_ui_sfx.gd" id="13_22oil"]
 [ext_resource type="Texture2D" uid="uid://dapnfalgc31fh" path="res://atlas_textures/button_hover.tres" id="13_ykxp3"]
+[ext_resource type="AudioStream" uid="uid://ou0us1ja6n0m" path="res://assets/UISoundpack/Retro8.ogg" id="14_p7tmn"]
 [ext_resource type="Texture2D" uid="uid://cxbkcu3uype26" path="res://assets/mouse-icons/Mouse right click.png" id="16_g6y4b"]
 [ext_resource type="AnimationLibrary" uid="uid://coh8ge25dmuqo" path="res://animation/ui_canvas_layer/game_hud.res" id="17_g6y4b"]
 [ext_resource type="Texture2D" uid="uid://dqf8c4w5qyelg" path="res://assets/mouse-icons/Mouse scroll.png" id="17_pvxhv"]
+[ext_resource type="AudioStream" uid="uid://csck5ime6epox" path="res://assets/UISoundpack/Retro3.ogg" id="18_6m80x"]
 [ext_resource type="Texture2D" uid="uid://bx3tr4di3066b" path="res://atlas_textures/paper.tres" id="19_6h1ut"]
+[ext_resource type="AudioStream" uid="uid://djbyuoxde8nv4" path="res://assets/SHMUP BGM Pack 2 ogg&m4a/stg_theme008.ogg" id="26_p7tmn"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_buypi"]
 shader = ExtResource("2_8pr8v")
@@ -266,6 +270,7 @@ texture_normal = ExtResource("11_hiucn")
 texture_pressed = ExtResource("12_k6its")
 texture_hover = ExtResource("13_2dw41")
 stretch_mode = 5
+script = ExtResource("13_22oil")
 
 [node name="Label" type="Label" parent="CanvasLayer/StartGameScreen/TitleBorder/PlayButton"]
 layout_mode = 1
@@ -281,6 +286,9 @@ theme_override_font_sizes/font_size = 32
 text = "Play"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="CanvasLayer/StartGameScreen/TitleBorder/PlayButton"]
+stream = ExtResource("14_p7tmn")
 
 [node name="HowToPlayLabel" type="Label" parent="CanvasLayer/StartGameScreen"]
 layout_mode = 1
@@ -643,6 +651,9 @@ text = "Play Again"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="CanvasLayer/GameOverScreen/PlayAgainButton"]
+stream = ExtResource("18_6m80x")
+
 [node name="GameWonScreen" type="Control" parent="CanvasLayer"]
 visible = false
 layout_mode = 3
@@ -704,6 +715,9 @@ text = "Play Again"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="CanvasLayer/GameWonScreen/PlayAgainButton"]
+stream = ExtResource("18_6m80x")
+
 [node name="GameHUD" type="Control" parent="CanvasLayer"]
 visible = false
 layout_mode = 3
@@ -756,3 +770,8 @@ starting_hp = 150.0
 
 [node name="BaseEnemy" parent="." instance=ExtResource("1_2nij2")]
 position = Vector2(979, 491)
+
+[node name="BG_Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("26_p7tmn")
+autoplay = true
+parameters/looping = true

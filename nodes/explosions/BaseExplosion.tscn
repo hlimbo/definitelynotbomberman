@@ -1,10 +1,11 @@
-[gd_scene load_steps=37 format=3 uid="uid://30i420qrdnkw"]
+[gd_scene load_steps=38 format=3 uid="uid://30i420qrdnkw"]
 
 [ext_resource type="Script" uid="uid://cs02h8ib40hig" path="res://scripts/base_explosion.gd" id="1_bb5nk"]
 [ext_resource type="Texture2D" uid="uid://by2rr752grisi" path="res://assets/smoke.png" id="3_1iyps"]
 [ext_resource type="Texture2D" uid="uid://bvqc21p3eh4i1" path="res://assets/smoke2.png" id="4_tn508"]
 [ext_resource type="Texture2D" uid="uid://dk5slhp45a01f" path="res://assets/sparks.png" id="5_o8px0"]
 [ext_resource type="Material" uid="uid://slrphm1eqsr" path="res://nodes/BaseExplosion_vfx.tres" id="6_1iyps"]
+[ext_resource type="AudioStream" uid="uid://cj0at05u1mcaw" path="res://assets/JDSherbert-PixelExplosionsSFXPackFree/JDSherbert - Pixel Explosions SFX Pack - EMP (2).ogg" id="7_tds8v"]
 [ext_resource type="Texture2D" uid="uid://cvgw5kt3ow462" path="res://assets/ring.png" id="7_tn508"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1iyps"]
@@ -223,3 +224,7 @@ one_shot = true
 fixed_fps = 60
 draw_order = 0
 process_material = SubResource("ParticleProcessMaterial_tn508")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_tds8v")
+autoplay = true

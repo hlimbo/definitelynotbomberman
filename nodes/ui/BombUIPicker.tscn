@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://4k3yawlmr7qu"]
+[gd_scene load_steps=11 format=3 uid="uid://4k3yawlmr7qu"]
 
 [ext_resource type="Script" uid="uid://dmsn3ljaq8pau" path="res://scripts/bomb_ui_picker_view.gd" id="1_41iq3"]
 [ext_resource type="Texture2D" uid="uid://c6qr7h2ptogfd" path="res://assets/bomb.png" id="1_y0l40"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://bal1mky00pmnb" path="res://atlas_textures/button_normal.tres" id="6_41iq3"]
 [ext_resource type="Texture2D" uid="uid://cbe2sma3jt5sk" path="res://atlas_textures/button_pressed.tres" id="7_sbvno"]
 [ext_resource type="Texture2D" uid="uid://dapnfalgc31fh" path="res://atlas_textures/button_hover.tres" id="8_sy60e"]
+[ext_resource type="AudioStream" uid="uid://bgdd03iff0rwf" path="res://assets/UISoundpack/Retro2.ogg" id="9_fuhlh"]
 [ext_resource type="Texture2D" uid="uid://domhjm4vgdktc" path="res://atlas_textures/arrow_icon.tres" id="9_sbvno"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_aogir"]
@@ -114,3 +115,6 @@ theme_override_font_sizes/font_size = 24
 text = "1"
 horizontal_alignment = 2
 vertical_alignment = 1
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_fuhlh")
