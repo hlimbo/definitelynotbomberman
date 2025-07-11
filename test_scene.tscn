@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://d2t2yd8avamds"]
+[gd_scene load_steps=37 format=3 uid="uid://d2t2yd8avamds"]
 
 [ext_resource type="PackedScene" uid="uid://dyubwq4v4oedp" path="res://nodes/enemies/BaseEnemy.tscn" id="1_2nij2"]
 [ext_resource type="Script" uid="uid://ho55ru8dkukc" path="res://scripts/test_dummy.gd" id="1_uhqqe"]
@@ -11,6 +11,18 @@
 [ext_resource type="PackedScene" uid="uid://dwryu2l051w1y" path="res://nodes/ui/HPBar.tscn" id="8_vr1i5"]
 [ext_resource type="PackedScene" uid="uid://b7vl0o5ey7gae" path="res://nodes/enemies/RangedEnemy.tscn" id="9_njel3"]
 [ext_resource type="PackedScene" uid="uid://4k3yawlmr7qu" path="res://nodes/ui/BombUIPicker.tscn" id="9_rpuu0"]
+[ext_resource type="Texture2D" uid="uid://c6qr7h2ptogfd" path="res://assets/bomb.png" id="10_6h1ut"]
+[ext_resource type="Theme" uid="uid://g8ijm1c5d00t" path="res://ui_theme.tres" id="10_hiucn"]
+[ext_resource type="Texture2D" uid="uid://dk5slhp45a01f" path="res://assets/sparks.png" id="11_6m80x"]
+[ext_resource type="Texture2D" uid="uid://du8jbnwmy21gx" path="res://atlas_textures/rect_button.tres" id="11_hiucn"]
+[ext_resource type="Texture2D" uid="uid://bal1mky00pmnb" path="res://atlas_textures/button_normal.tres" id="11_k6its"]
+[ext_resource type="Texture2D" uid="uid://cbe2sma3jt5sk" path="res://atlas_textures/button_pressed.tres" id="12_2dw41"]
+[ext_resource type="Texture2D" uid="uid://mvfn4lhv8dxl" path="res://atlas_textures/rect_button_pressed.tres" id="12_k6its"]
+[ext_resource type="Texture2D" uid="uid://mmxqphhb16n7" path="res://atlas_textures/rect_button_hover.tres" id="13_2dw41"]
+[ext_resource type="Texture2D" uid="uid://dapnfalgc31fh" path="res://atlas_textures/button_hover.tres" id="13_ykxp3"]
+[ext_resource type="Texture2D" uid="uid://cxbkcu3uype26" path="res://assets/mouse-icons/Mouse right click.png" id="16_g6y4b"]
+[ext_resource type="Texture2D" uid="uid://dqf8c4w5qyelg" path="res://assets/mouse-icons/Mouse scroll.png" id="17_pvxhv"]
+[ext_resource type="Texture2D" uid="uid://bx3tr4di3066b" path="res://atlas_textures/paper.tres" id="19_6h1ut"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_buypi"]
 shader = ExtResource("2_8pr8v")
@@ -19,18 +31,109 @@ shader_parameter/color_tint = Color(1, 0, 0, 1)
 shader_parameter/wave_frequency = 64.0
 shader_parameter/wave_threshold = 0.5
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_cqn77"]
+blend_mode = 1
+light_mode = 1
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6h1ut"]
+atlas = ExtResource("16_g6y4b")
+region = Rect2(0, 0, 200, 225)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6m80x"]
+atlas = ExtResource("16_g6y4b")
+region = Rect2(200, 0, 200, 225)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cqn77"]
+atlas = ExtResource("16_g6y4b")
+region = Rect2(400, 0, 200, 225)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_22oil"]
+atlas = ExtResource("16_g6y4b")
+region = Rect2(0, 225, 200, 225)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p7tmn"]
+atlas = ExtResource("16_g6y4b")
+region = Rect2(200, 225, 200, 225)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b11sm"]
+atlas = ExtResource("16_g6y4b")
+region = Rect2(400, 225, 200, 225)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mfkbt"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6h1ut")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6m80x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cqn77")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_22oil")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p7tmn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b11sm")
+}],
+"loop": true,
+"name": &"default",
+"speed": 12.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_077gh"]
+atlas = ExtResource("17_pvxhv")
+region = Rect2(0, 0, 200, 225)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5qgi0"]
+atlas = ExtResource("17_pvxhv")
+region = Rect2(200, 0, 200, 225)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7kp7o"]
+atlas = ExtResource("17_pvxhv")
+region = Rect2(400, 0, 200, 225)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8fq6b"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_077gh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5qgi0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7kp7o")
+}],
+"loop": true,
+"name": &"default",
+"speed": 6.0
+}]
+
 [node name="TestScene" type="Node2D"]
 
 [node name="BaseEnemy" parent="." instance=ExtResource("1_2nij2")]
+visible = false
 position = Vector2(269, 224)
 
 [node name="BaseEnemy3" parent="." instance=ExtResource("1_2nij2")]
+visible = false
 position = Vector2(177, 259)
 
 [node name="DashingEnemy" parent="." instance=ExtResource("8_buypi")]
+visible = false
 position = Vector2(951, 634)
 
+[node name="RangedEnemy" parent="." instance=ExtResource("9_njel3")]
+visible = false
+position = Vector2(137, 633)
+
 [node name="TestDummy" type="Node2D" parent="."]
+visible = false
 material = SubResource("ShaderMaterial_buypi")
 position = Vector2(547, 280)
 script = ExtResource("1_uhqqe")
@@ -45,12 +148,442 @@ scene_root = NodePath("..")
 explosion_node = ExtResource("3_sasra")
 
 [node name="SpawnExplosion" type="Button" parent="CanvasLayer"]
+visible = false
 offset_right = 8.0
 offset_bottom = 8.0
 focus_mode = 0
 text = "Spawn Explosion"
 
-[node name="HpBar" parent="CanvasLayer" instance=ExtResource("8_vr1i5")]
+[node name="StartGameScreen" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleBorder" type="NinePatchRect" parent="CanvasLayer/StartGameScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.844
+anchor_right = 1.003
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = 0.319946
+offset_right = -0.599976
+grow_horizontal = 2
+grow_vertical = 0
+texture = ExtResource("19_6h1ut")
+patch_margin_left = 16
+patch_margin_right = 16
+
+[node name="BombIcon" type="TextureRect" parent="CanvasLayer/StartGameScreen"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -21.0
+offset_top = -229.0
+offset_right = 221.0
+offset_bottom = 13.0
+grow_vertical = 0
+texture = ExtResource("10_6h1ut")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="FuseIcon" type="TextureRect" parent="CanvasLayer/StartGameScreen"]
+modulate = Color(1, 0.313726, 0.172549, 1)
+material = SubResource("CanvasItemMaterial_cqn77")
+layout_mode = 0
+offset_left = 103.0
+offset_top = 483.0
+offset_right = 196.0
+offset_bottom = 576.0
+texture = ExtResource("11_6m80x")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="CanvasLayer/StartGameScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.465
+anchor_top = 1.0
+anchor_right = 0.465
+anchor_bottom = 1.0
+offset_left = -384.0
+offset_top = -102.0
+offset_right = 383.0
+offset_bottom = -13.0
+grow_horizontal = 2
+theme = ExtResource("10_hiucn")
+theme_override_colors/font_shadow_color = Color(0.645501, 0.430219, 0, 1)
+theme_override_constants/shadow_offset_y = 6
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 32
+text = "Definitely Not Bomberman...."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="PlayButton" type="TextureButton" parent="CanvasLayer/StartGameScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 0.23
+anchor_right = 1.0
+anchor_bottom = 0.23
+offset_left = -277.0
+offset_top = 462.4
+offset_right = -15.0
+offset_bottom = 533.4
+focus_mode = 0
+texture_normal = ExtResource("11_hiucn")
+texture_pressed = ExtResource("12_k6its")
+texture_hover = ExtResource("13_2dw41")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="CanvasLayer/StartGameScreen/PlayButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 5.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("10_hiucn")
+theme_override_font_sizes/font_size = 32
+text = "Play"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="InstructionsRect" type="NinePatchRect" parent="CanvasLayer/StartGameScreen"]
+visible = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -599.0
+offset_right = 596.0
+offset_bottom = 359.0
+grow_horizontal = 2
+texture = ExtResource("19_6h1ut")
+patch_margin_left = 16
+patch_margin_right = 16
+
+[node name="HowToPlayLabel" type="Label" parent="CanvasLayer/StartGameScreen"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -196.5
+offset_top = 13.0
+offset_right = 191.5
+offset_bottom = 58.0
+grow_horizontal = 2
+theme = ExtResource("10_hiucn")
+theme_override_colors/font_shadow_color = Color(0.501961, 0.501961, 0.501961, 1)
+theme_override_constants/shadow_offset_y = 8
+theme_override_constants/outline_size = 18
+theme_override_font_sizes/font_size = 36
+text = "How to play?"
+
+[node name="MoveLabel" type="Label" parent="CanvasLayer/StartGameScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -183.0
+offset_top = -233.875
+offset_right = -69.0
+offset_bottom = -188.875
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("10_hiucn")
+theme_override_colors/font_shadow_color = Color(0.501961, 0.501961, 0.501961, 1)
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 30
+text = "Move"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DashLabel" type="Label" parent="CanvasLayer/StartGameScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -183.0
+offset_top = -165.875
+offset_right = -67.0
+offset_bottom = -120.875
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("10_hiucn")
+theme_override_colors/font_shadow_color = Color(0.501961, 0.501961, 0.501961, 1)
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 30
+text = "Dash"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ThrowBombLabel" type="Label" parent="CanvasLayer/StartGameScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 230.0
+offset_top = -235.0
+offset_right = 493.0
+offset_bottom = -190.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("10_hiucn")
+theme_override_colors/font_shadow_color = Color(0.501961, 0.501961, 0.501961, 1)
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 30
+text = "Throw Bomb"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SwitchBombLabel" type="Label" parent="CanvasLayer/StartGameScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 234.0
+offset_top = -169.0
+offset_right = 529.0
+offset_bottom = -96.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("10_hiucn")
+theme_override_colors/font_shadow_color = Color(0.501961, 0.501961, 0.501961, 1)
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 30
+text = "switch bomb type"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Spacebar" type="TextureButton" parent="CanvasLayer/StartGameScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.618
+anchor_bottom = 0.618
+offset_left = 135.0
+offset_top = -247.835
+offset_right = 456.0
+offset_bottom = -176.835
+scale = Vector2(0.75, 0.75)
+focus_mode = 0
+texture_normal = ExtResource("11_hiucn")
+texture_pressed = ExtResource("12_k6its")
+texture_hover = ExtResource("13_2dw41")
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="CanvasLayer/StartGameScreen/Spacebar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 5.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("10_hiucn")
+theme_override_font_sizes/font_size = 32
+text = "spacebar"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WASD_Controls" type="Control" parent="CanvasLayer/StartGameScreen"]
+layout_mode = 1
+anchor_top = 0.312
+anchor_bottom = 0.312
+offset_left = 185.0
+offset_top = -157.515
+offset_right = 381.0
+offset_bottom = 16.485
+scale = Vector2(0.75, 0.75)
+
+[node name="Button" type="TextureButton" parent="CanvasLayer/StartGameScreen/WASD_Controls"]
+layout_mode = 0
+offset_left = 66.0
+offset_top = 24.0
+offset_right = 124.0
+offset_bottom = 87.0
+focus_mode = 0
+texture_normal = ExtResource("11_k6its")
+texture_pressed = ExtResource("12_2dw41")
+texture_hover = ExtResource("13_ykxp3")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="CanvasLayer/StartGameScreen/WASD_Controls/Button"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -14.0
+offset_top = -25.5
+offset_right = 18.0
+offset_bottom = 14.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("10_hiucn")
+theme_override_font_sizes/font_size = 32
+text = "W"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button2" type="TextureButton" parent="CanvasLayer/StartGameScreen/WASD_Controls"]
+layout_mode = 0
+offset_left = 66.0
+offset_top = 84.0
+offset_right = 124.0
+offset_bottom = 147.0
+focus_mode = 0
+texture_normal = ExtResource("11_k6its")
+texture_pressed = ExtResource("12_2dw41")
+texture_hover = ExtResource("13_ykxp3")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="CanvasLayer/StartGameScreen/WASD_Controls/Button2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -14.0
+offset_top = -25.5
+offset_right = 18.0
+offset_bottom = 14.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("10_hiucn")
+theme_override_font_sizes/font_size = 32
+text = "S"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button4" type="TextureButton" parent="CanvasLayer/StartGameScreen/WASD_Controls"]
+layout_mode = 0
+offset_left = 126.0
+offset_top = 84.0
+offset_right = 184.0
+offset_bottom = 147.0
+focus_mode = 0
+texture_normal = ExtResource("11_k6its")
+texture_pressed = ExtResource("12_2dw41")
+texture_hover = ExtResource("13_ykxp3")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="CanvasLayer/StartGameScreen/WASD_Controls/Button4"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -14.0
+offset_top = -25.5
+offset_right = 18.0
+offset_bottom = 14.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("10_hiucn")
+theme_override_font_sizes/font_size = 32
+text = "D"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button3" type="TextureButton" parent="CanvasLayer/StartGameScreen/WASD_Controls"]
+layout_mode = 0
+offset_left = 6.0
+offset_top = 84.0
+offset_right = 64.0
+offset_bottom = 147.0
+focus_mode = 0
+texture_normal = ExtResource("11_k6its")
+texture_pressed = ExtResource("12_2dw41")
+texture_hover = ExtResource("13_ykxp3")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="CanvasLayer/StartGameScreen/WASD_Controls/Button3"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -14.0
+offset_top = -25.5
+offset_right = 18.0
+offset_bottom = 14.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("10_hiucn")
+theme_override_font_sizes/font_size = 32
+text = "A"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RightMouseClick" type="AnimatedSprite2D" parent="CanvasLayer/StartGameScreen"]
+position = Vector2(744, 117.125)
+scale = Vector2(0.8, 0.8)
+sprite_frames = SubResource("SpriteFrames_mfkbt")
+autoplay = "default"
+frame_progress = 0.0508399
+
+[node name="MiddleMouseScroll" type="AnimatedSprite2D" parent="CanvasLayer/StartGameScreen"]
+position = Vector2(744, 230)
+scale = Vector2(0.8, 0.8)
+sprite_frames = SubResource("SpriteFrames_8fq6b")
+autoplay = "default"
+frame_progress = 0.770216
+
+[node name="GameOverScreen" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GameWonScreen" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GameHUD" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HpBar" parent="CanvasLayer/GameHUD" instance=ExtResource("8_vr1i5")]
+layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -63,7 +596,8 @@ offset_bottom = -73.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="BombUiPicker" parent="CanvasLayer" instance=ExtResource("9_rpuu0")]
+[node name="BombUiPicker" parent="CanvasLayer/GameHUD" instance=ExtResource("9_rpuu0")]
+layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
@@ -81,6 +615,3 @@ grow_vertical = 0
 [node name="Player" parent="." instance=ExtResource("7_8pr8v")]
 position = Vector2(531, 486)
 starting_hp = 150.0
-
-[node name="RangedEnemy" parent="." instance=ExtResource("9_njel3")]
-position = Vector2(137, 633)
