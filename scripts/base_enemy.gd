@@ -25,7 +25,7 @@ enum AI_State
 @export var hp: float
 @export var follow_speed: float = 100.0 # pixels per second
 @export var follow_distance: float = 32.0
-@export var ai_state: AI_State
+@export var ai_state: AI_State = AI_State.INACTIVE
 @export var target: Node2D
 @export var damage_text_node: PackedScene
 @export var hurt_shader: Shader
@@ -95,9 +95,9 @@ func _ready():
 	slow_timer.timeout.connect(on_slow_completed)
 	
 	hp = starting_hp
-	ai_state = AI_State.IDLE
+	# ai_state = AI_State.IDLE
 
-# gets called when about to leave the SceneTree
+# gets called when about to leave the SceneTreeddddd
 func _exit_tree():
 	ai_state = AI_State.INACTIVE
 	visible = false

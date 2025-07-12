@@ -6,6 +6,8 @@ extends Node
 @export var bg_music_player: AudioStreamPlayer
 @export var menu_music_player: AudioStreamPlayer
 
+@export var mob_group_controller: MobGroupController
+
 
 #region Animation Names
 const HIDE_START_GAME_SCREEN: StringName = &"ui_canvas_layer/hide_start_game_screen"
@@ -46,7 +48,7 @@ func transition_track():
 	var other_linear: float = db_to_linear(bg_music_player.volume_db)
 	
 	while t < fade_time:
-		menu_music_player.volume_db = linear_to_db(linear_energy - t / fade_time)
+		menu_music_player.volume_db = linear_to_db((1.0  - t / fade_time) * linear_energy)
 		bg_music_player.volume_db = linear_to_db((t / fade_time) * other_linear)
 		t += audio_crossfade_timer.wait_time
 		await audio_crossfade_timer.timeout
@@ -58,9 +60,11 @@ func transition_track():
 func on_play_pressed():
 	toggle_start_game_screen()
 	toggle_player_hud(false)
+	
+	mob_group_controller.set_mobs_active()
+	
 	await transition_track()
-	#menu_music_player.stop()
-	#bg_music_player.play()
+	
 
 func reset_scene():
 	get_tree().reload_current_scene()
