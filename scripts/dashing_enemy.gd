@@ -43,6 +43,7 @@ func complete_dash():
 #region overridable functions
 func disable():
 	super()
+	can_dash = false
 	dash_line.visible = false
 	dash_attack_timer.stop()
 	cooldown_timer.stop()
@@ -72,7 +73,7 @@ func handle_states():
 
 func start_attack():
 	# if dash attack on cooldown, don't dash
-	if not can_dash or [AI_State.HURT, AI_State.DEATH].has(ai_state):
+	if not can_dash and [AI_State.HURT, AI_State.DEATH].has(ai_state):
 		return
 	
 	ai_state = AI_State.PREP_ATTACK

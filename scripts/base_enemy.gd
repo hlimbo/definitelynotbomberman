@@ -12,19 +12,20 @@ const ROOT: String = "ROOT"
 
 enum AI_State
 {
+	INACTIVE,
 	IDLE,
 	FOLLOW,
 	HURT,
-	DEATH,
 	ATTACK,
 	PREP_ATTACK,
+	DEATH,
 }
 
 @export var starting_hp: float = 1000.0
 @export var hp: float
 @export var follow_speed: float = 100.0 # pixels per second
 @export var follow_distance: float = 32.0
-@export var ai_state: AI_State = AI_State.IDLE
+@export var ai_state: AI_State
 @export var target: Node2D
 @export var damage_text_node: PackedScene
 @export var hurt_shader: Shader
@@ -94,6 +95,12 @@ func _ready():
 	slow_timer.timeout.connect(on_slow_completed)
 	
 	hp = starting_hp
+	ai_state = AI_State.IDLE
+
+# gets called when about to leave the SceneTree
+func _exit_tree():
+	ai_state = AI_State.INACTIVE
+	visible = false
 	
 func on_body_entered(body: Node2D):
 	if body.name == "Player" and ai_state == AI_State.IDLE:
@@ -105,6 +112,7 @@ func on_iframes_completed():
 	clear_shader()
 	
 func on_death_completed():
+	ai_state = AI_State.INACTIVE
 	queue_free()
 
 func find_and_remove_status_effect(status_effect: String):
@@ -236,6 +244,8 @@ func update_ai_state_label():
 			ai_state_label.text = "ATTACK"
 		AI_State.PREP_ATTACK:
 			ai_state_label.text = "PREP_ATTACK"
+		AI_State.INACTIVE:
+			ai_state_label.text = "INACTIVE"
 
 func handle_enter_explosion_area(explosion: BaseExplosion):
 	if explosion is PoisonExplosion:
@@ -307,6 +317,7 @@ func handle_exit_explosion_area(explosion: BaseExplosion):
 
 #region overridable functions
 func disable():
+	target = null # stop having enemy follow player
 	hit_area.queue_free()
 	detection_area.queue_free()
 	debuff_timer.stop()

@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://bfwwfna2vsv30"]
+[gd_scene load_steps=38 format=3 uid="uid://bfwwfna2vsv30"]
 
 [ext_resource type="Script" uid="uid://coyimaf1aeov5" path="res://scripts/poison_explosion.gd" id="1_2eg5r"]
 [ext_resource type="Texture2D" uid="uid://by2rr752grisi" path="res://assets/smoke.png" id="3_xnab7"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://dk5slhp45a01f" path="res://assets/sparks.png" id="5_fwrvh"]
 [ext_resource type="Material" uid="uid://slrphm1eqsr" path="res://nodes/BaseExplosion_vfx.tres" id="5_rxflh"]
 [ext_resource type="Texture2D" uid="uid://cvgw5kt3ow462" path="res://assets/ring.png" id="6_xnab7"]
+[ext_resource type="AudioStream" uid="uid://bd3xspxauq4wc" path="res://assets/JDSherbert-PixelExplosionsSFXPackFree/JDSherbert - Pixel Explosions SFX Pack - EMP (1).ogg" id="7_msvxa"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_05no2"]
 blend_mode = 1
@@ -225,3 +226,10 @@ collision_mask = 3
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("CircleShape2D_1iyps")
 disabled = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_msvxa")
+volume_db = 8.0
+autoplay = true
+attenuation = 0.42
+bus = &"SFX"

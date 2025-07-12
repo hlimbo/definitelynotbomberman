@@ -38,9 +38,16 @@ func transition_track():
 	var fade_time = 2.0  # seconds
 	var t = 0.0
 	audio_crossfade_timer.start()
+	
+	# obtains the linear energy of the audio and is used to crossfade b/w 2 tracks
+	# this ensures that the audio levels set in the editor are maintained and
+	# don't get reset back to their default values
+	var linear_energy: float = db_to_linear(menu_music_player.volume_db)
+	var other_linear: float = db_to_linear(bg_music_player.volume_db)
+	
 	while t < fade_time:
-		menu_music_player.volume_db = linear_to_db(1 - t / fade_time)
-		bg_music_player.volume_db = linear_to_db(t / fade_time)
+		menu_music_player.volume_db = linear_to_db(linear_energy - t / fade_time)
+		bg_music_player.volume_db = linear_to_db((t / fade_time) * other_linear)
 		t += audio_crossfade_timer.wait_time
 		await audio_crossfade_timer.timeout
 		
