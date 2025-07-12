@@ -68,12 +68,14 @@ var accumulated_pull_force: Vector2 = Vector2.ZERO
 var slow_factor: float = 0.0
 
 func set_shader(shader: Shader):
-	var shader_mat = ShaderMaterial.new()
+	var shader_mat: ShaderMaterial = sprite_2d.material as ShaderMaterial
+	assert(shader_mat != null)
 	shader_mat.shader = shader
-	self.material = shader_mat
 	
 func clear_shader():
-	self.material = null
+	var shader_mat: ShaderMaterial = sprite_2d.material as ShaderMaterial
+	assert(shader_mat != null)
+	shader_mat.shader = null
 
 func remove_all_signal_connections(signal_ref: Signal):
 	var connections: Array = signal_ref.get_connections()
@@ -94,12 +96,17 @@ func _ready():
 	root_timer.timeout.connect(on_root_completed)
 	slow_timer.timeout.connect(on_slow_completed)
 	
+	# create a separate shader material instance from other enemies that get spawned in
+	var shader_mat: ShaderMaterial = ShaderMaterial.new()
+	sprite_2d.material = shader_mat
+	
 	hp = starting_hp
 	# ai_state = AI_State.IDLE
 
-# gets called when about to leave the SceneTreeddddd
+# gets called when about to leave the SceneTree
 func _exit_tree():
 	ai_state = AI_State.INACTIVE
+	sprite_2d.visible = false
 	visible = false
 	
 func on_body_entered(body: Node2D):
@@ -112,7 +119,6 @@ func on_iframes_completed():
 	clear_shader()
 	
 func on_death_completed():
-	ai_state = AI_State.INACTIVE
 	queue_free()
 
 func find_and_remove_status_effect(status_effect: String):
@@ -154,12 +160,13 @@ func on_debuff_applied(dmg: float):
 	
 	hp -= dmg
 	
-	if hp <= 0.0:
+	if hp <= 0.0 and ![AI_State.INACTIVE, AI_State.DEATH].has(ai_state):
 		ai_state = AI_State.DEATH
 		self.velocity = Vector2(0.0, 0.0)
 		set_shader(death_shader)
 		death_timer.start()
-		death_audio_player.play()
+		if !death_audio_player.playing:
+			death_audio_player.play()
 		self.disable()
 	
 	# final tick
@@ -224,11 +231,9 @@ func _physics_process(delta_time: float):
 func _process(delta: float):
 	update_ai_state_label()
 	if ai_state == AI_State.DEATH:
-		var shader_mat: ShaderMaterial = (material as ShaderMaterial)
-		if is_instance_valid(shader_mat):
-			var t: float = 1.0 - curr_death_time / death_timer.wait_time
-			shader_mat.set_shader_parameter("alpha", t)
-			curr_death_time += delta
+		var t: float = clampf(1.0 - curr_death_time / death_timer.wait_time, 0.0, 1.0)
+		sprite_2d.set_instance_shader_parameter("alpha", t)
+		curr_death_time += delta
 			
 func update_ai_state_label():
 	match ai_state:
@@ -297,20 +302,20 @@ func handle_enter_explosion_area(explosion: BaseExplosion):
 	hp -= flat_dmg
 	
 	# default hurt and death logic
-	if hp > 0:
+	if hp > 0 and ![AI_State.HURT, AI_State.INACTIVE, AI_State.DEATH].has(ai_state):
 		ai_state = AI_State.HURT
 		self.velocity = Vector2(0.0, 0.0)
 		set_shader(hurt_shader)
 		hurt_timer.start()
 		self.interrupt()
 		hurt_audio_player.play()
-	else:
+	elif ![AI_State.INACTIVE, AI_State.DEATH, AI_State.HURT].has(ai_state):
 		ai_state = AI_State.DEATH
 		self.velocity = Vector2(0.0, 0.0)
 		set_shader(death_shader)
-		death_timer.start()
 		death_audio_player.play()
 		self.disable()
+		death_timer.start()
 	
 func handle_exit_explosion_area(explosion: BaseExplosion):
 	pass
@@ -318,10 +323,20 @@ func handle_exit_explosion_area(explosion: BaseExplosion):
 #region overridable functions
 func disable():
 	target = null # stop having enemy follow player
-	hit_area.queue_free()
-	detection_area.queue_free()
 	debuff_timer.stop()
 	debuff_frequency_timer.stop()
+	slow_timer.stop()
+	root_timer.stop()
+	gravity_timer.stop()
+	
+	# turn off collision layer scanning
+	hit_area.collision_layer = 0
+	detection_area.collision_layer = 0
+	
+	# turn off collison mask scanning
+	hit_area.collision_mask = 0
+	detection_area.collision_mask = 0
+	
 
 # used to stop timers that aren't in the BaseEnemy class such as DashingEnemy timers
 func interrupt():
@@ -336,7 +351,10 @@ func handle_states():
 			follow()
 	elif ai_state == AI_State.IDLE:
 		self.velocity = Vector2.ZERO
-		accumulated_pull_force = Vector2.ZERO
+		self.accumulated_pull_force = Vector2.ZERO
+	elif ai_state == AI_State.INACTIVE:
+		self.velocity = Vector2.ZERO
+		self.accumulated_pull_force = Vector2.ZERO
 
 func on_enter_impact_area(explosion: BaseExplosion, actor: Node):
 	# if same actor that received impact, handle the signal, otherwise don't handle it
@@ -346,8 +364,8 @@ func on_enter_impact_area(explosion: BaseExplosion, actor: Node):
 	if explosion.is_disabled:
 		return
 	
-	# enemies have i-frames
-	if [AI_State.HURT, AI_State.DEATH].has(ai_state):
+	# enemies have i-frames or is dead
+	if [AI_State.HURT, AI_State.DEATH, AI_State.INACTIVE].has(ai_state):
 		return
 	
 	# handle specific explosion type

@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://d2t2yd8avamds"]
+[gd_scene load_steps=47 format=3 uid="uid://d2t2yd8avamds"]
 
 [ext_resource type="Script" uid="uid://ho55ru8dkukc" path="res://scripts/test_dummy.gd" id="1_uhqqe"]
 [ext_resource type="Shader" uid="uid://b1cldd7wx5mnx" path="res://shaders/wave_death.gdshader" id="2_8pr8v"]
@@ -29,10 +29,11 @@
 [ext_resource type="PackedScene" uid="uid://n7630g0ehwof" path="res://nodes/enemies/DashingEnemy.tscn" id="27_mfkbt"]
 [ext_resource type="Script" uid="uid://s13cpb22dax1" path="res://scripts/mob_group_controller.gd" id="28_077gh"]
 [ext_resource type="Script" uid="uid://c1xvnako1kh2c" path="res://scripts/manual_bg_music_looper.gd" id="28_mfkbt"]
+[ext_resource type="PackedScene" uid="uid://dyubwq4v4oedp" path="res://nodes/enemies/BaseEnemy.tscn" id="30_7kp7o"]
+[ext_resource type="PackedScene" uid="uid://b7vl0o5ey7gae" path="res://nodes/enemies/RangedEnemy.tscn" id="31_8fq6b"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_buypi"]
 shader = ExtResource("2_8pr8v")
-shader_parameter/alpha = 1.0
 shader_parameter/color_tint = Color(1, 0, 0, 1)
 shader_parameter/wave_frequency = 64.0
 shader_parameter/wave_threshold = 0.5
@@ -804,17 +805,11 @@ position = Vector2(69, 85)
 [node name="DashingEnemy2" parent="TempController" instance=ExtResource("27_mfkbt")]
 position = Vector2(910, 174)
 
-[node name="DashingEnemy3" parent="TempController" instance=ExtResource("27_mfkbt")]
-position = Vector2(582, 147)
-
 [node name="DashingEnemy4" parent="TempController" instance=ExtResource("27_mfkbt")]
 position = Vector2(1011, 524)
 
-[node name="DashingEnemy5" parent="TempController" instance=ExtResource("27_mfkbt")]
-position = Vector2(77, 551)
+[node name="BaseEnemy" parent="TempController" instance=ExtResource("30_7kp7o")]
+position = Vector2(169, 482)
 
-[node name="DashingEnemy6" parent="TempController" instance=ExtResource("27_mfkbt")]
-position = Vector2(493, 597)
-
-[node name="DashingEnemy7" parent="TempController" instance=ExtResource("27_mfkbt")]
-position = Vector2(734, 588)
+[node name="RangedEnemy" parent="TempController" instance=ExtResource("31_8fq6b")]
+position = Vector2(501, 95)

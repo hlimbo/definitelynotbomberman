@@ -21,6 +21,9 @@ func _ready():
 	attack_area.body_entered.connect(on_dash_attack_connected)
 	
 func on_dash_attack_connected(other: Node2D):
+	if other.name != "Player":
+		return
+	
 	event_bus.on_start_attack.emit(self, other)
 	complete_dash()
 	
@@ -47,7 +50,6 @@ func disable():
 	dash_line.visible = false
 	dash_attack_timer.stop()
 	cooldown_timer.stop()
-	attack_area.queue_free()
 
 func interrupt():
 	can_dash = true

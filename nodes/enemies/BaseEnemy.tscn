@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://dyubwq4v4oedp"]
+[gd_scene load_steps=13 format=3 uid="uid://dyubwq4v4oedp"]
 
 [ext_resource type="Script" uid="uid://bydjmwa1oxxwt" path="res://scripts/base_enemy.gd" id="1_tsmau"]
 [ext_resource type="Shader" uid="uid://b1cldd7wx5mnx" path="res://shaders/wave_death.gdshader" id="1_u2ds8"]
@@ -17,6 +17,8 @@ radius = 42.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1msfx"]
 radius = 180.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_viiky"]
 
 [node name="BaseEnemy" type="CharacterBody2D"]
 collision_layer = 4
@@ -59,7 +61,7 @@ shape = SubResource("CircleShape2D_1msfx")
 debug_color = Color(0.949586, 2.88785e-06, 0.572767, 0.42)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-use_parent_material = true
+material = SubResource("ShaderMaterial_viiky")
 texture = ExtResource("2_p6qla")
 
 [node name="AimLine" type="Line2D" parent="."]

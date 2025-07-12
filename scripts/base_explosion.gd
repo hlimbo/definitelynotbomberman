@@ -29,7 +29,6 @@ func _ready():
 	area_2d.area_exited.connect(on_area_exited)
 	
 func on_explosion_finished():
-	print("on explosion finished")
 	disable()
 	queue_free()
 	event_bus.on_end_explosion.emit(self)
@@ -65,6 +64,5 @@ func on_area_entered(area: Area2D):
 func on_area_exited(area: Area2D):
 	if is_disabled:
 		return
-	
-	print("explosion exited")
+		
 	event_bus.on_exit_impact_area.emit(self, area.owner)

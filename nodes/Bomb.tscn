@@ -15,7 +15,7 @@ shader_parameter/color_fill = Color(0.752941, 0.752941, 0.752941, 1)
 radius = 35.0143
 
 [node name="Bomb" type="CharacterBody2D"]
-collision_layer = 2
+collision_layer = 8
 script = ExtResource("1_4f8ai")
 explosion_node = ExtResource("3_qf65r")
 

@@ -9,7 +9,7 @@ func _ready():
 	
 
 func on_start_explosion(explosion: BaseExplosion):
-	print("an explosion started: %s" % explosion.name)
+	pass
 	
 func on_end_explosion(explosion: BaseExplosion):
-	print("an explosion ended: %s" % explosion.name)
+	pass

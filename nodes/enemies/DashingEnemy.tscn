@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://n7630g0ehwof"]
+[gd_scene load_steps=15 format=3 uid="uid://n7630g0ehwof"]
 
 [ext_resource type="Script" uid="uid://b0dw3tatxpru6" path="res://scripts/dashing_enemy.gd" id="1_xc3d4"]
 [ext_resource type="PackedScene" uid="uid://dlryu3u30yhb3" path="res://nodes/ui/DamageText.tscn" id="2_ijalk"]
@@ -21,6 +21,8 @@ radius = 360.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_xc3d4"]
 radius = 42.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kh31v"]
 
 [node name="DashingEnemy" type="CharacterBody2D"]
 collision_layer = 4
@@ -73,7 +75,7 @@ shape = SubResource("CircleShape2D_xc3d4")
 debug_color = Color(0.268192, 0.633042, 3.85046e-07, 0.42)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-use_parent_material = true
+material = SubResource("ShaderMaterial_kh31v")
 texture = ExtResource("6_ijalk")
 
 [node name="AimLine" type="Line2D" parent="."]
@@ -87,6 +89,7 @@ default_color = Color(0.984577, 0, 0.328501, 1)
 one_shot = true
 
 [node name="death_timer" type="Timer" parent="."]
+process_callback = 0
 wait_time = 1.25
 one_shot = true
 
