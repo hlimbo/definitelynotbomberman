@@ -1,5 +1,6 @@
-[gd_scene load_steps=7 format=4 uid="uid://dp2iuab5tvmej"]
+[gd_scene load_steps=8 format=4 uid="uid://dp2iuab5tvmej"]
 
+[ext_resource type="Script" uid="uid://d1m0kd3pjyo8p" path="res://scripts/maze_generation.gd" id="1_fos0i"]
 [ext_resource type="Texture2D" uid="uid://c7kqrfslmxvdn" path="res://assets/tileset x1.png" id="2_uu6xs"]
 [ext_resource type="PackedScene" uid="uid://deh3txb4jfjc5" path="res://nodes/Player.tscn" id="4_cm0pq"]
 [ext_resource type="PackedScene" uid="uid://dwryu2l051w1y" path="res://nodes/ui/HPBar.tscn" id="5_trn2v"]
@@ -118,8 +119,10 @@ physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_r0du0")
 
 [node name="Main" type="Node2D"]
+script = ExtResource("1_fos0i")
 
-[node name="Player" parent="." instance=ExtResource("4_cm0pq")]
+[node name="Player" parent="." node_paths=PackedStringArray("hp_bar") instance=ExtResource("4_cm0pq")]
+hp_bar = NodePath("../CanvasLayer/HpBar")
 
 [node name="BombContainer" type="Node2D" parent="."]
 

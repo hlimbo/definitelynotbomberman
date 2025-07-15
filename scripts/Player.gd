@@ -118,7 +118,7 @@ func _get_move_input() -> Vector2:
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Life‑cycle ──
 # ─────────────────────────────────────────────────────────────────────────────
-func _ready() -> void:	
+func _ready() -> void:
 	death_timer.wait_time = death_audio_player.stream.get_length() + 1.0
 	
 	#Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
