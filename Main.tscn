@@ -2,7 +2,7 @@
 
 [ext_resource type="Texture2D" uid="uid://c7kqrfslmxvdn" path="res://assets/tileset x1.png" id="2_uu6xs"]
 [ext_resource type="PackedScene" uid="uid://deh3txb4jfjc5" path="res://nodes/Player.tscn" id="4_cm0pq"]
-[ext_resource type="PackedScene" uid="uid://dwryu2l051w1y" path="res://nodes/ui/HPBar.tscn" id="5_trn2v"]
+[ext_resource type="PackedScene" uid="uid://dwryu2l051w1y" path="res://assets/JDSherbert-PixelExplosionsSFXPackFree/HPBar.tscn" id="5_trn2v"]
 [ext_resource type="PackedScene" uid="uid://4k3yawlmr7qu" path="res://nodes/ui/BombUIPicker.tscn" id="6_03owx"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_r0du0"]

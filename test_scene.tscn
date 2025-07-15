@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://da4h3jou13i3f" path="res://assets/mindless_blob.png" id="2_coq8p"]
 [ext_resource type="Script" uid="uid://ca2851eh2yeph" path="res://scripts/ui_canvas_layer_controller.gd" id="7_6m80x"]
 [ext_resource type="PackedScene" uid="uid://deh3txb4jfjc5" path="res://nodes/Player.tscn" id="7_8pr8v"]
-[ext_resource type="PackedScene" uid="uid://dwryu2l051w1y" path="res://nodes/ui/HPBar.tscn" id="8_vr1i5"]
+[ext_resource type="PackedScene" uid="uid://dwryu2l051w1y" path="res://assets/JDSherbert-PixelExplosionsSFXPackFree/HPBar.tscn" id="8_vr1i5"]
 [ext_resource type="AnimationLibrary" uid="uid://5i1cfqludin2" path="res://animation/ui_canvas_layer/ui_canvas_layer.res" id="9_cqn77"]
 [ext_resource type="PackedScene" uid="uid://4k3yawlmr7qu" path="res://nodes/ui/BombUIPicker.tscn" id="9_rpuu0"]
 [ext_resource type="Texture2D" uid="uid://c6qr7h2ptogfd" path="res://assets/bomb.png" id="10_6h1ut"]
