@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://b7vl0o5ey7gae"]
+[gd_scene load_steps=15 format=3 uid="uid://b7vl0o5ey7gae"]
 
 [ext_resource type="Script" uid="uid://brnbeliuhlboh" path="res://scripts/ranged_enemy.gd" id="1_oqdl1"]
 [ext_resource type="PackedScene" uid="uid://dlryu3u30yhb3" path="res://nodes/ui/DamageText.tscn" id="2_87mjh"]
@@ -6,6 +6,7 @@
 [ext_resource type="Shader" uid="uid://caw6qgxxaapj4" path="res://shaders/color_blinking.gdshader" id="3_xx71m"]
 [ext_resource type="Shader" uid="uid://b1cldd7wx5mnx" path="res://shaders/wave_death.gdshader" id="4_4favd"]
 [ext_resource type="Theme" uid="uid://g8ijm1c5d00t" path="res://ui_theme.tres" id="5_l3v88"]
+[ext_resource type="PackedScene" uid="uid://bwfxeyu3w3xo3" path="res://nodes/ui/EnemyHpBar.tscn" id="6_dq708"]
 [ext_resource type="Texture2D" uid="uid://dv6re8a0stc2o" path="res://assets/mindless_blob2.png" id="6_iv11w"]
 [ext_resource type="AudioStream" uid="uid://h8ogsv2e6qjq" path="res://assets/Shapeforms Audio Free Sound Effects/Hit and Punch Preview/HIT_METAL_WRENCH_HEAVIEST_02.wav" id="8_0cwua"]
 [ext_resource type="AudioStream" uid="uid://ba8ij1nyuc4mp" path="res://assets/JDSherbert-PixelExplosionsSFXPackFree/JDSherbert - Pixel Explosions SFX Pack - Flashbang (2).ogg" id="9_twncv"]
@@ -30,6 +31,7 @@ follow_distance = 300.0
 damage_text_node = ExtResource("2_87mjh")
 hurt_shader = ExtResource("3_xx71m")
 death_shader = ExtResource("4_4favd")
+hp_ui_view_node = ExtResource("6_dq708")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_dbob3")
@@ -39,6 +41,9 @@ debug_color = Color(1, 0.655003, 0.237995, 0.42)
 z_index = 20
 z_as_relative = false
 position = Vector2(0, -92)
+
+[node name="UIRoot" type="Node2D" parent="."]
+position = Vector2(-49, -73)
 
 [node name="DebugTextRoot" type="Node2D" parent="."]
 position = Vector2(0, 46)

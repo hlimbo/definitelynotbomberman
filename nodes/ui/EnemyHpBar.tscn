@@ -1,0 +1,79 @@
+[gd_scene load_steps=6 format=3 uid="uid://bwfxeyu3w3xo3"]
+
+[ext_resource type="Script" uid="uid://c2p0exbj2mpre" path="res://scripts/hp_ui_view.gd" id="1_b1wsh"]
+[ext_resource type="Texture2D" uid="uid://ycvq7xb2trok" path="res://atlas_textures/hp_bar_background.tres" id="2_gbkrg"]
+[ext_resource type="Texture2D" uid="uid://dhbheughjcm47" path="res://atlas_textures/hp_bar_over.tres" id="3_ctqp4"]
+[ext_resource type="Texture2D" uid="uid://bbia7b60wprcs" path="res://atlas_textures/hp_bar_foreground.tres" id="4_lg6de"]
+[ext_resource type="Theme" uid="uid://g8ijm1c5d00t" path="res://ui_theme.tres" id="5_wv78r"]
+
+[node name="EnemyHpBar" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+size_flags_horizontal = 0
+script = ExtResource("1_b1wsh")
+current_hp = 100.0
+max_hp = 100.0
+max_tween_duration_seconds = 0.5
+
+[node name="Background" type="TextureProgressBar" parent="."]
+layout_mode = 0
+offset_top = 7.0
+offset_right = 52.0
+offset_bottom = 15.0
+scale = Vector2(2, 1)
+value = 100.0
+texture_under = ExtResource("2_gbkrg")
+texture_progress_offset = Vector2(1, 0)
+
+[node name="Damage_Progress" type="TextureProgressBar" parent="."]
+layout_mode = 0
+offset_top = 7.0
+offset_right = 52.0
+offset_bottom = 15.0
+scale = Vector2(2, 1)
+value = 100.0
+texture_progress = ExtResource("3_ctqp4")
+texture_progress_offset = Vector2(1, 0)
+
+[node name="HP_Progress" type="TextureProgressBar" parent="."]
+layout_mode = 0
+offset_top = 7.0
+offset_right = 52.0
+offset_bottom = 15.0
+scale = Vector2(2, 1)
+value = 100.0
+texture_progress = ExtResource("4_lg6de")
+texture_progress_offset = Vector2(1, 0)
+
+[node name="HP_Label_Container" type="HBoxContainer" parent="."]
+visible = false
+layout_mode = 0
+offset_top = 2.0
+offset_right = 133.0
+offset_bottom = 25.0
+
+[node name="CurrentHP" type="Label" parent="HP_Label_Container"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme = ExtResource("5_wv78r")
+theme_override_font_sizes/font_size = 18
+text = "60"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Divider" type="Label" parent="HP_Label_Container"]
+layout_mode = 2
+theme = ExtResource("5_wv78r")
+theme_override_font_sizes/font_size = 18
+text = "/"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MaxHP" type="Label" parent="HP_Label_Container"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme = ExtResource("5_wv78r")
+theme_override_font_sizes/font_size = 18
+text = "100"
+horizontal_alignment = 1
+vertical_alignment = 1

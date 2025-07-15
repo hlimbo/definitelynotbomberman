@@ -21,7 +21,7 @@ enum AI_State
 	DEATH,
 }
 
-@export var starting_hp: float = 1000.0
+@export var max_hp: float = 1000.0
 @export var hp: float
 @export var follow_speed: float = 100.0 # pixels per second
 @export var follow_distance: float = 32.0
@@ -67,6 +67,11 @@ var accumulated_pull_force: Vector2 = Vector2.ZERO
 
 var slow_factor: float = 0.0
 
+@export var enemy_id: int
+@export var hp_ui_view_node: PackedScene
+@export var hp_ui_view: HpUiView
+@onready var ui_root: Node2D = $UIRoot
+
 func set_shader(shader: Shader):
 	var shader_mat: ShaderMaterial = sprite_2d.material as ShaderMaterial
 	assert(shader_mat != null)
@@ -89,6 +94,7 @@ func _ready():
 	detection_area.body_entered.connect(on_body_entered)
 	event_bus.on_enter_impact_area.connect(on_enter_impact_area)
 	event_bus.on_exit_impact_area.connect(on_exit_impact_area)
+	
 	hurt_timer.timeout.connect(on_iframes_completed)
 	death_timer.timeout.connect(on_death_completed)
 	debuff_timer.timeout.connect(on_debuff_completed)
@@ -100,8 +106,16 @@ func _ready():
 	var shader_mat: ShaderMaterial = ShaderMaterial.new()
 	sprite_2d.material = shader_mat
 	
-	hp = starting_hp
-	# ai_state = AI_State.IDLE
+	hp = max_hp
+	
+	hp_ui_view = hp_ui_view_node.instantiate() as HpUiView
+	hp_ui_view.visible = false
+	ui_root.add_child(hp_ui_view)
+	hp_ui_view.set_actor_node(self)
+	assert(hp_ui_view != null)
+	
+	enemy_id = self.get_canvas_item().get_id()
+	event_bus.on_initialize_hp.emit(enemy_id, max_hp, max_hp)
 
 # gets called when about to leave the SceneTree
 func _exit_tree():
@@ -159,14 +173,14 @@ func on_debuff_applied(dmg: float):
 	damage_text.play_animation(dmg)
 	
 	hp -= dmg
+	event_bus.on_hp_updated.emit(enemy_id, dmg)
 	
 	if hp <= 0.0 and ![AI_State.INACTIVE, AI_State.DEATH].has(ai_state):
 		ai_state = AI_State.DEATH
 		self.velocity = Vector2(0.0, 0.0)
 		set_shader(death_shader)
 		death_timer.start()
-		if !death_audio_player.playing:
-			death_audio_player.play()
+		death_audio_player.play()
 		self.disable()
 	
 	# final tick
@@ -300,6 +314,8 @@ func handle_enter_explosion_area(explosion: BaseExplosion):
 	damage_text.play_animation(flat_dmg) 
 	
 	hp -= flat_dmg
+	hp_ui_view.visible = true
+	event_bus.on_hp_updated.emit(enemy_id, flat_dmg)
 	
 	# default hurt and death logic
 	if hp > 0 and ![AI_State.HURT, AI_State.INACTIVE, AI_State.DEATH].has(ai_state):
@@ -336,6 +352,8 @@ func disable():
 	# turn off collison mask scanning
 	hit_area.collision_mask = 0
 	detection_area.collision_mask = 0
+	
+	hp_ui_view.visible = false
 	
 
 # used to stop timers that aren't in the BaseEnemy class such as DashingEnemy timers

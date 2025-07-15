@@ -102,6 +102,8 @@ var _aim_dir: Vector2 = Vector2.ZERO
 @export var dashing_enemy_hurt_sfx: AudioStream
 @export var normal_enemy_hurt_sfx: AudioStream
 
+@export var player_id: int
+@export var hp_bar: HpUiView
 
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Input helpers ──
@@ -116,19 +118,24 @@ func _get_move_input() -> Vector2:
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Life‑cycle ──
 # ─────────────────────────────────────────────────────────────────────────────
-func _ready() -> void:
+func _ready() -> void:	
 	death_timer.wait_time = death_audio_player.stream.get_length() + 1.0
 	
 	#Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	event_bus.on_start_attack.connect(_on_attacked)
 	event_bus.on_projectile_hit.connect(_on_projectile_hit)
-	event_bus.on_bomb_switched.connect(_on_bomb_switched)
+	event_bus.on_player_bomb_switched.connect(_on_bomb_switched)
+	
+	assert(hp_bar != null and is_instance_valid(hp_bar))
+	hp_bar.set_actor_node(self)
+	player_id = self.get_canvas_item().get_id()
+	event_bus.on_initialize_hp.emit(player_id, starting_hp, starting_hp)
+	
 	hurt_timer.timeout.connect(_on_hurt_finished)
 	death_timer.timeout.connect(_on_death_finished)
 	shader_mat = (material as ShaderMaterial)
 	current_hp = starting_hp
 	
-	event_bus.on_initialize_player_hp.emit(starting_hp, starting_hp)
 
 func _input(event: InputEvent) -> void:
 	# Bomb charge / release handling
@@ -343,7 +350,7 @@ func _on_attacked(enemy: BaseEnemy, target: Node2D):
 	damage_text.play_animation(enemy.base_damage)
 	
 	current_hp -= enemy.base_damage
-	event_bus.on_player_hp_updated.emit(enemy.base_damage)
+	event_bus.on_hp_updated.emit(player_id, enemy.base_damage)
 	
 	# compute knockback force
 	var player_from_enemy_dir: Vector2 = (global_position - enemy.global_position).normalized()

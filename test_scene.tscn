@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://da4h3jou13i3f" path="res://assets/mindless_blob.png" id="2_coq8p"]
 [ext_resource type="Script" uid="uid://ca2851eh2yeph" path="res://scripts/ui_canvas_layer_controller.gd" id="7_6m80x"]
 [ext_resource type="PackedScene" uid="uid://deh3txb4jfjc5" path="res://nodes/Player.tscn" id="7_8pr8v"]
-[ext_resource type="PackedScene" uid="uid://dwryu2l051w1y" path="res://assets/JDSherbert-PixelExplosionsSFXPackFree/HPBar.tscn" id="8_vr1i5"]
+[ext_resource type="PackedScene" uid="uid://dwryu2l051w1y" path="res://nodes/ui/HPBar.tscn" id="8_vr1i5"]
 [ext_resource type="AnimationLibrary" uid="uid://5i1cfqludin2" path="res://animation/ui_canvas_layer/ui_canvas_layer.res" id="9_cqn77"]
 [ext_resource type="PackedScene" uid="uid://4k3yawlmr7qu" path="res://nodes/ui/BombUIPicker.tscn" id="9_rpuu0"]
 [ext_resource type="Texture2D" uid="uid://c6qr7h2ptogfd" path="res://assets/bomb.png" id="10_6h1ut"]
@@ -31,12 +31,6 @@
 [ext_resource type="Script" uid="uid://c1xvnako1kh2c" path="res://scripts/manual_bg_music_looper.gd" id="28_mfkbt"]
 [ext_resource type="PackedScene" uid="uid://dyubwq4v4oedp" path="res://nodes/enemies/BaseEnemy.tscn" id="30_7kp7o"]
 [ext_resource type="PackedScene" uid="uid://b7vl0o5ey7gae" path="res://nodes/enemies/RangedEnemy.tscn" id="31_8fq6b"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_buypi"]
-shader = ExtResource("2_8pr8v")
-shader_parameter/color_tint = Color(1, 0, 0, 1)
-shader_parameter/wave_frequency = 64.0
-shader_parameter/wave_threshold = 0.5
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_cqn77"]
 blend_mode = 1
@@ -153,17 +147,13 @@ _data = {
 &"RESET": SubResource("Animation_g6y4b")
 }
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_buypi"]
+shader = ExtResource("2_8pr8v")
+shader_parameter/color_tint = Color(1, 0, 0, 1)
+shader_parameter/wave_frequency = 64.0
+shader_parameter/wave_threshold = 0.5
+
 [node name="TestScene" type="Node2D"]
-
-[node name="TestDummy" type="Node2D" parent="."]
-visible = false
-material = SubResource("ShaderMaterial_buypi")
-position = Vector2(547, 280)
-script = ExtResource("1_uhqqe")
-
-[node name="Sprite2D" type="Sprite2D" parent="TestDummy"]
-use_parent_material = true
-texture = ExtResource("2_coq8p")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." node_paths=PackedStringArray("bg_music_player", "menu_music_player", "mob_group_controller")]
 script = ExtResource("7_6m80x")
@@ -774,11 +764,22 @@ grow_vertical = 0
 [node name="audio_crossfade_timer" type="Timer" parent="CanvasLayer"]
 wait_time = 0.06
 
+[node name="TestDummy" type="Node2D" parent="."]
+visible = false
+material = SubResource("ShaderMaterial_buypi")
+position = Vector2(547, 280)
+script = ExtResource("1_uhqqe")
+
+[node name="Sprite2D" type="Sprite2D" parent="TestDummy"]
+use_parent_material = true
+texture = ExtResource("2_coq8p")
+
 [node name="BombContainer" type="Node2D" parent="."]
 
-[node name="Player" parent="." instance=ExtResource("7_8pr8v")]
+[node name="Player" parent="." node_paths=PackedStringArray("hp_bar") instance=ExtResource("7_8pr8v")]
 position = Vector2(531, 486)
 starting_hp = 150.0
+hp_bar = NodePath("../CanvasLayer/GameHUD/HpBar")
 
 [node name="BG_Music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("26_b11sm")
@@ -808,8 +809,8 @@ position = Vector2(910, 174)
 [node name="DashingEnemy4" parent="TempController" instance=ExtResource("27_mfkbt")]
 position = Vector2(1011, 524)
 
-[node name="BaseEnemy" parent="TempController" instance=ExtResource("30_7kp7o")]
-position = Vector2(169, 482)
-
 [node name="RangedEnemy" parent="TempController" instance=ExtResource("31_8fq6b")]
 position = Vector2(501, 95)
+
+[node name="BaseEnemy" parent="TempController" instance=ExtResource("30_7kp7o")]
+position = Vector2(123, 527)

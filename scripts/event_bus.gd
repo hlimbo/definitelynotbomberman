@@ -11,8 +11,13 @@ signal on_attach_to_entity()
 signal on_start_attack(enemy: BaseEnemy, target: Node2D)
 signal on_projectile_hit(projectile: Projectile, target: Node2D)
 
-signal on_initialize_player_hp(current_hp: float, max_hp: float)
-signal on_player_hp_updated(damage: float)
-signal on_bomb_switched(explosion_index: int)
+#region UI Signals
+
+# utilizes RID's int id to determine which godot object this event is for
+signal on_initialize_hp(resource_id: int, current_hp: float, max_hp: float)
+signal on_hp_updated(resource_id: int, damage: float)
+signal on_player_bomb_switched(explosion_index: int)
+
+#endregion
 
 signal on_game_end(game_state: String)
