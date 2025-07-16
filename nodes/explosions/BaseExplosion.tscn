@@ -13,6 +13,7 @@ radius = 50.0
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_o8px0"]
 blend_mode = 1
+light_mode = 1
 
 [sub_resource type="Curve" id="Curve_bu348"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.118941), 0.0, 0.0, 0, 0]
@@ -45,6 +46,7 @@ alpha_curve = SubResource("CurveTexture_1iyps")
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_5osga"]
 blend_mode = 1
+light_mode = 1
 
 [sub_resource type="Curve" id="Curve_5osga"]
 _limits = [0.0, 0.5, 0.0, 1.0]
@@ -89,6 +91,7 @@ light_mode = 1
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_1iyps"]
 blend_mode = 1
+light_mode = 1
 
 [sub_resource type="Curve" id="Curve_1iyps"]
 _data = [Vector2(0.00726392, 0), 0.0, 0.0, 0, 0, Vector2(1, 0.499536), 0.0, 0.0, 0, 0]
@@ -123,6 +126,7 @@ color = Color(1, 0.290196, 0, 1)
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_3v85f"]
 blend_mode = 1
+light_mode = 1
 
 [sub_resource type="Gradient" id="Gradient_tn508"]
 offsets = PackedFloat32Array(0, 0.178295, 0.49354, 0.979328)

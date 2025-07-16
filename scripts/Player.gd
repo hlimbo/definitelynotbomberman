@@ -126,8 +126,11 @@ func _ready() -> void:
 	event_bus.on_projectile_hit.connect(_on_projectile_hit)
 	event_bus.on_player_bomb_switched.connect(_on_bomb_switched)
 	
-	assert(hp_bar != null and is_instance_valid(hp_bar))
-	hp_bar.set_actor_node(self)
+	if hp_bar == null or !is_instance_valid(hp_bar):
+		push_warning("Player.gd script is missing the hp_bar ui node reference!")
+	else:
+		hp_bar.set_actor_node(self)
+	
 	player_id = self.get_canvas_item().get_id()
 	event_bus.on_initialize_hp.emit(player_id, starting_hp, starting_hp)
 	
