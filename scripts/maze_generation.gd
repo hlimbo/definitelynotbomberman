@@ -31,6 +31,54 @@ var maze: Array[Array]
 # value = bool that represents if the given row col in the maze is visited or not
 var visited_set: Dictionary[String, bool] = {}
 
+class UnionFind:
+	var parent: Array[int] = []
+	var rank: Array[int] = []
+	
+	func _init(n: int):
+		# data structure - array
+		# index represents the 1D position of a cell in the maze
+		# value represents who the parent or root of this position is
+		self.parent.append_array(range(n))
+		
+		# rank helps balance tree structure
+		self.rank.resize(n)
+	
+	# find the root of x's group using recursion
+	func find(x: int) -> int:
+		if self.parent[x] != x:
+			self.parent[x] = self.find(self.parent[x])
+			
+		return self.parent[x]
+
+	# this returns true if the 2 1D positions in the maze are disjoint, false
+	# if they already share the same parent
+	# x represents the 1D index of a cell in a 2D grid
+	# y represents the 1D index of a cell in a 2D grid
+	func union(x: int, y: int) -> bool:
+		# merge the groups of x and y
+		var root_x: int = self.find(x)
+		var root_y: int = self.find(y)
+		
+		# if already in same group, return False --> this means they share same root already
+		if root_x == root_y:
+			return false
+			
+		# merge groups (attach smaller tree to larger tree)
+		if self.rank[root_x] < self.rank[root_y]:
+			var temp: int = root_x
+			root_x = root_y
+			root_y = temp
+			
+		# make root_x be the parent of root_y
+		self.parent[root_y] = root_x
+		
+		# update rank if trees were same height
+		if self.rank[root_x] == self.rank[root_y]:
+			self.rank[root_x] += 1
+		
+		return true
+
 func init_maze():
 	maze = []
 	var err = maze.resize(_height)
@@ -51,6 +99,7 @@ func print_maze():
 		for col in range(len(maze[row])):
 			string_row += "%d\t" % maze[row][col]
 		print("%s" % string_row)
+	
 
 # source: https://www.cs.cmu.edu/~112-s23/notes/student-tp-guides/Mazes.pdf
 func dfs_generate(row: int, col: int, width: int, height: int, maze: Array[Array], visited_set: Dictionary[String, bool]):
@@ -69,27 +118,99 @@ func dfs_generate(row: int, col: int, width: int, height: int, maze: Array[Array
 		[2, 0], # east
 		[-2, 0], # west
 	]
-	
-	# filters out locations in the maze that are already visited or out of bounds
-	directions = directions.filter(func (direction: Array):
-		var new_row: int = row + direction[0]
-		var new_col: int = col + direction[1]
 		
-		var is_out_of_bounds: bool = new_row < 0 or new_row >= height or new_col < 0 or new_col >= width
-		var new_location: String = "%d-%d" % [new_row, new_col]
-		var is_visited: bool = visited_set.has(new_location)
-		return !is_out_of_bounds and !is_visited
-	)
-	
 	# randomize the directions list order to simulate picking random paths to create
 	directions.shuffle()
 	for direction in directions:
 		var new_row: int = row + direction[0]
 		var new_col: int = col + direction[1]
 		
+		var new_location: String = "%d-%d" % [new_row, new_col]
+		
+		# filters out locations in the maze that are already visited or out of bounds
+		var is_out_of_bounds: bool = new_row < 0 or new_row >= height or new_col < 0 or new_col >= width
+		if is_out_of_bounds or visited_set.has(new_location):
+			continue
+		
 		# add passage from current location to neighbor
 		maze[row + direction[0] / 2][col + direction[1] / 2] = TileType.Connection
 		dfs_generate(new_row, new_col, width, height, maze, visited_set)
+
+func kruskal_generate(width: int, height: int, maze: Array[Array]):
+	# enumerate all possible connections (undirected edges) in the maze
+	# ensure all possible connections are unique
+	# 2 is used because the assumption is that every other row is a wall
+	var directions: Array = [
+		[0, -2], # north
+		[0, 2], # south
+		[2, 0], # east
+		[-2, 0], # west
+	]
+	
+	# key - from location represented as String in form of "0-1" for example
+	# value - neighbors of to location represented as String in form of "1-1" for example
+	var from_to_connections: Dictionary[String, Array] = {}
+	var to_from_connections: Dictionary[String, Array] = {}
+	for row in range(0, height, 2):
+		for col in range(0, width, 2):
+			var location: String = "%d-%d" % [row, col]
+			for direction in directions:
+				# if an edge is already connected, skip as 0-1 and 1-0 are considered to be same
+				if to_from_connections.has(location):
+					continue
+				
+				var new_row: int = row + direction[0]
+				var new_col: int = col + direction[1]
+				var neighbor_location: String = "%d-%d" % [new_row, new_col]
+				var is_in_bounds: bool = new_row >= 0 and new_row < height and new_col >=0 and new_col < width
+				if is_in_bounds:
+					if not from_to_connections.has(location):
+						from_to_connections[location] = []
+					if not to_from_connections.has(neighbor_location):
+						to_from_connections[neighbor_location] = []
+						
+						
+					
+					from_to_connections[location].append(neighbor_location)
+					to_from_connections[neighbor_location].append(location)
+
+	
+	# shuffle connections to randomize which possible connections to visit and connect
+	var connections: Array[Array] = []
+	for from_location in from_to_connections:
+		var to_locations: Array = from_to_connections[from_location]
+		for to_location in to_locations:
+			connections.append([from_location, to_location])
+			#print(connections.back())
+	
+	connections.shuffle()
+	
+	var union_find = UnionFind.new(width * height)
+	
+	for connection in connections:
+		# extract locations from string format %d-%d
+		var tokens: PackedStringArray = connection[0].split("-")
+		var from_row: int = int(tokens[0])
+		var from_col: int = int(tokens[1])
+		
+		tokens = connection[1].split("-")
+		var to_row: int = int(tokens[0])
+		var to_col: int = int(tokens[1])
+		
+		# convert 2D coordinates to 1D
+		var cell1: int = from_row * width + from_col
+		var cell2: int = to_row * width + to_col
+		
+		# if cells are not in same set, connect them
+		if union_find.union(cell1, cell2):
+			# mark connection in maze
+			maze[from_row][from_col] = TileType.Path
+			maze[to_row][to_col] = TileType.Path
+			
+			# mark connection path
+			var y_dir: int = (to_row - from_row) / 2
+			var x_dir: int = (to_col - from_col) / 2
+			maze[from_row + y_dir][from_col + x_dir] = TileType.Connection
 
 func _ready():
 	_wall_padding_width = width - 1
@@ -101,5 +222,11 @@ func _ready():
 	print_maze()
 	
 	print("\n")
-	dfs_generate(0, 0, _width, _height, maze, visited_set)
+	
+	match maze_type:
+		MazeType.DFS:
+			dfs_generate(0, 0, _width, _height, maze, visited_set)
+		MazeType.Kruskal:
+			kruskal_generate(_width, _height, maze)
+	
 	print_maze()
