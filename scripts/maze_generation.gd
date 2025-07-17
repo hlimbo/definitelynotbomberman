@@ -31,6 +31,19 @@ var maze: Array[Array]
 # value = bool that represents if the given row col in the maze is visited or not
 var visited_set: Dictionary[String, bool] = {}
 
+@onready var floating_islands: TileMapLayer = $floating_islands
+@onready var maze_tile_map_layer: TileMapLayer = $maze
+
+@export var recreate_maze_btn: Button
+
+
+# limitation: can uniquely identify a tile if you have exactly 1 TileSource in the TileSet
+# otherwise, would need to include a nested dictionary or something to identify which tile set source the tile coordinate id is from
+# key - TileType enum used to categorize a group of tiles e.g. floor, wall, water, etc
+# value - array of possible tiles to use (atlas coordinate ids Vector2i)
+var tile_lookup_table: Dictionary[TileType, Array] = {}
+var tile_set_source: TileSetSource
+
 class UnionFind:
 	var parent: Array[int] = []
 	var rank: Array[int] = []
@@ -99,7 +112,7 @@ func print_maze():
 		for col in range(len(maze[row])):
 			string_row += "%d\t" % maze[row][col]
 		print("%s" % string_row)
-	
+	print("\n\n")
 
 # source: https://www.cs.cmu.edu/~112-s23/notes/student-tp-guides/Mazes.pdf
 func dfs_generate(row: int, col: int, width: int, height: int, maze: Array[Array], visited_set: Dictionary[String, bool]):
@@ -212,21 +225,65 @@ func kruskal_generate(width: int, height: int, maze: Array[Array]):
 			var x_dir: int = (to_col - from_col) / 2
 			maze[from_row + y_dir][from_col + x_dir] = TileType.Connection
 
+func build_maze():
+	assert(maze_tile_map_layer.tile_set.get_source_count() > 0)
+	
+	var source_id: int = maze_tile_map_layer.tile_set.get_source_id(0)
+	tile_set_source = maze_tile_map_layer.tile_set.get_source(source_id)
+	
+	# IMPROVEMENT: can create an editor extension tool to categorize which tiles belong to which type grouping
+	# manually pick which tiles are floor or walls for now
+	
+	var floor_coordinate_id = Vector2i(4,1)
+	tile_lookup_table[TileType.Path] = [floor_coordinate_id]
+	var grass_tile_coordinate_id = Vector2i(19, 0)
+	tile_lookup_table[TileType.Connection] = [grass_tile_coordinate_id]
+
+	var wall_id = Vector2i(2,5)
+	tile_lookup_table[TileType.Wall] = [wall_id]
+	
+	var can_transpose: bool = true
+	for r in range(_height):
+		for c in range(_width):
+			var map_coords = Vector2i(c, r)
+			
+			var tile_type: TileType = maze[r][c]
+			var tile_atlas_coord_id: Vector2i = tile_lookup_table[tile_type][0]
+			maze_tile_map_layer.set_cell(map_coords, source_id, tile_atlas_coord_id)
+
 func _ready():
 	_wall_padding_width = width - 1
 	_wall_padding_height = height - 1
 	_width = width + _wall_padding_width
 	_height = height + _wall_padding_height
 	
-	init_maze()
-	print_maze()
+	create_maze()
 	
-	print("\n")
+	if recreate_maze_btn != null:
+		recreate_maze_btn.pressed.connect(on_recreate_maze_pressed)
+		
+
+func clear_maze():
+	# delete all cells
+	maze_tile_map_layer.clear()
+	
+	init_maze()
+	visited_set.clear()
+
+func create_maze():
+	# delete all cells
+	maze_tile_map_layer.clear()
+	
+	init_maze()
 	
 	match maze_type:
 		MazeType.DFS:
 			dfs_generate(0, 0, _width, _height, maze, visited_set)
 		MazeType.Kruskal:
 			kruskal_generate(_width, _height, maze)
-	
-	print_maze()
+
+	build_maze()
+
+func on_recreate_maze_pressed():
+	clear_maze()
+	create_maze()
