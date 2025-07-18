@@ -949,6 +949,7 @@ sources/0 = SubResource("TileSetAtlasSource_ihaej")
 
 [node name="MazeGeneratorScene" type="Node2D" node_paths=PackedStringArray("recreate_maze_btn")]
 script = ExtResource("1_ihaej")
+maze_type = 1
 width = 10
 height = 10
 recreate_maze_btn = NodePath("CanvasLayer/Button")
