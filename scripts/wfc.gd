@@ -53,6 +53,16 @@ class PossibleTiles:
 	func _init(_tiles: Array[String]):
 		tiles = []
 		tiles.append_array(_tiles)
+		
+	func remove(tile: String):
+		assert(tile in tiles)
+		var remove_tile_index: int = -1
+		for i in range(len(tiles)):
+			if tiles[i] == tile:
+				remove_tile_index = i
+				break
+		
+		tiles.remove_at(remove_tile_index)
 
 # a lookup table to determine which neighboring tiles are valid to pick 
 # when a tile at a given position is chosen
@@ -150,8 +160,24 @@ func observe_cell():
 func propagate_constraints() -> bool:
 	return false
 	
-func ban_tile():
-	pass
+func ban_tile(cell_position: Vector2i, tile_index: int):
+	assert(tile_index >= 0 and tile_index < len(TILES))
+	var tile: String = TILES[tile_index]
+	possible_tile_choices[cell_position.y][cell_position.x].remove(tile)
+	
+	banned_tiles_stack[stack_size] = BannedTile.new(cell_position, tile_index)
+	stack_size += 1
+	
+	# add banned tile to final output
+	wave_output[cell_position.y][cell_position.x] = tile
+	
+	# update weights
+	sums_of_weights[cell_position.y][cell_position.x] -= weights[tile_index]
+	sums_of_log_weights[cell_position.y][cell_position.x] -= log_weights[tile_index]
+	
+	# recompute shannon entropy
+	var sums: float = sums_of_weights[cell_position.y][cell_position.x]
+	entropies[cell_position.y][cell_position.x] = log(sums) - sums_of_log_weights[cell_position.y][cell_position.x] / sums 
 	
 func run() -> bool:
 	init()
