@@ -47,43 +47,6 @@ class BannedTile:
 		cell_position = _cell_position
 		tile_index = _tile_index
 
-class PossibleNeighborTiles:
-	var direction: Compass
-	# replace with actual tiles later on
-	var tiles: Array[String]
-	
-	func _init(_direction: Compass, _tiles: Array[String]):
-		direction = _direction
-		tiles = []
-		tiles.append_array(_tiles)
-		
-	func remove(tile: String):
-		assert(tile in tiles)
-		var remove_index: int = -1
-		for i in range(len(tiles)):
-			if tile == tiles[i]:
-				remove_index = i
-				break
-				
-		tiles.remove_at(remove_index)
-
-class PossibleNeighborTilesList:
-	var possible_tiles: Array[PossibleNeighborTiles]
-	
-	func _init(_possible_tiles: Array[PossibleNeighborTiles] = []):
-		possible_tiles = []
-		# temp code
-		if len(_possible_tiles) == 0:
-			for direction in DIRECTIONS:
-				possible_tiles.append(PossibleNeighborTiles.new(direction, TILES))
-		else:
-			possible_tiles = []
-			possible_tiles.append_array(_possible_tiles)
-			
-	func get_entry(index: int) -> PossibleNeighborTiles:
-		assert(index >= 0 and index < len(possible_tiles))
-		return possible_tiles[index]
-
 class PossibleTiles:
 	# switch to actual tiles later on
 	var tiles: Array[String]
@@ -112,14 +75,8 @@ class PossibleTiles:
 		
 		tiles.remove_at(remove_tile_index)
 
-# a lookup table to determine which neighboring tiles are valid to pick 
-# when a tile at a given position is chosen
-# key - cell index on map (Vector2i x = col, y = row)
-# value - list of possible tiles to pick from where each entry represents a neighboring tile
-var possible_neighboring_tiles_table: Dictionary[Vector2i, PossibleNeighborTilesList]
-
-@export var width: int = 3
-@export var height: int = 3
+@export var width: int = 10
+@export var height: int = 10
 @export var tiles_count: int = 4
 
 # this represents how many tile options are left for a given cell
@@ -135,8 +92,6 @@ var wave_output: Array[Array]
 # end of array represents the latest banned tile
 # beginning of array represents oldest banned tile
 var banned_tiles_stack: Array[BannedTile] = []
-# keeps track of where the latest banned tile is
-var stack_size: int
 
 
 ### Weights - used to decide which tile to pick for a given cell
@@ -179,28 +134,23 @@ func init():
 	
 	weights.resize(tiles_count)
 	log_weights.resize(tiles_count)
-	distribution.resize(tiles_count)
+	
+	weights[0] = 4.0 # ocean
+	weights[1] = 2.0 # mountain
+	weights[2] = 2.0 # forest
+	weights[3] = 16.0 # Sand
 	
 	# compute weights using Shannon Entropy
 	# Source: https://github.com/mxgmn/WaveFunctionCollapse/blob/master/Model.cs
 	# starts at line 55 of source code link
 	for t in range(tiles_count):
-		weights[t] = 2.0 # equal weight
+		# weights[t] = 2.0 # equal weight
 		log_weights[t] = weights[t] * log(weights[t])
 		sum_of_weights += weights[t]
 		sum_of_log_weights += log_weights[t]
 	
 	assert(sum_of_weights > 0)
 	starting_entropy = log(sum_of_weights) - (sum_of_log_weights / sum_of_weights)
-	
-	# banned_tiles_stack.resize(width * height * tiles_count)
-	stack_size = 0
-	
-	# assign all tiles as possible for each cell in an empty grid
-	for row in range(height):
-		for col in range(width):
-			var cell_position = Vector2i(col, row)
-			possible_neighboring_tiles_table[cell_position] = PossibleNeighborTilesList.new()
 
 func clear():
 	for row in range(height):
@@ -235,25 +185,23 @@ func pick_unobserved_cell() -> Vector2i:
 				min = entropy + noise
 				cell = Vector2i(col, row)
 	
-	print("cell picked: ", cell)
+	#print("cell picked: ", cell)
 	return cell
 	
 func observe_cell(cell: Vector2i):
 	
 	# assign tile weights for the given cell inputted
-	for t in range(tiles_count):
-		var tile_choices: int = possible_tile_choices[cell.y][cell.x].size()
-		if tile_choices > 1:
-			distribution[t] = weights[t]
-		else:
-			distribution[t] = 0.0
-			
+	distribution = []
+	var possible_tile_choices_count: int = possible_tile_choices[cell.y][cell.x].size()
+	for t in range(possible_tile_choices_count):
+		distribution.append(weights[t])
+
 	
 	# pick a random tile to place in the given cell
 	var sum: float = 0.0
-	for t in range(tiles_count):
+	for t in range(len(distribution)):
 		sum += distribution[t]
-		
+	
 	var threshold: float = fmod(randf(), 1.0) * sum
 	var partial_sum: float = 0.0
 	var tile_index: int = 0
@@ -263,22 +211,20 @@ func observe_cell(cell: Vector2i):
 			tile_index = t
 			break
 	
-	print("picked tile: ", TILES[tile_index])
+	var picked_tile: String = possible_tile_choices[cell.y][cell.x].tiles[tile_index]
+	#print("picked tile: ", picked_tile)
 	
-	# ban all tiles that don't match tile_index for the given cell index
+	# ban all tiles that don't match tile_index for the given cell index -- collapse
 	for t in range(tiles_count):
-		if tile_index != t and possible_tile_choices[cell.y][cell.x].has_tile(TILES[t]):
+		if picked_tile != TILES[t] and possible_tile_choices[cell.y][cell.x].has_tile(TILES[t]):
 			ban_tile(cell, t)
-		else:
-			print("not banning: ", TILES[t])
 
 # returns true if any cell has more than 1 tile to pick from from any cell
 # returns false otherwise
 func propagate_constraints() -> bool:
-	while stack_size > 0:
+	while len(banned_tiles_stack) > 0:
 		# pick the latest tile banned
 		var banned_tile: BannedTile = banned_tiles_stack.pop_back()
-		stack_size -= 1
 		assert(banned_tile != null)
 		
 		# look at the neighboring tiles relative to the banned_tile's location
@@ -306,15 +252,22 @@ func propagate_constraints() -> bool:
 		if possible_tile_choices[banned_tile.cell_position.y][banned_tile.cell_position.x].size() <= 0:
 			return true
 			# return false
-			
-		var picked_tile: String = possible_tile_choices[banned_tile.cell_position.y][banned_tile.cell_position.x].get_tile(0)
 		
-		var compat_tiles: Array = compatible_tiles[picked_tile]
+		# after the first cell propagation... neighbor of neighbors can have multiple choices so this one needs to be a loop....
+		var tiles_union_set: Dictionary[String, bool] = {}
+		for picked_tile in possible_tile_choices[banned_tile.cell_position.y][banned_tile.cell_position.x].tiles:
+			var compat_tiles: Array = compatible_tiles[picked_tile]
+			for compat_tile in compat_tiles:
+				tiles_union_set[compat_tile] = true
+		
+		var length: int = len(tiles_union_set)
+		assert(length > 0)
+		
 		var eliminated_tile_indices: Array[int] = [] 
 		
 		for t in range(len(TILES)):
 			var tile: String = TILES[t]
-			if tile not in compat_tiles:
+			if tile not in tiles_union_set:
 				eliminated_tile_indices.append(t)
 		
 		for direction in DIRECTIONS:
@@ -351,10 +304,6 @@ func ban_tile(cell_position: Vector2i, tile_index: int):
 	possible_tile_choices[cell_position.y][cell_position.x].remove(tile)
 	
 	banned_tiles_stack.append(BannedTile.new(cell_position, tile_index))
-	stack_size += 1
-	
-	## add banned tile to final output
-	#wave_output[cell_position.y][cell_position.x] = tile
 	
 	# update weights
 	sums_of_weights[cell_position.y][cell_position.x] -= weights[tile_index]
@@ -365,6 +314,7 @@ func ban_tile(cell_position: Vector2i, tile_index: int):
 	entropies[cell_position.y][cell_position.x] = log(sums) - sums_of_log_weights[cell_position.y][cell_position.x] / sums 
 
 func print_puzzle():
+	print("------------------------PUZZLE-------------------------------")
 	for row in range(height):
 		var string_row: String = ""
 		for col in range(width):
@@ -375,10 +325,22 @@ func print_puzzle():
 				string_row += ". "
 		
 		print(string_row)
+	print("---------------------------------------------------------------")
+
+func print_grid_state():
+	for row in range(height):
+		var row_string: String = ""
+		for col in range(width):
+			var tiles: Array[String] = possible_tile_choices[row][col].tiles
+			row_string +=  "[" + ",".join(tiles) + "]\t"
+		print(row_string)
 
 func run() -> bool:
 	init()
 	clear()
+	
+	print_grid_state()
+	print("-----------------------------")
 	
 	var is_puzzle_solved: bool = false
 	var is_puzzle_in_progress: bool = true
@@ -388,6 +350,10 @@ func run() -> bool:
 	while is_puzzle_in_progress:
 		if iterations == 9:
 			print("last one hardcoded")
+		
+		#print("------------BEFORE---------------")
+		#print_grid_state()
+		#print("---------------------------------")
 		
 		var cell_coords: Vector2i = pick_unobserved_cell()
 		var is_puzzle_incomplete: bool = cell_coords.x >= 0 and cell_coords.y >= 0
@@ -403,6 +369,10 @@ func run() -> bool:
 			is_puzzle_in_progress = false
 			
 		iterations += 1
+		
+		#print("------------AFTER----------------")
+		#print_grid_state()
+		#print("---------------------------------")
 			
 			
 	print_puzzle()
