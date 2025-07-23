@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=4 uid="uid://csxw5hj145lwf"]
+[gd_scene load_steps=18 format=4 uid="uid://csxw5hj145lwf"]
 
 [ext_resource type="Script" uid="uid://d1m0kd3pjyo8p" path="res://scripts/maze_generation.gd" id="1_ihaej"]
 [ext_resource type="TileSet" uid="uid://yeq8dqhx07a4" path="res://tiles/tileset.tres" id="1_pual2"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://dk7itprmg8iwg" path="res://assets/floating_islands_tileset/tiles_packed.png" id="4_a7whb"]
 [ext_resource type="Texture2D" uid="uid://bjh1kfo2ea7mo" path="res://assets/zelda-like-tiles/sheet.png" id="5_p2cus"]
 [ext_resource type="TileSet" uid="uid://m0ie6u7rp81y" path="res://tiles/maze_tileset.tres" id="7_un1bd"]
+[ext_resource type="Script" uid="uid://s4giawyygn5d" path="res://scripts/wfc.gd" id="8_2hb8k"]
 [ext_resource type="Theme" uid="uid://g8ijm1c5d00t" path="res://ui_theme.tres" id="8_xc3yc"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_a7whb"]
@@ -1002,6 +1003,7 @@ scale = Vector2(4, 4)
 tile_set = ExtResource("7_un1bd")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+script = ExtResource("8_2hb8k")
 
 [node name="Button" type="Button" parent="CanvasLayer"]
 anchors_preset = 5
@@ -1014,3 +1016,10 @@ grow_horizontal = 2
 theme = ExtResource("8_xc3yc")
 theme_override_font_sizes/font_size = 28
 text = "Re-roll Maze"
+
+[node name="WFC_Button" type="Button" parent="CanvasLayer"]
+offset_left = 443.0
+offset_top = 395.0
+offset_right = 744.0
+offset_bottom = 456.0
+text = "go!"
