@@ -955,6 +955,13 @@ width = 10
 height = 10
 recreate_maze_btn = NodePath("CanvasLayer/Button")
 
+[node name="WaveFunctionCollapse" type="Node2D" parent="." node_paths=PackedStringArray("button", "map")]
+script = ExtResource("8_2hb8k")
+button = NodePath("../CanvasLayer/WFC_Button")
+map = NodePath("../map")
+width = 14
+height = 14
+
 [node name="dungeon_tiles" type="TileMapLayer" parent="."]
 visible = false
 scale = Vector2(4, 4)
@@ -999,11 +1006,15 @@ tile_map_data = PackedByteArray("AAADAAAAAAAAAAIAAAAEAAAAAAABAAIAAAAFAAAAAAACAAI
 tile_set = SubResource("TileSet_a7whb")
 
 [node name="maze" type="TileMapLayer" parent="."]
+visible = false
+scale = Vector2(4, 4)
+tile_set = ExtResource("7_un1bd")
+
+[node name="map" type="TileMapLayer" parent="."]
 scale = Vector2(4, 4)
 tile_set = ExtResource("7_un1bd")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
-script = ExtResource("8_2hb8k")
 
 [node name="Button" type="Button" parent="CanvasLayer"]
 anchors_preset = 5

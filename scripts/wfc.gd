@@ -3,32 +3,35 @@
 
 extends Node
 
-# goal: have an NxM grid of characters generate a map of characters outputted as console log
-# O - Ocean
-# M - Mountain
-# F - Forest
-# S - Sand
-const TILES: Array[String] = ["O", "M", "F", "S"]
+@export var button: Button
+@export var map: TileMapLayer
 
-# Example rule-set
-# * Oceans can be next to Sand
-# * Sand can be next to Ocean, Mountain or Forest
-# * Mountain can be next to Forest or Sand
-# * Forest can be next to Mountain or Sand
-# The same tile type can be next to each other** e.g. Oceans can be next to Oceans
+@export var width: int = 10
+@export var height: int = 10
+@export var tiles_count: int = 4
+
+# alternative IDs will be used for picking out which rotated tile to use
+# these coordinates are hardcoded atlas coordinates from the maze_tileset.tres resource
+const GRASS_TILE = Vector2i(2,2)
+const STONE_TILE = Vector2i(2,5)
+const WATER_TILE = Vector2i(12,5)
+const DIRT_TILE = Vector2i(16, 3)
+
+# Vector2i represents the atlas coordinates of tiles found in the map's TileSet's TileSetSource Resource
+const TILES: Array[Vector2i] = [
+	GRASS_TILE, STONE_TILE, WATER_TILE, DIRT_TILE
+]
 
 # used to determine which tiles fit together like a puzzle piece
 # this can be thought of as a rule set of which tiles can be connected together
-# key - tile string
-# value - list of Strings that are compatible with this tile
-var compatible_tiles: Dictionary[String, Array] = {
-	"O": ["O", "S"],
-	"S": ["S", "O", "M", "F"],
-	"M": ["M", "F", "S"],
-	"F": ["F", "M", "S"]
+# key - tile's atlas coordinates
+# value - list of Vector2i atlas coordinates of tiles that are compatible with this tile
+var compatible_tiles: Dictionary[Vector2i, Array] = {
+	WATER_TILE: [WATER_TILE, DIRT_TILE],
+	DIRT_TILE: [DIRT_TILE, WATER_TILE, STONE_TILE, GRASS_TILE],
+	STONE_TILE: [STONE_TILE, GRASS_TILE, DIRT_TILE],
+	GRASS_TILE: [GRASS_TILE, STONE_TILE, DIRT_TILE]
 }
-
-@onready var button: Button = $WFC_Button
 
 enum Compass { N = 0, S = 1, W = 2, E = 3 }
 
@@ -48,25 +51,24 @@ class BannedTile:
 		tile_index = _tile_index
 
 class PossibleTiles:
-	# switch to actual tiles later on
-	var tiles: Array[String]
+	var tiles: Array[Vector2i]
 	
-	func _init(_tiles: Array[String]):
+	func _init(_tiles: Array[Vector2i]):
 		tiles = []
 		tiles.append_array(_tiles)
 	
 	func size() -> int:
 		return len(tiles)
 		
-	func get_tile(index: int) -> String:
+	func get_tile(index: int) -> Vector2i:
 		assert(index >= 0 and index < len(tiles))
 		return tiles[index]
 	
-	func has_tile(tile: String) -> bool:
+	func has_tile(tile: Vector2i) -> bool:
 		return tile in tiles
 	
-	func remove(tile: String):
-		#assert(tile in tiles)
+	func remove(tile: Vector2i):
+		assert(tile in tiles)
 		var remove_tile_index: int = -1
 		for i in range(len(tiles)):
 			if tiles[i] == tile:
@@ -75,19 +77,12 @@ class PossibleTiles:
 		
 		tiles.remove_at(remove_tile_index)
 
-@export var width: int = 10
-@export var height: int = 10
-@export var tiles_count: int = 4
-
 # this represents how many tile options are left for a given cell
 # gets collapsed down to 1 tile per cell once algorithm finishes
 # 2D array of PossibleTiles
 # first index represents row (y)
 # second index represents col (x)
 var possible_tile_choices: Array[Array]
-# represents the final tile map output to console log
-# 2d Array of Strings
-var wave_output: Array[Array]
 
 # end of array represents the latest banned tile
 # beginning of array represents oldest banned tile
@@ -95,6 +90,14 @@ var banned_tiles_stack: Array[BannedTile] = []
 
 
 ### Weights - used to decide which tile to pick for a given cell
+const WEIGHTS_TABLE: Dictionary[Vector2i, float] = {
+	GRASS_TILE: 2.0,
+	STONE_TILE: 2.0,
+	WATER_TILE: 2.0,
+	DIRT_TILE: 2.0,
+}
+
+
 ### these are all arrays containing floats
 ### index is tile index
 var weights: Array[float]
@@ -113,20 +116,17 @@ var entropies: Array[Array]
 
 
 func init():
-	wave_output.resize(height)
 	possible_tile_choices.resize(height)
 	sums_of_weights.resize(height)
 	sums_of_log_weights.resize(height)
 	entropies.resize(height)
 	
 	for row in range(height):
-		wave_output[row].resize(width)
 		possible_tile_choices[row].resize(width)
 		sums_of_weights[row].resize(width)
 		sums_of_log_weights[row].resize(width)
 		entropies[row].resize(width)
 		for col in range(width):
-			wave_output[row][col] ="."
 			possible_tile_choices[row][col] = PossibleTiles.new(TILES)
 			sums_of_weights[row][col] = 0.0
 			sums_of_log_weights[row][col] = 0.0
@@ -135,20 +135,19 @@ func init():
 	weights.resize(tiles_count)
 	log_weights.resize(tiles_count)
 	
-	weights[0] = 4.0 # ocean
-	weights[1] = 2.0 # mountain
-	weights[2] = 2.0 # forest
-	weights[3] = 16.0 # Sand
-	
 	# compute weights using Shannon Entropy
 	# Source: https://github.com/mxgmn/WaveFunctionCollapse/blob/master/Model.cs
 	# starts at line 55 of source code link
-	for t in range(tiles_count):
-		# weights[t] = 2.0 # equal weight
+	assert(tiles_count == len(WEIGHTS_TABLE))
+	var t: int = 0
+	var custom_weights = WEIGHTS_TABLE.values()
+	while t < len(WEIGHTS_TABLE):
+		weights[t] = float(custom_weights[t])
 		log_weights[t] = weights[t] * log(weights[t])
 		sum_of_weights += weights[t]
 		sum_of_log_weights += log_weights[t]
-	
+		t += 1
+
 	assert(sum_of_weights > 0)
 	starting_entropy = log(sum_of_weights) - (sum_of_log_weights / sum_of_weights)
 
@@ -194,7 +193,9 @@ func observe_cell(cell: Vector2i):
 	distribution = []
 	var possible_tile_choices_count: int = possible_tile_choices[cell.y][cell.x].size()
 	for t in range(possible_tile_choices_count):
-		distribution.append(weights[t])
+		var tile_coords: Vector2i = possible_tile_choices[cell.y][cell.x].get_tile(t)
+		var weight: float = WEIGHTS_TABLE[tile_coords]
+		distribution.append(weight)
 
 	
 	# pick a random tile to place in the given cell
@@ -202,6 +203,7 @@ func observe_cell(cell: Vector2i):
 	for t in range(len(distribution)):
 		sum += distribution[t]
 	
+	# a random percentage of the sum will be used to determine which tiles will be used left in the tiles pool
 	var threshold: float = fmod(randf(), 1.0) * sum
 	var partial_sum: float = 0.0
 	var tile_index: int = 0
@@ -211,7 +213,7 @@ func observe_cell(cell: Vector2i):
 			tile_index = t
 			break
 	
-	var picked_tile: String = possible_tile_choices[cell.y][cell.x].tiles[tile_index]
+	var picked_tile: Vector2i = possible_tile_choices[cell.y][cell.x].get_tile(tile_index)
 	#print("picked tile: ", picked_tile)
 	
 	# ban all tiles that don't match tile_index for the given cell index -- collapse
@@ -247,14 +249,12 @@ func propagate_constraints() -> bool:
 		# if there are 0 tile options for a given cell, don't visit it 
 		# if a cell is out of bounds, don't visit it
 		
-		# if number of tile choices for this position is 0... skip it....
-		# this check may be causing the algorithm to stop early even though there are still tiles to be picked
+		# this means no more choices for this cell is possible resulting in an incomplete puzzel
 		if possible_tile_choices[banned_tile.cell_position.y][banned_tile.cell_position.x].size() <= 0:
-			return true
-			# return false
+			return false
 		
-		# after the first cell propagation... neighbor of neighbors can have multiple choices so this one needs to be a loop....
-		var tiles_union_set: Dictionary[String, bool] = {}
+		# after the first cell propagation... neighbor of neighbors can have multiple tile choices to pick from
+		var tiles_union_set: Dictionary[Vector2i, bool] = {}
 		for picked_tile in possible_tile_choices[banned_tile.cell_position.y][banned_tile.cell_position.x].tiles:
 			var compat_tiles: Array = compatible_tiles[picked_tile]
 			for compat_tile in compat_tiles:
@@ -266,7 +266,7 @@ func propagate_constraints() -> bool:
 		var eliminated_tile_indices: Array[int] = [] 
 		
 		for t in range(len(TILES)):
-			var tile: String = TILES[t]
+			var tile: Vector2i = TILES[t]
 			if tile not in tiles_union_set:
 				eliminated_tile_indices.append(t)
 		
@@ -292,15 +292,13 @@ func propagate_constraints() -> bool:
 	for row in range(height):
 		for col in range(width):
 			var choices_left: int = possible_tile_choices[row][col].size()
-			# will infinite loop now.....
-			# if choices_left > 1:
 			total_choices_left += choices_left
 	
 	return total_choices_left > 0
 	
 func ban_tile(cell_position: Vector2i, tile_index: int):
 	assert(tile_index >= 0 and tile_index < len(TILES))
-	var tile: String = TILES[tile_index]
+	var tile: Vector2i = TILES[tile_index]
 	possible_tile_choices[cell_position.y][cell_position.x].remove(tile)
 	
 	banned_tiles_stack.append(BannedTile.new(cell_position, tile_index))
@@ -320,7 +318,7 @@ func print_puzzle():
 		for col in range(width):
 			var choice_count: int = possible_tile_choices[row][col].size()
 			if choice_count == 1:
-				string_row += possible_tile_choices[row][col].get_tile(0) + " "
+				string_row += "%2.0v " % possible_tile_choices[row][col].get_tile(0)
 			else: # many choices are either still left or no valid tiles can be picked
 				string_row += ". "
 		
@@ -331,16 +329,16 @@ func print_grid_state():
 	for row in range(height):
 		var row_string: String = ""
 		for col in range(width):
-			var tiles: Array[String] = possible_tile_choices[row][col].tiles
-			row_string +=  "[" + ",".join(tiles) + "]\t"
+			var tiles: Array[Vector2i] = possible_tile_choices[row][col].tiles
+			row_string +=  "(" + ",".join(tiles) + ")\t"
 		print(row_string)
 
 func run() -> bool:
 	init()
 	clear()
 	
-	print_grid_state()
-	print("-----------------------------")
+	#print_grid_state()
+	#print("-----------------------------")
 	
 	var is_puzzle_solved: bool = false
 	var is_puzzle_in_progress: bool = true
@@ -348,9 +346,6 @@ func run() -> bool:
 	# while you still have a cell to pick a tile from the grid, continue the loop
 	# otherwise stop the loop
 	while is_puzzle_in_progress:
-		if iterations == 9:
-			print("last one hardcoded")
-		
 		#print("------------BEFORE---------------")
 		#print_grid_state()
 		#print("---------------------------------")
@@ -375,12 +370,32 @@ func run() -> bool:
 		#print("---------------------------------")
 			
 			
-	print_puzzle()
+	#print_puzzle()
 	return is_puzzle_solved
 
 func run_wave_function_collapse():
+	
+	var start_time: int = Time.get_ticks_msec()
+	
+	map.clear()
 	var is_successful: bool = run()
 	print("is successful? ", is_successful)
+	
+	if is_successful:
+		place_tiles()
+		
+	var time_processed: int = Time.get_ticks_msec() - start_time
+	print("Time processed in milliseconds: %d" % time_processed)
+
+func place_tiles():
+	for row in range(height):
+		for col in range(width):
+			assert(possible_tile_choices[row][col].size() > 0)
+			
+			var position = Vector2i(col, row)
+			var tile_set_source_id: int = 0
+			var atlas_coords: Vector2i = possible_tile_choices[row][col].tiles[0]
+			map.set_cell(position, tile_set_source_id, atlas_coords)
 
 func _ready():
 	button.pressed.connect(run_wave_function_collapse)

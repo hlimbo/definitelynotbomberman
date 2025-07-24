@@ -242,7 +242,6 @@ func build_maze():
 	var wall_id = Vector2i(2,5)
 	tile_lookup_table[TileType.Wall] = [wall_id]
 	
-	var can_transpose: bool = true
 	for r in range(_height):
 		for c in range(_width):
 			var map_coords = Vector2i(c, r)

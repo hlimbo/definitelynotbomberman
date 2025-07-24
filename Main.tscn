@@ -125,6 +125,7 @@ hp_bar = NodePath("../CanvasLayer/HpBar")
 [node name="BombContainer" type="Node2D" parent="."]
 
 [node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.5, 0.5)
 
 [node name="Walls (Tilemap)" type="TileMapLayer" parent="."]
 z_index = -10
