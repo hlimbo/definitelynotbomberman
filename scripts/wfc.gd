@@ -8,8 +8,9 @@ extends Node
 
 @export var width: int = 10
 @export var height: int = 10
-@export var tiles_count: int = 4
+@export var tiles_count: int
 
+#region TILES
 # alternative IDs will be used for picking out which rotated tile to use
 # these coordinates are hardcoded atlas coordinates from the maze_tileset.tres resource
 const GRASS_TILE = Vector2i(2,2)
@@ -17,21 +18,82 @@ const STONE_TILE = Vector2i(2,5)
 const WATER_TILE = Vector2i(12,5)
 const DIRT_TILE = Vector2i(16, 3)
 
-# Vector2i represents the atlas coordinates of tiles found in the map's TileSet's TileSetSource Resource
+const GRASS_TL_CORNER = Vector2i(0,0)
+const GRASS_BL_CORNER = Vector2i(0,4)
+const GRASS_TR_CORNER = Vector2i(5,0)
+const GRASS_BR_CORNER = Vector2i(5,4)
+const GRASS_CENTER = Vector2i(4,2)
+const GRASS_TOP = Vector2i(3,0)
+const GRASS_BOT = Vector2i(3,4)
+const GRASS_LEFT = Vector2i(0,2)
+const GRASS_RIGHT = Vector2i(5,2)
+
+const GRASSWATER_TOP = Vector2i(2,1)
+const GRASSWATER_BOT = Vector2i(2,3)
+const GRASSWATER_LEFT = Vector2i(1,2)
+const GRASSWATER_RIGHT = Vector2i(3,2)
+const GRASSWATER_TL = Vector2i(1,1)
+const GRASSWATER_TR = Vector2i(3,1)
+const GRASSWATER_BL = Vector2i(1,3)
+const GRASSWATER_BR = Vector2i(3,3)
+
+const WATEREDGE_TL = Vector2i(11,4)
+const WATEREDGE_TC = Vector2i(12,4)
+const WATEREDGE_TR = Vector2i(13,4)
+const WATEREDGE_LC = Vector2i(11,5)
+const WATEREDGE_RC = Vector2i(13,5)
+const WATEREDGE_CC = Vector2i(12,5)
+const WATEREDGE_BL = Vector2i(11,6)
+const WATEREDGE_BC = Vector2i(12,6)
+const WATEREDGE_BR = Vector2i(13,6)
+#endregion
+
 const TILES: Array[Vector2i] = [
-	GRASS_TILE, STONE_TILE, WATER_TILE, DIRT_TILE
+	GRASS_TL_CORNER,
+	GRASS_BL_CORNER,
+	GRASS_TR_CORNER,
+	GRASS_BR_CORNER,
+	GRASS_CENTER,
+	GRASS_TOP,
+	GRASS_BOT,
+	GRASS_LEFT,
+	GRASS_RIGHT,
+
+	GRASSWATER_TOP,
+	GRASSWATER_BOT,
+	GRASSWATER_LEFT,
+	GRASSWATER_RIGHT,
+	GRASSWATER_TL,
+	GRASSWATER_TR,
+	GRASSWATER_BL,
+	GRASSWATER_BR,
+
+	WATEREDGE_TL,
+	WATEREDGE_TC,
+	WATEREDGE_TR,
+	WATEREDGE_LC,
+	WATEREDGE_RC,
+	WATEREDGE_CC,
+	WATEREDGE_BL,
+	WATEREDGE_BC,
+	WATEREDGE_BR,
 ]
 
-# used to determine which tiles fit together like a puzzle piece
-# this can be thought of as a rule set of which tiles can be connected together
-# key - tile's atlas coordinates
-# value - list of Vector2i atlas coordinates of tiles that are compatible with this tile
-var compatible_tiles: Dictionary[Vector2i, Array] = {
-	WATER_TILE: [WATER_TILE, DIRT_TILE],
-	DIRT_TILE: [DIRT_TILE, WATER_TILE, STONE_TILE, GRASS_TILE],
-	STONE_TILE: [STONE_TILE, GRASS_TILE, DIRT_TILE],
-	GRASS_TILE: [GRASS_TILE, STONE_TILE, DIRT_TILE]
-}
+## Vector2i represents the atlas coordinates of tiles found in the map's TileSet's TileSetSource Resource
+#const TILES: Array[Vector2i] = [
+	#GRASS_TILE, STONE_TILE, WATER_TILE, DIRT_TILE
+#]
+#
+## used to determine which tiles fit together like a puzzle piece
+## this can be thought of as a rule set of which tiles can be connected together
+## key - tile's atlas coordinates
+## value - list of Vector2i atlas coordinates of tiles that are compatible with this tile
+#var compatible_tiles: Dictionary[Vector2i, Array] = {
+	#WATER_TILE: [WATER_TILE, DIRT_TILE],
+	#DIRT_TILE: [DIRT_TILE, WATER_TILE, STONE_TILE, GRASS_TILE],
+	#STONE_TILE: [STONE_TILE, GRASS_TILE, DIRT_TILE],
+	#GRASS_TILE: [GRASS_TILE, STONE_TILE, DIRT_TILE]
+#}
 
 enum Compass { N = 0, S = 1, W = 2, E = 3 }
 
@@ -40,6 +102,174 @@ const DIRECTIONS: Dictionary[Compass, Vector2i] = {
 	Compass.S: Vector2i(0, 1),
 	Compass.W: Vector2i(-1, 0),
 	Compass.E: Vector2i(1, 0),
+}
+
+# TODO: create a tool that lets me pick this out visually....
+# key: Vector2i - represents atlas coordinates of tiles found
+# value: Dictionary
+# inner key: represents direction in which a tile can be placed
+# inner value: Array of Vector2i atlas tile coordinates of compatible tiles for the given direction 
+var compatible_tiles: Dictionary[Vector2i, Dictionary] = {
+	GRASS_TL_CORNER: {
+		Compass.N: [],
+		Compass.S: [GRASS_LEFT],
+		Compass.W: [],
+		Compass.E: [GRASS_TOP],
+	},
+	GRASS_BL_CORNER: {
+		Compass.N: [GRASS_LEFT],
+		Compass.S: [],
+		Compass.W: [],
+		Compass.E: [GRASS_BOT],
+	},
+	GRASS_TR_CORNER: {
+		Compass.N: [],
+		Compass.S: [GRASS_RIGHT],
+		Compass.W: [GRASS_TOP],
+		Compass.E: [],
+	},
+	GRASS_BR_CORNER: {
+		Compass.N: [GRASS_RIGHT],
+		Compass.S: [],
+		Compass.W: [GRASS_BOT],
+		Compass.E: [],
+	},
+	GRASS_CENTER: {
+		Compass.N: [GRASS_TOP, GRASS_CENTER],
+		Compass.S: [GRASS_BOT, GRASS_CENTER],
+		Compass.W: [GRASS_LEFT, GRASS_CENTER],
+		Compass.E: [GRASS_RIGHT, GRASS_CENTER],
+	},
+	GRASS_TOP: {
+		Compass.N: [],
+		Compass.S: [GRASS_CENTER],
+		Compass.W: [GRASS_TOP, GRASS_TL_CORNER],
+		Compass.E: [GRASS_TOP, GRASS_TR_CORNER],
+	},
+	GRASS_BOT: {
+		Compass.N: [GRASS_CENTER],
+		Compass.S: [],
+		Compass.W: [GRASS_BOT, GRASS_BL_CORNER],
+		Compass.E: [GRASS_BOT, GRASS_BR_CORNER],
+	},
+	GRASS_LEFT: {
+		Compass.N: [GRASS_LEFT, GRASS_TL_CORNER],
+		Compass.S: [GRASS_LEFT, GRASS_BL_CORNER],
+		Compass.W: [],
+		Compass.E: [GRASS_CENTER],
+	},
+	GRASS_RIGHT: {
+		Compass.N: [GRASS_RIGHT, GRASS_TR_CORNER],
+		Compass.S: [GRASS_RIGHT, GRASS_BR_CORNER],
+		Compass.W: [GRASS_CENTER],
+		Compass.E: [],
+	},
+	
+	GRASSWATER_TOP: {
+		Compass.N: [GRASS_CENTER, GRASS_TOP],
+		Compass.S: [WATEREDGE_TC],
+		Compass.W: [GRASSWATER_TOP, GRASSWATER_TL],
+		Compass.E: [GRASSWATER_TOP, GRASSWATER_TR],
+	},
+	GRASSWATER_BOT: {
+		Compass.N: [WATEREDGE_BC],
+		Compass.S: [GRASS_CENTER, GRASS_BOT],
+		Compass.W: [GRASSWATER_BOT, GRASSWATER_BL],
+		Compass.E: [GRASSWATER_BOT, GRASSWATER_BR],
+	},
+	GRASSWATER_LEFT: {
+		Compass.N: [GRASSWATER_LEFT, GRASSWATER_TL],
+		Compass.S: [GRASSWATER_LEFT, GRASSWATER_BL],
+		Compass.W: [GRASS_CENTER, GRASS_LEFT],
+		Compass.E: [WATEREDGE_LC],
+	},
+	GRASSWATER_RIGHT: {
+		Compass.N: [GRASSWATER_RIGHT, GRASSWATER_TR],
+		Compass.S: [GRASSWATER_RIGHT, GRASSWATER_BR],
+		Compass.W: [WATEREDGE_RC],
+		Compass.E: [GRASS_CENTER, GRASS_RIGHT],
+	},
+	GRASSWATER_TL: {
+		Compass.N: [GRASS_CENTER, GRASS_TOP],
+		Compass.S: [GRASSWATER_LEFT],
+		Compass.W: [GRASS_CENTER, GRASS_LEFT],
+		Compass.E: [GRASSWATER_TOP],
+	},
+	GRASSWATER_TR: {
+		Compass.N: [GRASS_CENTER, GRASS_TOP],
+		Compass.S: [GRASSWATER_RIGHT],
+		Compass.W: [GRASSWATER_TOP],
+		Compass.E: [GRASS_CENTER, GRASS_RIGHT],
+	},
+	GRASSWATER_BL: {
+		Compass.N: [GRASSWATER_LEFT],
+		Compass.S: [GRASS_CENTER, GRASS_BOT],
+		Compass.W: [GRASS_CENTER, GRASS_LEFT],
+		Compass.E: [GRASSWATER_BOT],
+	},
+	GRASSWATER_BR: {
+		Compass.N: [GRASSWATER_RIGHT],
+		Compass.S: [GRASS_CENTER, GRASS_BOT],
+		Compass.W: [GRASSWATER_BOT],
+		Compass.E: [GRASS_CENTER, GRASS_RIGHT],
+	},
+	
+	WATEREDGE_TL: {
+		Compass.N: [GRASSWATER_TOP],
+		Compass.S: [WATEREDGE_LC],
+		Compass.W: [GRASSWATER_LEFT],
+		Compass.E: [WATEREDGE_TC, WATEREDGE_TR],
+	},
+	WATEREDGE_TC: {
+		Compass.N: [GRASSWATER_TOP],
+		Compass.S: [WATEREDGE_CC, WATEREDGE_BC],
+		Compass.W: [WATEREDGE_TC, WATEREDGE_TL],
+		Compass.E: [WATEREDGE_TC, WATEREDGE_TR],
+	},
+	WATEREDGE_TR: {
+		Compass.N: [GRASSWATER_TOP],
+		Compass.S: [WATEREDGE_RC],
+		Compass.W: [WATEREDGE_TC],
+		Compass.E: [GRASSWATER_RIGHT],
+	},
+	WATEREDGE_LC: {
+		Compass.N: [WATEREDGE_LC, WATEREDGE_TL],
+		Compass.S: [WATEREDGE_LC, WATEREDGE_BL],
+		Compass.W: [GRASSWATER_LEFT],
+		Compass.E: [WATEREDGE_CC],
+	},
+	WATEREDGE_RC: {
+		Compass.N: [WATEREDGE_RC, WATEREDGE_TR],
+		Compass.S: [WATEREDGE_RC, WATEREDGE_BR],
+		Compass.W: [WATEREDGE_CC],
+		Compass.E: [GRASSWATER_RIGHT],
+	},
+	WATEREDGE_CC: {
+		Compass.N: [WATEREDGE_CC, WATEREDGE_TC],
+		Compass.S: [WATEREDGE_CC, WATEREDGE_BC],
+		Compass.W: [WATEREDGE_CC, WATEREDGE_LC],
+		Compass.E: [WATEREDGE_CC, WATEREDGE_RC],
+	},
+	WATEREDGE_BL: {
+		Compass.N: [WATEREDGE_LC],
+		Compass.S: [GRASSWATER_BOT],
+		Compass.W: [GRASSWATER_LEFT],
+		Compass.E: [WATEREDGE_BC, WATEREDGE_BR],
+	},
+	WATEREDGE_BC: {
+		Compass.N: [WATEREDGE_CC],
+		Compass.S: [GRASSWATER_BOT],
+		Compass.W: [WATEREDGE_BC, WATEREDGE_BL],
+		Compass.E: [WATEREDGE_BC, WATEREDGE_BR],
+	},
+	WATEREDGE_BR: {
+		Compass.N: [WATEREDGE_RC],
+		Compass.S: [GRASSWATER_BOT],
+		Compass.W: [WATEREDGE_BC],
+		Compass.E: [GRASSWATER_RIGHT],
+	},
+	
+	
 }
 
 class BannedTile:
@@ -138,11 +368,12 @@ func init():
 	# compute weights using Shannon Entropy
 	# Source: https://github.com/mxgmn/WaveFunctionCollapse/blob/master/Model.cs
 	# starts at line 55 of source code link
-	assert(tiles_count == len(WEIGHTS_TABLE))
+	# assert(tiles_count == len(WEIGHTS_TABLE))
 	var t: int = 0
-	var custom_weights = WEIGHTS_TABLE.values()
+	# var custom_weights = WEIGHTS_TABLE.values()
 	while t < len(WEIGHTS_TABLE):
-		weights[t] = float(custom_weights[t])
+		# equal weights
+		weights[t] = 2.0 # float(custom_weights[t])
 		log_weights[t] = weights[t] * log(weights[t])
 		sum_of_weights += weights[t]
 		sum_of_log_weights += log_weights[t]
@@ -194,7 +425,7 @@ func observe_cell(cell: Vector2i):
 	var possible_tile_choices_count: int = possible_tile_choices[cell.y][cell.x].size()
 	for t in range(possible_tile_choices_count):
 		var tile_coords: Vector2i = possible_tile_choices[cell.y][cell.x].get_tile(t)
-		var weight: float = WEIGHTS_TABLE[tile_coords]
+		var weight: float = 2.0 # WEIGHTS_TABLE[tile_coords]
 		distribution.append(weight)
 
 	
@@ -249,26 +480,43 @@ func propagate_constraints() -> bool:
 		# if there are 0 tile options for a given cell, don't visit it 
 		# if a cell is out of bounds, don't visit it
 		
-		# this means no more choices for this cell is possible resulting in an incomplete puzzel
+		# this means no more choices for this cell is possible resulting in an incomplete puzzle
 		if possible_tile_choices[banned_tile.cell_position.y][banned_tile.cell_position.x].size() <= 0:
 			return false
 		
 		# after the first cell propagation... neighbor of neighbors can have multiple tile choices to pick from
-		var tiles_union_set: Dictionary[Vector2i, bool] = {}
-		for picked_tile in possible_tile_choices[banned_tile.cell_position.y][banned_tile.cell_position.x].tiles:
-			var compat_tiles: Array = compatible_tiles[picked_tile]
-			for compat_tile in compat_tiles:
-				tiles_union_set[compat_tile] = true
+		# var tiles_union_set: Dictionary[Vector2i, bool] = {}
+		# inner dictionary
+		# inner key - Vector2i representing atlas tile texture coordinate
+		# inner value - boolean representing whether or not tile exists in the union set
+		var tiles_union_set: Dictionary[Compass, Dictionary] = {}
+		for possible_tile in possible_tile_choices[banned_tile.cell_position.y][banned_tile.cell_position.x].tiles:
+			# var compat_tiles: Array = compatible_tiles[picked_tile]
+			var compat_tiles_dirs: Dictionary = compatible_tiles[possible_tile]
+			for dir in compat_tiles_dirs:
+				tiles_union_set[dir] = {}
+				var compat_tiles: Array = compat_tiles_dirs[dir]
+				for compat_tile in compat_tiles:
+					tiles_union_set[dir][compat_tile] = true
 		
 		var length: int = len(tiles_union_set)
 		assert(length > 0)
 		
-		var eliminated_tile_indices: Array[int] = [] 
+		# key = compass direction
+		# value = array of eliminated tile indices - Array[int]
+		var eliminated_tile_indices: Dictionary[Compass, Array] = {
+			Compass.N: [],
+			Compass.S: [],
+			Compass.W: [],
+			Compass.E: [],
+		} 
 		
+		var cardinal_directions: Array = DIRECTIONS.keys()
 		for t in range(len(TILES)):
 			var tile: Vector2i = TILES[t]
-			if tile not in tiles_union_set:
-				eliminated_tile_indices.append(t)
+			for dir in cardinal_directions:
+				if tile not in tiles_union_set[dir]:
+					eliminated_tile_indices[dir].append(t)
 		
 		for direction in DIRECTIONS:
 			var delta_dir: Vector2i = DIRECTIONS[direction]
@@ -283,7 +531,7 @@ func propagate_constraints() -> bool:
 			if choices_left <= 1:
 				continue
 				
-			for t in eliminated_tile_indices:
+			for t in eliminated_tile_indices[direction]:
 				if possible_tile_choices[neighbor_position.y][neighbor_position.x].has_tile(TILES[t]):
 					ban_tile(neighbor_position, t)
 		
@@ -330,7 +578,7 @@ func print_grid_state():
 		var row_string: String = ""
 		for col in range(width):
 			var tiles: Array[Vector2i] = possible_tile_choices[row][col].tiles
-			row_string +=  "(" + ",".join(tiles) + ")\t"
+			row_string +=  "[" + ",".join(tiles) + "]\t"
 		print(row_string)
 
 func run() -> bool:
@@ -346,9 +594,9 @@ func run() -> bool:
 	# while you still have a cell to pick a tile from the grid, continue the loop
 	# otherwise stop the loop
 	while is_puzzle_in_progress:
-		#print("------------BEFORE---------------")
-		#print_grid_state()
-		#print("---------------------------------")
+		print("------------BEFORE---------------")
+		print_grid_state()
+		print("---------------------------------")
 		
 		var cell_coords: Vector2i = pick_unobserved_cell()
 		var is_puzzle_incomplete: bool = cell_coords.x >= 0 and cell_coords.y >= 0
@@ -358,6 +606,7 @@ func run() -> bool:
 			if !have_tile_options_from_any_cell:
 				is_puzzle_solved = false
 				is_puzzle_in_progress = false
+				print("Not solvable")
 		else:
 			# WFC algorithm completed solving the grid map layout
 			is_puzzle_solved = true
@@ -365,9 +614,9 @@ func run() -> bool:
 			
 		iterations += 1
 		
-		#print("------------AFTER----------------")
-		#print_grid_state()
-		#print("---------------------------------")
+		print("------------AFTER----------------")
+		print_grid_state()
+		print("---------------------------------")
 			
 			
 	#print_puzzle()
@@ -381,8 +630,7 @@ func run_wave_function_collapse():
 	var is_successful: bool = run()
 	print("is successful? ", is_successful)
 	
-	if is_successful:
-		place_tiles()
+	place_tiles()
 		
 	var time_processed: int = Time.get_ticks_msec() - start_time
 	print("Time processed in milliseconds: %d" % time_processed)
@@ -390,7 +638,11 @@ func run_wave_function_collapse():
 func place_tiles():
 	for row in range(height):
 		for col in range(width):
-			assert(possible_tile_choices[row][col].size() > 0)
+			# skip -- this part of the puzzle not solvable
+			if possible_tile_choices[row][col].size() == 0:
+				continue
+			
+			# assert(possible_tile_choices[row][col].size() > 0)
 			
 			var position = Vector2i(col, row)
 			var tile_set_source_id: int = 0
@@ -398,4 +650,5 @@ func place_tiles():
 			map.set_cell(position, tile_set_source_id, atlas_coords)
 
 func _ready():
+	tiles_count = len(TILES)
 	button.pressed.connect(run_wave_function_collapse)

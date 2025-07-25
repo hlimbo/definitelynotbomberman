@@ -959,8 +959,8 @@ recreate_maze_btn = NodePath("CanvasLayer/Button")
 script = ExtResource("8_2hb8k")
 button = NodePath("../CanvasLayer/WFC_Button")
 map = NodePath("../map")
-width = 14
-height = 14
+width = 3
+height = 3
 
 [node name="dungeon_tiles" type="TileMapLayer" parent="."]
 visible = false
