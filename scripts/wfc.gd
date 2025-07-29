@@ -49,40 +49,129 @@ const WATEREDGE_BR = Vector2i(13,6)
 
 const EMPTY_TILE = Vector2i(22,7)
 const ROCK_TILE = Vector2i(9,7)
+
+##### Pipes Tileset -- z represents alternative tile id index for rotated tile versions ######
+const BRIDGE := Vector3i(0,0,0)
+const COMPONENT := Vector3i(1,0,0)
+const CONNECTION := Vector3i(2,0,0)
+const CORNER := Vector3i(3,0,0)
+const DSKEW := Vector3i(4,0,0)
+const SKEW := Vector3i(5,0,0)
+const SUBSTRATE :=Vector3i(6,0,0)
+const T := Vector3i(7,0,0)
+const TRACK := Vector3i(8,0,0)
+const TRANSITION:= Vector3i(0,1,0)
+const TURN := Vector3i(1,1,0)
+const VIAD := Vector3i(2,1,0)
+const VIAS := Vector3i(3,1,0)
+const WIRE := Vector3i(4,1,0)
+
+### Rotated Versions
+const BRIDGE1 := Vector3i(0,0,1)
+const CONNECTION1 := Vector3i(2,0,1)
+const CONNECTION2 := Vector3i(2,0,2)
+const CONNECTION3 := Vector3i(2,0,3)
+const CORNER1 := Vector3i(3,0,1)
+const CORNER2 := Vector3i(3,0,2)
+const CORNER3 := Vector3i(3,0,3)
+const DSKEW1 := Vector3i(4,0,1)
+const SKEW1 := Vector3i(5,0,1)
+const SKEW2 := Vector3i(5,0,2)
+const SKEW3 := Vector3i(5,0,3)
+const T1 := Vector3i(7,0,1)
+const T2 := Vector3i(7,0,2)
+const T3 := Vector3i(7,0,3)
+const TRACK1 := Vector3i(8,0,1)
+const TRANSITION1 := Vector3i(0,1,1)
+const TRANSITION2 := Vector3i(0,1,2)
+const TRANSITION3 := Vector3i(0,1,3)
+const TURN1 := Vector3i(1,1,1)
+const TURN2 := Vector3i(1,1,2)
+const TURN3 := Vector3i(1,1,3)
+const VIAD1 := Vector3i(2,1,1)
+const VIAS1 := Vector3i(3,1,1)
+const VIAS2 := Vector3i(3,1,2)
+const VIAS3 := Vector3i(3,1,3)
+const WIRE1 := Vector3i(4,1,1)
+
 #endregion
 
-const TILES: Array[Vector2i] = [
-	GRASS_TL_CORNER,
-	GRASS_BL_CORNER,
-	GRASS_TR_CORNER,
-	GRASS_BR_CORNER,
-	GRASS_CENTER,
-	GRASS_TOP,
-	GRASS_BOT,
-	GRASS_LEFT,
-	GRASS_RIGHT,
+#const TILES: Array[Vector2i] = [
+	#GRASS_TL_CORNER,
+	#GRASS_BL_CORNER,
+	#GRASS_TR_CORNER,
+	#GRASS_BR_CORNER,
+	#GRASS_CENTER,
+	#GRASS_TOP,
+	#GRASS_BOT,
+	#GRASS_LEFT,
+	#GRASS_RIGHT,
+#
+	#GRASSWATER_TOP,
+	#GRASSWATER_BOT,
+	#GRASSWATER_LEFT,
+	#GRASSWATER_RIGHT,
+	#GRASSWATER_TL,
+	#GRASSWATER_TR,
+	#GRASSWATER_BL,
+	#GRASSWATER_BR,
+#
+	#WATEREDGE_TL,
+	#WATEREDGE_TC,
+	#WATEREDGE_TR,
+	#WATEREDGE_LC,
+	#WATEREDGE_RC,
+	#WATEREDGE_CC,
+	#WATEREDGE_BL,
+	#WATEREDGE_BC,
+	#WATEREDGE_BR,
+	#
+	#EMPTY_TILE,
+	 #STONE_TILE,
+#]
 
-	GRASSWATER_TOP,
-	GRASSWATER_BOT,
-	GRASSWATER_LEFT,
-	GRASSWATER_RIGHT,
-	GRASSWATER_TL,
-	GRASSWATER_TR,
-	GRASSWATER_BL,
-	GRASSWATER_BR,
-
-	WATEREDGE_TL,
-	WATEREDGE_TC,
-	WATEREDGE_TR,
-	WATEREDGE_LC,
-	WATEREDGE_RC,
-	WATEREDGE_CC,
-	WATEREDGE_BL,
-	WATEREDGE_BC,
-	WATEREDGE_BR,
+var TILES2: Array[Vector3i] = [
+	BRIDGE,
+	COMPONENT,
+	CONNECTION,
+	CORNER,
+	DSKEW,
+	SKEW,
+	SUBSTRATE,
+	T,
+	TRACK,
+	TRANSITION,
+	TURN,
+	VIAD,
+	VIAS,
+	WIRE,
 	
-	EMPTY_TILE,
-	# STONE_TILE,
+	BRIDGE1,
+	CONNECTION1,
+	CONNECTION2,
+	CONNECTION3,
+	CORNER1,
+	CORNER2,
+	CORNER3,
+	DSKEW1,
+	SKEW1,
+	SKEW2,
+	SKEW3,
+	T1,
+	T2,
+	T3,
+	TRACK1,
+	TRANSITION1,
+	TRANSITION2,
+	TRANSITION3,
+	TURN1,
+	TURN2,
+	TURN3,
+	VIAD1,
+	VIAS1,
+	VIAS2,
+	VIAS3,
+	WIRE1,
 ]
 
 ## Vector2i represents the atlas coordinates of tiles found in the map's TileSet's TileSetSource Resource
@@ -297,6 +386,250 @@ var compatible_tiles: Dictionary[Vector2i, Dictionary] = {
 	}
 }
 
+var compatible_tiles2: Dictionary[Vector3i, Dictionary] = {
+	BRIDGE: {
+	   Compass.N: [TRACK, TRANSITION, TURN1, TURN2, T, T1, T3, BRIDGE],
+	   Compass.E: [WIRE, VIAS3, BRIDGE],
+	   Compass.S: [TRACK, TURN, TURN3, TRANSITION2, VIAS, T1, T2, T3, CONNECTION, BRIDGE],
+	   Compass.W: [WIRE, VIAS1, BRIDGE],
+	},
+	COMPONENT: {
+	   Compass.N: [COMPONENT, CONNECTION],
+	   Compass.E: [COMPONENT, CONNECTION1],
+	   Compass.S: [COMPONENT, CONNECTION2],
+	   Compass.W: [COMPONENT, CONNECTION3],
+	},
+	CONNECTION: {
+	   Compass.N: [T, T1, T3, TRACK, BRIDGE, TURN1, TURN2],
+	   Compass.E: [CORNER, CONNECTION],
+	   Compass.S: [COMPONENT],
+	   Compass.W: [CORNER3, CONNECTION],
+	},
+	CORNER: {
+	   Compass.N: [SUBSTRATE, TRACK1, WIRE, TURN, TURN3, T2],
+	   Compass.E: [SUBSTRATE, TRACK, WIRE1, TURN, TURN1, VIAD1],
+	   Compass.S: [CONNECTION1],
+	   Compass.W: [CONNECTION],
+	},
+	DSKEW: {
+	   Compass.N: [DSKEW, SKEW2],
+	   Compass.E: [DSKEW, SKEW2],
+	   Compass.S: [DSKEW, SKEW],
+	   Compass.W: [DSKEW, SKEW],
+	},
+	SKEW: {
+	   Compass.N: [T, T1, TRANSITION, TRANSITION2],
+	   Compass.E: [T, T1, TRANSITION1, TRANSITION3, SKEW3],
+	   Compass.S: [SUBSTRATE],
+	   Compass.W: [SUBSTRATE],
+	},
+	SUBSTRATE: {
+	   Compass.N: [SUBSTRATE, CORNER1, WIRE, TRACK1, T2, TURN, TURN3, VIAS1, VIAS3],
+	   Compass.E: [SUBSTRATE, CORNER3, TRACK, WIRE1, TURN, T3, VIAD1],
+	   Compass.S: [SUBSTRATE, CORNER2, WIRE, TRACK1, T, TURN1, TURN2, VIAS1, VIAS3],
+	   Compass.W: [SUBSTRATE, CORNER, TRACK, WIRE1, TURN3, T1, VIAD1],
+	},
+	T: {
+	   Compass.N: [SUBSTRATE, T2, TURN, TURN3],
+	   Compass.E: [T, TRACK1, VIAS3, VIAD, TURN2, TURN3, CONNECTION3, TRANSITION1, T, T1, T2],
+	   Compass.S: [TRACK, VIAS, VIAD1, TURN, TURN3, VIAD1, CONNECTION, TRANSITION2, T1, T2, T3],
+	   Compass.W: [T, TRACK1, VIAS1, VIAD, TURN, TURN1, CONNECTION2, TRANSITION3, T, T2, T3],
+	},
+	TRACK: {
+	   Compass.N: [VIAS2, VIAD1, TRACK, BRIDGE, T, T1, T3, CORNER1, CORNER2, CONNECTION2],
+	   Compass.E: [SUBSTRATE, TRACK, T3, TURN, TURN1, VIAD1],
+	   Compass.S: [VIAS, VIAD1, TRACK, BRIDGE, T2, T1, T3, CORNER, CORNER3, CONNECTION],
+	   Compass.W: [SUBSTRATE, TRACK, T1, TURN3, TURN2, VIAD1],
+	},
+	TRANSITION: {
+	   Compass.N: [WIRE1,BRIDGE1, SKEW1, SKEW2],
+	   Compass.E: [SUBSTRATE, TRANSITION, TRANSITION2, TURN, TURN2, TRACK, WIRE1],
+	   Compass.S: [TRACK, BRIDGE, SKEW, TURN, TURN3],
+	   Compass.W: [SUBSTRATE, TRANSITION, TRANSITION2, TURN1, TURN3, TRACK, WIRE1],
+	},
+	TURN: {
+	   Compass.N: [TURN1, TRACK, BRIDGE],
+	   Compass.E: [TURN3, TRACK1, BRIDGE1],
+	   Compass.S: [SUBSTRATE, TURN1, TURN2, TRACK1, WIRE],
+	   Compass.W: [SUBSTRATE, TURN2, TURN3, TRACK, TRANSITION, TRANSITION2],
+	},
+	VIAD: {
+	   Compass.N: [SUBSTRATE, VIAD, TRACK1, WIRE, TRANSITION1, TRANSITION3],
+	   Compass.E: [TRACK, VIAD, TRANSITION1, TURN3, TURN2, T, T1, T2, T3],
+	   Compass.S: [SUBSTRATE, VIAD, TRACK1, WIRE, TRANSITION1, TRANSITION3],
+	   Compass.W: [TRACK, VIAD, TRANSITION3, TURN, TURN1, T, T1, T2, T3],
+	},
+	VIAS: {
+	   Compass.N: [TRACK, BRIDGE, CONNECTION2],
+	   Compass.E: [SUBSTRATE],
+	   Compass.S: [SUBSTRATE],
+	   Compass.W: [SUBSTRATE],
+	},
+	WIRE: {
+	   Compass.N: [SUBSTRATE],
+	   Compass.E: [WIRE, TRANSITION2, BRIDGE],
+	   Compass.S: [SUBSTRATE],
+	   Compass.W: [WIRE, TRANSITION1, BRIDGE],
+	},
+
+	BRIDGE1: {
+	   Compass.N: [WIRE1, BRIDGE1],
+	   Compass.E: [TRACK1, BRIDGE1, T, T1, T2, CORNER3, CORNER2],
+	   Compass.S: [WIRE1, BRIDGE1],
+	   Compass.W: [TRACK1, BRIDGE1, T, T3, T2, CORNER, CORNER1],
+	},
+	CONNECTION1: {
+	   Compass.N: [CONNECTION1, CORNER],
+	   Compass.E: [TRACK1, BRIDGE1],
+	   Compass.S: [CONNECTION1, CORNER1],
+	   Compass.W: [COMPONENT],
+	},
+	CONNECTION2: {
+	   Compass.N: [COMPONENT],
+	   Compass.E: [CONNECTION2, CORNER1],
+	   Compass.S: [TRACK, BRIDGE],
+	   Compass.W: [CONNECTION2, CORNER2],
+	},
+	CONNECTION3: {
+	   Compass.N: [CONNECTION3, CORNER3],
+	   Compass.E: [COMPONENT],
+	   Compass.S: [CONNECTION3, CORNER2],
+	   Compass.W: [TRACK1, BRIDGE1],
+	},
+	CORNER1: {
+	   Compass.N: [CONNECTION1],
+	   Compass.E: [SUBSTRATE],
+	   Compass.S: [SUBSTRATE],
+	   Compass.W: [CONNECTION2],
+	},
+	CORNER2: {
+	   Compass.N: [CONNECTION3],
+	   Compass.E: [CONNECTION2],
+	   Compass.S: [SUBSTRATE],
+	   Compass.W: [SUBSTRATE],
+	},
+	CORNER3: {
+	   Compass.N: [SUBSTRATE],
+	   Compass.E: [CONNECTION],
+	   Compass.S: [CONNECTION3],
+	   Compass.W: [SUBSTRATE],
+	},
+	DSKEW1: {
+	   Compass.N: [DSKEW1, SKEW1],
+	   Compass.E: [DSKEW1, SKEW3],
+	   Compass.S: [DSKEW1, SKEW3],
+	   Compass.W: [DSKEW1, SKEW1],
+	},
+	SKEW1: {
+	   Compass.N: [SUBSTRATE],
+	   Compass.E: [DSKEW1, SKEW3, T, T1, T2, TRACK1],
+	   Compass.S: [T1, T2, T3, TRACK, SKEW3],
+	   Compass.W: [SUBSTRATE],
+	},
+	SKEW2: {
+	   Compass.N: [SUBSTRATE],
+	   Compass.E: [SUBSTRATE],
+	   Compass.S: [SKEW, T1, T2, T3, TRACK, CONNECTION],
+	   Compass.W: [T, T2, T3, TRACK1, DSKEW, SKEW, CONNECTION1],
+	},
+	SKEW3: {
+	   Compass.N: [CONNECTION2, T, T1, T3, TRACK, SKEW1, DSKEW1],
+	   Compass.E: [SUBSTRATE],
+	   Compass.S: [SUBSTRATE],
+	   Compass.W: [SKEW1, DSKEW1, T, T2, T3, TRACK, CONNECTION1],
+	},
+	T1: {
+	   Compass.N: [T,T1,T3,TRACK, BRIDGE, CONNECTION2],
+	   Compass.E: [SUBSTRATE],
+	   Compass.S: [T,T1,T3,TRACK, BRIDGE, CONNECTION],
+	   Compass.W: [TRACK1, BRIDGE1, CONNECTION1],
+	},
+	T2: {
+	   Compass.N: [TRACK, CONNECTION],
+	   Compass.E: [T, T1, T2, TRACK1, BRIDGE1, CONNECTION3],
+	   Compass.S: [SUBSTRATE],
+	   Compass.W: [T, T2, T3, TRACK1, BRIDGE1, CONNECTION1],
+	},
+	T3: {
+	   Compass.N: [T, T1, T3, CONNECTION, VIAS2, VIAD1, CONNECTION2],
+	   Compass.E: [T, T1, T2, CONNECTION1, VIAD, CONNECTION3],
+	   Compass.S: [T1,T2,T3, CONNECTION2, VIAS, VIAD1, CONNECTION],
+	   Compass.W: [SUBSTRATE],
+	},
+	TRACK1: {
+	   Compass.N: [SUBSTRATE],
+	   Compass.E: [T, T1, T2, TRACK1, TURN3, TURN2, TRANSITION1, CONNECTION3, VIAS3, BRIDGE1],
+	   Compass.S: [SUBSTRATE],
+	   Compass.W: [T, T2, T3, TRACK1, TURN, TURN1, TRANSITION3, CONNECTION1, VIAS1, BRIDGE1],
+	},
+	TRANSITION1: {
+	   Compass.N: [SUBSTRATE, TRANSITION1],
+	   Compass.E: [WIRE, SKEW2, SKEW3],
+	   Compass.S: [SUBSTRATE, TRANSITION1],
+	   Compass.W: [TRACK1, T, T2, T3, TURN, TURN1, TURN3],
+	},
+	TRANSITION2: {
+	   Compass.N: [TRACK, T, T1, T3],
+	   Compass.E: [SUBSTRATE,TRANSITION2],
+	   Compass.S: [WIRE, SKEW3, SKEW],
+	   Compass.W: [SUBSTRATE,TRANSITION2],
+	},
+	TRANSITION3: {
+	   Compass.N: [TRANSITION3,SUBSTRATE],
+	   Compass.E: [TRACK1, T, T1, T2, TURN2, TURN3],
+	   Compass.S: [TRANSITION3,SUBSTRATE],
+	   Compass.W: [WIRE, SKEW, SKEW1],
+	},
+	TURN1: {
+	   Compass.N: [SUBSTRATE],
+	   Compass.E: [TURN2, TRACK1, BRIDGE1, TRANSITION1, CONNECTION3, T, T1, T2, T3],
+	   Compass.S: [TURN, TURN3,TRACK, BRIDGE, TRANSITION2, CONNECTION, T1, T2, T3],
+	   Compass.W: [SUBSTRATE],
+	},
+	TURN2: {
+	   Compass.N: [SUBSTRATE],
+	   Compass.E: [SUBSTRATE],
+	   Compass.S: [TRACK, BRIDGE, TURN, TURN3, T1, T2, T3],
+	   Compass.W: [TURN1, TRACK1, BRIDGE1, TURN, TURN1, T, T2, T3],
+	},
+	TURN3: {
+	   Compass.N: [TRACK, BRIDGE, TURN1, TURN2, T, T1, T3, VIAS2],
+	   Compass.E: [SUBSTRATE],
+	   Compass.S: [SUBSTRATE],
+	   Compass.W: [TRACK1, BRIDGE1, TURN1, TURN, T1, T2, T3, VIAS1],
+	},
+	VIAD1: {
+	   Compass.N: [TRACK, BRIDGE, VIAD1, T1, T3, T, TURN1, TURN2],
+	   Compass.E: [VIAD1,SUBSTRATE],
+	   Compass.S: [TRACK, BRIDGE, VIAD1, T1, T2, T3, TURN, TURN3],
+	   Compass.W: [VIAD1,SUBSTRATE],
+	},
+	VIAS1: {
+	   Compass.N: [SUBSTRATE,VIAS1],
+	   Compass.E: [TRACK1, BRIDGE1, T, T1, T2, TURN2, TURN3],
+	   Compass.S: [SUBSTRATE,VIAS1],
+	   Compass.W: [SUBSTRATE],
+	},
+	VIAS2: {
+	   Compass.N: [SUBSTRATE],
+	   Compass.E: [VIAS2, SUBSTRATE],
+	   Compass.S: [TRACK, BRIDGE, T1, T2, T3, TURN, TURN3],
+	   Compass.W: [VIAS2, SUBSTRATE],
+	},
+	VIAS3: {
+	   Compass.N: [SUBSTRATE, VIAS3],
+	   Compass.E: [SUBSTRATE],
+	   Compass.S: [SUBSTRATE, VIAS3],
+	   Compass.W: [TRACK1, BRIDGE1, TURN, TURN1, T, T2, T3],
+	},
+	WIRE1: {
+	   Compass.N: [CONNECTION2, BRIDGE1, WIRE1],
+	   Compass.E: [SUBSTRATE],
+	   Compass.S: [CONNECTION, BRIDGE1, WIRE1],
+	   Compass.W: [SUBSTRATE],
+	},
+}
+
 class BannedTile:
 	var cell_position: Vector2i
 	var tile_index: int
@@ -306,23 +639,23 @@ class BannedTile:
 		tile_index = _tile_index
 
 class PossibleTiles:
-	var tiles: Array[Vector2i]
+	var tiles: Array[Vector3i]
 	
-	func _init(_tiles: Array[Vector2i]):
+	func _init(_tiles: Array[Vector3i]):
 		tiles = []
 		tiles.append_array(_tiles)
 	
 	func size() -> int:
 		return len(tiles)
 		
-	func get_tile(index: int) -> Vector2i:
+	func get_tile(index: int) -> Vector3i:
 		assert(index >= 0 and index < len(tiles))
 		return tiles[index]
 	
-	func has_tile(tile: Vector2i) -> bool:
+	func has_tile(tile: Vector3i) -> bool:
 		return tile in tiles
 	
-	func remove(tile: Vector2i) -> bool:
+	func remove(tile: Vector3i) -> bool:
 		if tile not in tiles:
 			return false
 			
@@ -348,43 +681,85 @@ var banned_tiles_stack: Array[BannedTile] = []
 
 
 ### Weights - used to decide which tile to pick for a given cell
-const WEIGHTS_TABLE: Dictionary[Vector2i, float] = {
+const WEIGHTS_TABLE: Dictionary[Vector3i, float] = {
 	#GRASS_TILE: 2.0,
 	#STONE_TILE: 2.0,
 	#WATER_TILE: 2.0,
 	#DIRT_TILE: 2.0,
 	
-	GRASS_TL_CORNER: 4.0,
-	GRASS_BL_CORNER: 4.0,
-	GRASS_TR_CORNER: 4.0,
-	GRASS_BR_CORNER: 4.0,
-	GRASS_CENTER: 32.0,
-	GRASS_TOP: 8.0,
-	GRASS_BOT: 8.0,
-	GRASS_LEFT: 8.0,
-	GRASS_RIGHT: 8.0,
-	
-	GRASSWATER_TOP: 4.0,
-	GRASSWATER_BOT: 4.0,
-	GRASSWATER_LEFT: 4.0,
-	GRASSWATER_RIGHT: 4.0,
-	GRASSWATER_TL: 4.0,
-	GRASSWATER_TR: 4.0,
-	GRASSWATER_BL: 4.0,
-	GRASSWATER_BR: 4.0,
-	
-	WATEREDGE_TL:  8.0,
-	WATEREDGE_TC:  8.0,
-	WATEREDGE_TR:  8.0,
-	WATEREDGE_LC:  8.0,
-	WATEREDGE_RC:  8.0,
-	WATEREDGE_CC:  8.0,
-	WATEREDGE_BL:  8.0,
-	WATEREDGE_BC:  8.0,
-	WATEREDGE_BR:  8.0,
-	
-	EMPTY_TILE: 2.0,
+	#GRASS_TL_CORNER: 4.0,
+	#GRASS_BL_CORNER: 4.0,
+	#GRASS_TR_CORNER: 4.0,
+	#GRASS_BR_CORNER: 4.0,
+	#GRASS_CENTER: 32.0,
+	#GRASS_TOP: 8.0,
+	#GRASS_BOT: 8.0,
+	#GRASS_LEFT: 8.0,
+	#GRASS_RIGHT: 8.0,
+	#
+	#GRASSWATER_TOP: 4.0,
+	#GRASSWATER_BOT: 4.0,
+	#GRASSWATER_LEFT: 4.0,
+	#GRASSWATER_RIGHT: 4.0,
+	#GRASSWATER_TL: 4.0,
+	#GRASSWATER_TR: 4.0,
+	#GRASSWATER_BL: 4.0,
+	#GRASSWATER_BR: 4.0,
+	#
+	#WATEREDGE_TL:  8.0,
+	#WATEREDGE_TC:  8.0,
+	#WATEREDGE_TR:  8.0,
+	#WATEREDGE_LC:  8.0,
+	#WATEREDGE_RC:  8.0,
+	#WATEREDGE_CC:  8.0,
+	#WATEREDGE_BL:  8.0,
+	#WATEREDGE_BC:  8.0,
+	#WATEREDGE_BR:  8.0,
+	#
+	#EMPTY_TILE: 2.0,
 	#STONE_TILE: 2.0,
+	
+	BRIDGE: 2.0,
+	COMPONENT: 2.0,
+	CONNECTION: 2.0,
+	CORNER: 2.0,
+	DSKEW: 2.0,
+	SKEW: 2.0,
+	SUBSTRATE: 2.0,
+	T: 2.0,
+	TRACK: 2.0,
+	TRANSITION: 2.0,
+	TURN: 2.0,
+	VIAD: 2.0,
+	VIAS: 2.0,
+	WIRE: 2.0,
+	
+	BRIDGE1: 2.0,
+	CONNECTION1: 2.0,
+	CONNECTION2: 2.0,
+	CONNECTION3: 2.0,
+	CORNER1: 2.0,
+	CORNER2: 2.0,
+	CORNER3: 2.0,
+	DSKEW1: 2.0,
+	SKEW1: 2.0,
+	SKEW2: 2.0,
+	SKEW3: 2.0,
+	T1: 2.0,
+	T2: 2.0,
+	T3: 2.0,
+	TRACK1: 2.0,
+	TRANSITION1: 2.0,
+	TRANSITION2: 2.0,
+	TRANSITION3: 2.0,
+	TURN1: 2.0,
+	TURN2: 2.0,
+	TURN3: 2.0,
+	VIAD1: 2.0,
+	VIAS1: 2.0,
+	VIAS2: 2.0,
+	VIAS3: 2.0,
+	WIRE1: 2.0,
 }
 
 
@@ -418,7 +793,7 @@ func init():
 		sums_of_log_weights[row].resize(width)
 		entropies[row].resize(width)
 		for col in range(width):
-			possible_tile_choices[row][col] = PossibleTiles.new(TILES)
+			possible_tile_choices[row][col] = PossibleTiles.new(TILES2)
 			sums_of_weights[row][col] = 0.0
 			sums_of_log_weights[row][col] = 0.0
 			entropies[row][col] = 0.0
@@ -488,9 +863,10 @@ func pick_unobserved_cell() -> Vector2i:
 	return cell
 
 # compute possible tile options based on its neighboring cells for the current grid state
-func compute_tile_choices(position: Vector2i) -> PossibleTiles:
-	var tile_choices: Array[Vector2i] = []
-	var tile_set: Dictionary[Vector2i, bool] = {}
+func compute_tile_choices(pos: Vector3i) -> PossibleTiles:
+	var position := Vector2i(pos.x, pos.y)
+	var tile_choices: Array[Vector3i] = []
+	var tile_set: Dictionary[Vector3i, bool] = {}
 	for direction in DIRECTIONS:
 		var neighbor_cell: Vector2i = position + DIRECTIONS[direction]
 		if neighbor_cell.x < 0 or neighbor_cell.y < 0 or neighbor_cell.x >= width or neighbor_cell.y >= height:
@@ -515,17 +891,19 @@ func observe_cell(cell: Vector2i):
 	var current_possible_tiles: PossibleTiles = possible_tile_choices[cell.y][cell.x]
 	var possible_tile_choices_count: int = current_possible_tiles.size()
 	
-	# recompute possibilities if 0 was found from propagation step
-	if possible_tile_choices_count == 0:
-		possible_tile_choices[cell.y][cell.x] = compute_tile_choices(cell)
-		current_possible_tiles = possible_tile_choices[cell.y][cell.x]
-		possible_tile_choices_count = current_possible_tiles.size()
+	## recompute possibilities if 0 was found from propagation step
+	#if possible_tile_choices_count == 0:
+		#possible_tile_choices[cell.y][cell.x] = compute_tile_choices(cell)
+		#current_possible_tiles = possible_tile_choices[cell.y][cell.x]
+		#possible_tile_choices_count = current_possible_tiles.size()
 	
 	for t in range(possible_tile_choices_count):
-		var tile_coords: Vector2i = current_possible_tiles.get_tile(t)
+		var tile_coords: Vector3i = current_possible_tiles.get_tile(t)
 		var weight: float = WEIGHTS_TABLE[tile_coords]
 		distribution.append(weight)
 
+	if len(distribution) == 0:
+		return
 	
 	# pick a random tile to place in the given cell
 	var sum: float = 0.0
@@ -542,12 +920,12 @@ func observe_cell(cell: Vector2i):
 			tile_index = t
 			break
 	
-	var picked_tile: Vector2i = current_possible_tiles.get_tile(tile_index)
+	var picked_tile: Vector3i = current_possible_tiles.get_tile(tile_index)
 	# print("picked tile: ", picked_tile)
 	
 	# ban all tiles that don't match tile_index for the given cell index -- collapse
 	for t in range(tiles_count):
-		if picked_tile != TILES[t] and current_possible_tiles.has_tile(TILES[t]):
+		if picked_tile != TILES2[t] and current_possible_tiles.has_tile(TILES2[t]):
 			ban_tile(cell, t)
 
 # returns true if any cell has more than 1 tile to pick from from any cell
@@ -587,10 +965,12 @@ func propagate_constraints() -> bool:
 		
 		# this means no more choices for this cell is possible resulting in an incomplete puzzle
 		if possible_tile_choices[banned_tile.cell_position.y][banned_tile.cell_position.x].size() <= 0:
-			var curr_possible_choices: PossibleTiles = compute_tile_choices(banned_tile.cell_position)
-			possible_tile_choices[banned_tile.cell_position.y][banned_tile.cell_position.x] = curr_possible_choices
-			if curr_possible_choices.size() <= 0:
-				return false
+			continue
+			# return false
+			#var curr_possible_choices: PossibleTiles = compute_tile_choices(banned_tile.cell_position)
+			#possible_tile_choices[banned_tile.cell_position.y][banned_tile.cell_position.x] = curr_possible_choices
+			#if curr_possible_choices.size() <= 0:
+				#return false
 		
 		# after the first cell propagation... neighbor of neighbors can have multiple tile choices to pick from
 		# var tiles_union_set: Dictionary[Vector2i, bool] = {}
@@ -600,7 +980,7 @@ func propagate_constraints() -> bool:
 		var tiles_union_set: Dictionary[Compass, Dictionary] = {}
 		for possible_tile in possible_tile_choices[banned_tile.cell_position.y][banned_tile.cell_position.x].tiles:
 			# var compat_tiles: Array = compatible_tiles[picked_tile]
-			var compat_tiles_dirs: Dictionary = compatible_tiles[possible_tile]
+			var compat_tiles_dirs: Dictionary = compatible_tiles2[possible_tile]
 			for dir in compat_tiles_dirs:
 				tiles_union_set[dir] = {}
 				var compat_tiles: Array = compat_tiles_dirs[dir]
@@ -623,8 +1003,8 @@ func propagate_constraints() -> bool:
 		} 
 		
 		var cardinal_directions: Array = DIRECTIONS.keys()
-		for t in range(len(TILES)):
-			var tile: Vector2i = TILES[t]
+		for t in range(len(TILES2)):
+			var tile: Vector3i = TILES2[t]
 			for dir in cardinal_directions:
 				if tile not in tiles_union_set[dir]:
 					eliminated_tile_indices[dir].append(t)
@@ -643,7 +1023,7 @@ func propagate_constraints() -> bool:
 				continue
 				
 			for t in eliminated_tile_indices[direction]:
-				if possible_tile_choices[neighbor_position.y][neighbor_position.x].has_tile(TILES[t]):
+				if possible_tile_choices[neighbor_position.y][neighbor_position.x].has_tile(TILES2[t]):
 					ban_tile(neighbor_position, t)
 		
 	# count number of choices left to make per cell
@@ -656,8 +1036,8 @@ func propagate_constraints() -> bool:
 	return total_choices_left > 0
 	
 func ban_tile(cell_position: Vector2i, tile_index: int):
-	assert(tile_index >= 0 and tile_index < len(TILES))
-	var tile: Vector2i = TILES[tile_index]
+	assert(tile_index >= 0 and tile_index < len(TILES2))
+	var tile: Vector3i = TILES2[tile_index]
 	possible_tile_choices[cell_position.y][cell_position.x].remove(tile)
 	
 	banned_tiles_stack.append(BannedTile.new(cell_position, tile_index))
@@ -758,19 +1138,22 @@ func place_tiles():
 			var position = Vector2i(col, row)
 			var tile_set_source_id: int = 0
 			
+			const EMPTY_EMPTY = Vector2i(8,1)
+			
 			# not solvable case
 			if tile_choices == 0:
-				map.set_cell(position, tile_set_source_id, ROCK_TILE)
+				map.set_cell(position, tile_set_source_id, EMPTY_EMPTY)
 			# multiple tiles to pick for this cell
 			elif tile_choices > 1:
 				const MUSHROOM_TILE = Vector2i(10,7)
-				map.set_cell(position, tile_set_source_id, MUSHROOM_TILE)
+				map.set_cell(position, tile_set_source_id, EMPTY_EMPTY)
 			# 1 tile to pick for this cell
 			else:
-				var atlas_coords: Vector2i = possible_tile_choices[row][col].tiles[0]
-				map.set_cell(position, tile_set_source_id, atlas_coords)
+				var atlas_coords: Vector3i = possible_tile_choices[row][col].tiles[0]
+				var coords = Vector2i(atlas_coords.x, atlas_coords.y)
+				map.set_cell(position, tile_set_source_id, coords, atlas_coords.z)
 
 func _ready():
-	tiles_count = len(TILES)
+	tiles_count = len(TILES2)
 	print(tiles_count)
 	button.pressed.connect(run_wave_function_collapse)
