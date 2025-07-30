@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://d2t2yd8avamds"]
+[gd_scene load_steps=51 format=3 uid="uid://d2t2yd8avamds"]
 
 [ext_resource type="Script" uid="uid://ho55ru8dkukc" path="res://scripts/test_dummy.gd" id="1_uhqqe"]
 [ext_resource type="Shader" uid="uid://b1cldd7wx5mnx" path="res://shaders/wave_death.gdshader" id="2_8pr8v"]
@@ -24,6 +24,8 @@
 [ext_resource type="Texture2D" uid="uid://dqf8c4w5qyelg" path="res://assets/mouse-icons/Mouse scroll.png" id="17_pvxhv"]
 [ext_resource type="AudioStream" uid="uid://csck5ime6epox" path="res://assets/UISoundpack/Retro3.ogg" id="18_6m80x"]
 [ext_resource type="Texture2D" uid="uid://bx3tr4di3066b" path="res://atlas_textures/paper.tres" id="19_6h1ut"]
+[ext_resource type="Script" uid="uid://cw3bb55h136vj" path="res://scripts/clock_countdown.gd" id="21_8fq6b"]
+[ext_resource type="AnimationLibrary" uid="uid://culg486cgxkhy" path="res://animation/ui_canvas_layer/clock_hud.res" id="22_oy8sc"]
 [ext_resource type="AudioStream" uid="uid://2sulg4fdcpyd" path="res://assets/SHMUP BGM Pack 2 ogg&m4a/stg_st003-loop.ogg" id="26_b11sm"]
 [ext_resource type="AudioStream" uid="uid://cv3k3xrhsxq57" path="res://assets/SHMUP BGM Pack 2 ogg&m4a/stg_theme008.ogg" id="27_077gh"]
 [ext_resource type="PackedScene" uid="uid://n7630g0ehwof" path="res://nodes/enemies/DashingEnemy.tscn" id="27_mfkbt"]
@@ -145,6 +147,38 @@ tracks/1/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_pvxhv"]
 _data = {
 &"RESET": SubResource("Animation_g6y4b")
+}
+
+[sub_resource type="Animation" id="Animation_2nf64"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Label:anchor_top")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Label:anchor_bottom")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-1.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_sxsde"]
+_data = {
+&"RESET": SubResource("Animation_2nf64")
 }
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_buypi"]
@@ -760,6 +794,45 @@ offset_right = -255.0
 offset_bottom = -126.0
 grow_horizontal = 2
 grow_vertical = 0
+
+[node name="ClockHUD" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchor_right = 1.0
+anchor_bottom = 0.151
+offset_bottom = 0.279991
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/ClockHUD"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = -1.0
+anchor_right = 0.5
+anchor_bottom = -1.0
+offset_left = -78.0
+offset_right = 78.0
+offset_bottom = 60.0
+grow_horizontal = 2
+theme = ExtResource("10_hiucn")
+theme_override_colors/font_shadow_color = Color(0.262932, 0.262932, 0.262932, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 8
+theme_override_constants/shadow_outline_size = 1
+theme_override_font_sizes/font_size = 48
+text = "03:45"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("21_8fq6b")
+start_time_seconds = 85
+
+[node name="Timer" type="Timer" parent="CanvasLayer/ClockHUD/Label"]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/ClockHUD"]
+libraries = {
+&"": SubResource("AnimationLibrary_sxsde"),
+&"clock_hud": ExtResource("22_oy8sc")
+}
 
 [node name="audio_crossfade_timer" type="Timer" parent="CanvasLayer"]
 wait_time = 0.06

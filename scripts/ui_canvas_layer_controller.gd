@@ -12,10 +12,12 @@ extends Node
 #region Animation Names
 const HIDE_START_GAME_SCREEN: StringName = &"ui_canvas_layer/hide_start_game_screen"
 const TOGGLE_PLAYER_HUD: StringName = &"game_hud/toggle_player_hud"
+const TOGGLE_CLOCK_HUD: StringName = &"clock_hud/toggle"
 #endregion
 
 @onready var start_game_anim_player: AnimationPlayer = $StartGameScreen/AnimationPlayer
 @onready var game_hud_anim_player: AnimationPlayer = $GameHUD/AnimationPlayer
+@onready var clock_hud_anim_player: AnimationPlayer = $ClockHUD/AnimationPlayer
 @onready var play_button: TextureButton = $StartGameScreen/TitleBorder/PlayButton
 @onready var play_again_button: TextureButton = $GameOverScreen/PlayAgainButton
 @onready var play_again_button2: TextureButton = $GameWonScreen/PlayAgainButton
@@ -24,7 +26,7 @@ const TOGGLE_PLAYER_HUD: StringName = &"game_hud/toggle_player_hud"
 @onready var game_won_screen: Control = $GameWonScreen
 
 @onready var audio_crossfade_timer: Timer = $audio_crossfade_timer
-
+@onready var clock_hud: ClockHUD = $ClockHUD/Label
 
 func _ready():
 	play_button.pressed.connect(on_play_pressed)
@@ -60,11 +62,12 @@ func transition_track():
 func on_play_pressed():
 	toggle_start_game_screen()
 	toggle_player_hud(false)
+	toggle_clock_hud(false)
+	clock_hud.start_countdown()
 	
 	mob_group_controller.set_mobs_active()
 	
 	await transition_track()
-	
 
 func reset_scene():
 	get_tree().reload_current_scene()
@@ -88,4 +91,9 @@ func toggle_player_hud(is_hidden: bool = true):
 		game_hud_anim_player.play(TOGGLE_PLAYER_HUD)
 	else:
 		game_hud_anim_player.play_backwards(TOGGLE_PLAYER_HUD)
-	
+
+func toggle_clock_hud(is_hidden: bool = true):
+	if is_hidden:
+		clock_hud_anim_player.play_backwards(TOGGLE_CLOCK_HUD)
+	else:
+		clock_hud_anim_player.play(TOGGLE_CLOCK_HUD)
