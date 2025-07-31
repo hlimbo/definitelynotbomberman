@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=4 uid="uid://d2t2yd8avamds"]
+[gd_scene load_steps=52 format=4 uid="uid://d2t2yd8avamds"]
 
 [ext_resource type="Script" uid="uid://ho55ru8dkukc" path="res://scripts/test_dummy.gd" id="1_uhqqe"]
 [ext_resource type="Shader" uid="uid://b1cldd7wx5mnx" path="res://shaders/wave_death.gdshader" id="2_8pr8v"]
@@ -186,6 +186,8 @@ shader = ExtResource("2_8pr8v")
 shader_parameter/color_tint = Color(1, 0, 0, 1)
 shader_parameter/wave_frequency = 64.0
 shader_parameter/wave_threshold = 0.5
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_oy8sc"]
 
 [node name="TestScene" type="Node2D"]
 
@@ -860,10 +862,11 @@ tile_set = ExtResource("31_8fq6b")
 script = ExtResource("30_7kp7o")
 tile_map_layer = NodePath("../TileMapLayer")
 
-[node name="PackedSceneSpawner" type="Node2D" parent="." node_paths=PackedStringArray("random_spawn_picker")]
+[node name="PackedSceneSpawner" type="Node2D" parent="." node_paths=PackedStringArray("random_spawn_picker", "marker")]
 script = ExtResource("26_8fq6b")
 weight_table = ExtResource("27_oy8sc")
 random_spawn_picker = NodePath("../RandomSpawnPicker")
+marker = NodePath("../Marker2D")
 spawn_count = 8
 
 [node name="spawn_delay_timer" type="Timer" parent="PackedSceneSpawner"]
@@ -893,3 +896,7 @@ end_tolerance = 0.016
 [node name="Marker2D" type="Marker2D" parent="."]
 position = Vector2(801, 225)
 gizmo_extents = 1000.0
+
+[node name="Sprite2D" type="Sprite2D" parent="Marker2D"]
+scale = Vector2(16, 16)
+texture = SubResource("PlaceholderTexture2D_oy8sc")

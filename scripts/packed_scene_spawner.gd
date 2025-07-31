@@ -4,6 +4,9 @@ class_name PackedSceneSpawner extends Node
 
 @export var weight_table: WeightTable
 @export var random_spawn_picker: RandomSpawnPicker
+@export var marker: Marker2D
+
+var debug_markers: Array[Marker2D] = []
 
 @export var spawn_count: int = 12
 
@@ -33,8 +36,13 @@ func on_spawn_enemy():
 		spawn_delay_timer.stop()
 	else:
 		var base_enemy: BaseEnemy = nodes[enemy_index] as BaseEnemy
-		self.add_child(base_enemy)
+		self.get_tree().current_scene.add_child(base_enemy)
 		var position: Vector2 = random_spawn_picker.pick_random_world_position()
 		base_enemy.position = position
+		
+		var clone: Marker2D = marker.duplicate()
+		self.get_tree().current_scene.add_child(clone)
+		debug_markers.append(clone)
+		clone.position = position
 		
 		enemy_index += 1

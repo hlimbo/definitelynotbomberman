@@ -12,6 +12,9 @@ var tile_dimensions: Vector2i
 var tile_map_width: int
 var tile_map_height: int
 
+# tile map layer start position offset
+var tile_root_position: Vector2i
+
 # represents what positions are valid to spawn packed scenes in
 # 2d array of bools
 # true - can spawn a packed scene in the given [y][x] tile coordinate position
@@ -24,7 +27,8 @@ func _ready():
 
 	# returns enclosing rect space of the tile map layer
 	var rect_area: Rect2i = tile_map_layer.get_used_rect()
-	root_position = tile_map_layer.position + Vector2(rect_area.position)
+	root_position = tile_map_layer.position + Vector2(rect_area.position.x * tile_map_layer_scale.x, rect_area.position.y * tile_map_layer_scale.y)
+	tile_root_position = rect_area.position
 	tile_map_width = rect_area.size.x
 	tile_map_height = rect_area.size.y
 
@@ -58,8 +62,10 @@ func pick_random_spawn_location() -> Vector2i:
 	
 	var random_position: Vector2i = valid_positions[random_index]
 	# mark is unavailable position to spawn in
-	available_positions[random_position.y][random_position.x] = false	
-	return random_position
+	available_positions[random_position.y][random_position.x] = false
+
+	# add to tile_root_position to ensure the tiles are placed at the correct offset
+	return random_position + tile_root_position
 
 # sets all cell positions as valid positions to randomly place a node on
 func reset():
@@ -78,4 +84,8 @@ func convert_tile_coords_to_world_coords(tile_coord: Vector2i) -> Vector2:
 func pick_random_world_position() -> Vector2:
 	var spawn_pos: Vector2i = pick_random_spawn_location()
 	var spawn_world_pos: Vector2 = convert_tile_coords_to_world_coords(spawn_pos)
+	
+	print("spawn pos: %.0v" % spawn_pos)
+	print("spawn world pos: %v" % spawn_world_pos)
+	
 	return spawn_world_pos
