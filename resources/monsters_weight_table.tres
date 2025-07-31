@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="WeightTable" load_steps=5 format=3 uid="uid://r7eewuc33ttq"]
+
+[ext_resource type="PackedScene" uid="uid://dyubwq4v4oedp" path="res://nodes/enemies/BaseEnemy.tscn" id="1_fn5fv"]
+[ext_resource type="Script" uid="uid://d3njcutgqbltx" path="res://scripts/weight_table.gd" id="1_r4r35"]
+[ext_resource type="PackedScene" uid="uid://n7630g0ehwof" path="res://nodes/enemies/DashingEnemy.tscn" id="2_wftnk"]
+[ext_resource type="PackedScene" uid="uid://b7vl0o5ey7gae" path="res://nodes/enemies/RangedEnemy.tscn" id="3_buonr"]
+
+[resource]
+script = ExtResource("1_r4r35")
+original_pool = Dictionary[PackedScene, float]({
+ExtResource("1_fn5fv"): 8.0,
+ExtResource("2_wftnk"): 8.0,
+ExtResource("3_buonr"): 8.0
+})
+is_unique_only = false
+metadata/_custom_type_script = "uid://d3njcutgqbltx"

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="WeightTable" load_steps=2 format=3 uid="uid://ckued8r7khy8t"]
+
+[ext_resource type="Script" uid="uid://d3njcutgqbltx" path="res://scripts/weight_table.gd" id="1_suthi"]
+
+[resource]
+script = ExtResource("1_suthi")
+original_pool = Dictionary[PackedScene, float]({})
+is_unique_only = false
+metadata/_custom_type_script = "uid://d3njcutgqbltx"

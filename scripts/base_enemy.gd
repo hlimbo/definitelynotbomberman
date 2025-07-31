@@ -25,7 +25,7 @@ enum AI_State
 @export var hp: float
 @export var follow_speed: float = 100.0 # pixels per second
 @export var follow_distance: float = 32.0
-@export var ai_state: AI_State = AI_State.INACTIVE
+@export var ai_state: AI_State = AI_State.IDLE
 @export var target: Node2D
 @export var damage_text_node: PackedScene
 @export var hurt_shader: Shader
@@ -91,6 +91,7 @@ func can_attack() -> bool:
 	return AI_State.FOLLOW == ai_state and (is_instance_valid(target) and position.distance_to(target.position) < follow_distance)
 
 func _ready():
+	print("base enemy ready!")
 	detection_area.body_entered.connect(on_body_entered)
 	event_bus.on_enter_impact_area.connect(on_enter_impact_area)
 	event_bus.on_exit_impact_area.connect(on_exit_impact_area)
@@ -109,12 +110,13 @@ func _ready():
 	hp = max_hp
 	
 	hp_ui_view = hp_ui_view_node.instantiate() as HpUiView
-	hp_ui_view.visible = false
-	ui_root.add_child(hp_ui_view)
-	hp_ui_view.set_actor_node(self)
 	assert(hp_ui_view != null)
+	hp_ui_view.visible = false
+	hp_ui_view.set_actor_node(self)
+	ui_root.add_child(hp_ui_view)
 	
 	enemy_id = self.get_canvas_item().get_id()
+	print("emitting on initialize hp as enemy")
 	event_bus.on_initialize_hp.emit(enemy_id, max_hp, max_hp)
 
 # gets called when about to leave the SceneTree

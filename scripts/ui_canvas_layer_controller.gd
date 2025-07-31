@@ -6,9 +6,6 @@ extends Node
 @export var bg_music_player: AudioStreamPlayer
 @export var menu_music_player: AudioStreamPlayer
 
-@export var mob_group_controller: MobGroupController
-
-
 #region Animation Names
 const HIDE_START_GAME_SCREEN: StringName = &"ui_canvas_layer/hide_start_game_screen"
 const TOGGLE_PLAYER_HUD: StringName = &"game_hud/toggle_player_hud"
@@ -64,9 +61,7 @@ func on_play_pressed():
 	toggle_player_hud(false)
 	toggle_clock_hud(false)
 	clock_hud.start_countdown()
-	
-	mob_group_controller.set_mobs_active()
-	
+		
 	await transition_track()
 
 func reset_scene():

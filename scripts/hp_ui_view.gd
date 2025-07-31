@@ -17,7 +17,7 @@ var event_bus: EventBus = EventBus
 
 # Used to identify who owns this view and to set the correct hp bar values with
 # whenever the event bus emits an event to initialize or update the hp bar values
-@export var actor_node: Node2D = null
+@export var actor_node: Node2D
 
 func set_actor_node(node: Node2D):
 	actor_node = node
@@ -27,7 +27,15 @@ func _ready():
 	event_bus.on_hp_updated.connect(deduct_hp)
 
 func initialize(owner_id: int, current_hp: float, max_hp: float):
+	# for some reason this assertion fails when spawning enemies during runtime rather
+	# than hand placing them in a scene... and when I do a null check
+	# it seems to fix itself....
+	# it could be that the enemies and player that spawn in their own hp ui view node
+	# is receiving the signal on_initialize_hp from the event bus when some of them don't
+	# have the actor_node reference set yet...
 	assert(actor_node != null and is_instance_valid(actor_node))
+	#if actor_node == null or !is_instance_valid(actor_node):
+		#return
 	if owner_id != actor_node.get_canvas_item().get_id():
 		return
 	

@@ -29,9 +29,9 @@ func compute_sum_weights() -> float:
 
 	return weights_sum
 	
-func pick_random_spawnable_packed_scene() -> PackedScene:
+func pick_random_spawnable() -> PackedScene:
 	assert(len(active_pool) > 0)
-	var packed_scene: PackedScene = active_pool.values()[len(active_pool) - 1] as PackedScene
+	var packed_scene: PackedScene = active_pool.keys()[len(active_pool) - 1] as PackedScene
 	
 	var random_val: float = randf() * sum_weights
 	var total_weight: float = 0.0

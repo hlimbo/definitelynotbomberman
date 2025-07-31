@@ -132,6 +132,7 @@ func _ready() -> void:
 		hp_bar.set_actor_node(self)
 	
 	player_id = self.get_canvas_item().get_id()
+	print("emitting on initialize hp as player")
 	event_bus.on_initialize_hp.emit(player_id, starting_hp, starting_hp)
 	
 	hurt_timer.timeout.connect(_on_hurt_finished)

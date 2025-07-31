@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=3 uid="uid://d2t2yd8avamds"]
+[gd_scene load_steps=51 format=4 uid="uid://d2t2yd8avamds"]
 
 [ext_resource type="Script" uid="uid://ho55ru8dkukc" path="res://scripts/test_dummy.gd" id="1_uhqqe"]
 [ext_resource type="Shader" uid="uid://b1cldd7wx5mnx" path="res://shaders/wave_death.gdshader" id="2_8pr8v"]
@@ -26,13 +26,13 @@
 [ext_resource type="Texture2D" uid="uid://bx3tr4di3066b" path="res://atlas_textures/paper.tres" id="19_6h1ut"]
 [ext_resource type="Script" uid="uid://cw3bb55h136vj" path="res://scripts/clock_countdown.gd" id="21_8fq6b"]
 [ext_resource type="AnimationLibrary" uid="uid://culg486cgxkhy" path="res://animation/ui_canvas_layer/clock_hud.res" id="22_oy8sc"]
+[ext_resource type="Script" uid="uid://dbm3bflji5k25" path="res://scripts/packed_scene_spawner.gd" id="26_8fq6b"]
 [ext_resource type="AudioStream" uid="uid://2sulg4fdcpyd" path="res://assets/SHMUP BGM Pack 2 ogg&m4a/stg_st003-loop.ogg" id="26_b11sm"]
 [ext_resource type="AudioStream" uid="uid://cv3k3xrhsxq57" path="res://assets/SHMUP BGM Pack 2 ogg&m4a/stg_theme008.ogg" id="27_077gh"]
-[ext_resource type="PackedScene" uid="uid://n7630g0ehwof" path="res://nodes/enemies/DashingEnemy.tscn" id="27_mfkbt"]
-[ext_resource type="Script" uid="uid://s13cpb22dax1" path="res://scripts/mob_group_controller.gd" id="28_077gh"]
+[ext_resource type="Resource" uid="uid://r7eewuc33ttq" path="res://resources/monsters_weight_table.tres" id="27_oy8sc"]
 [ext_resource type="Script" uid="uid://c1xvnako1kh2c" path="res://scripts/manual_bg_music_looper.gd" id="28_mfkbt"]
-[ext_resource type="PackedScene" uid="uid://dyubwq4v4oedp" path="res://nodes/enemies/BaseEnemy.tscn" id="30_7kp7o"]
-[ext_resource type="PackedScene" uid="uid://b7vl0o5ey7gae" path="res://nodes/enemies/RangedEnemy.tscn" id="31_8fq6b"]
+[ext_resource type="Script" uid="uid://ba7aq3ww6ipbx" path="res://scripts/random_spawn_picker.gd" id="30_7kp7o"]
+[ext_resource type="TileSet" uid="uid://m0ie6u7rp81y" path="res://tiles/maze_tileset.tres" id="31_8fq6b"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_cqn77"]
 blend_mode = 1
@@ -189,11 +189,10 @@ shader_parameter/wave_threshold = 0.5
 
 [node name="TestScene" type="Node2D"]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." node_paths=PackedStringArray("bg_music_player", "menu_music_player", "mob_group_controller")]
+[node name="CanvasLayer" type="CanvasLayer" parent="." node_paths=PackedStringArray("bg_music_player", "menu_music_player")]
 script = ExtResource("7_6m80x")
 bg_music_player = NodePath("../BG_Music")
 menu_music_player = NodePath("../Menu_Music")
-mob_group_controller = NodePath("../TempController")
 
 [node name="SpawnExplosion" type="Button" parent="CanvasLayer"]
 visible = false
@@ -849,6 +848,22 @@ texture = ExtResource("2_coq8p")
 
 [node name="BombContainer" type="Node2D" parent="."]
 
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+z_index = -5
+z_as_relative = false
+scale = Vector2(4, 4)
+tile_map_data = PackedByteArray("AAABAAEAAAAAAAAAAAAQAAEAAAAFAAAAAAABAAYAAAAAAAQAAAAQAAYAAAAFAAQAAAACAAIAAAAEAAIAAAADAAIAAAAEAAIAAAAEAAIAAAAEAAIAAAAFAAIAAAAEAAIAAAAGAAIAAAAEAAIAAAAHAAIAAAAEAAIAAAAHAAMAAAAEAAIAAAAIAAMAAAAEAAIAAAAJAAMAAAAEAAIAAAAKAAMAAAAEAAIAAAALAAMAAAAEAAIAAAAMAAMAAAAEAAIAAAANAAMAAAAEAAIAAAAOAAMAAAAEAAIAAAACAAMAAAAEAAIAAAACAAQAAAAEAAIAAAACAAUAAAAEAAIAAAADAAMAAAAEAAIAAAADAAQAAAAEAAIAAAADAAUAAAAEAAIAAAAEAAMAAAAEAAIAAAAEAAQAAAAEAAIAAAAEAAUAAAAEAAIAAAAFAAMAAAAEAAIAAAAFAAQAAAAEAAIAAAAFAAUAAAAEAAIAAAAGAAMAAAAEAAIAAAAGAAQAAAAEAAIAAAAGAAUAAAAEAAIAAAAHAAQAAAAEAAIAAAAHAAUAAAAEAAIAAAAIAAIAAAAEAAIAAAAIAAQAAAAEAAIAAAAIAAUAAAAEAAIAAAAJAAIAAAAEAAIAAAAJAAQAAAAEAAIAAAAJAAUAAAAEAAIAAAAKAAIAAAAEAAIAAAAKAAQAAAAEAAIAAAAKAAUAAAAEAAIAAAALAAIAAAAEAAIAAAALAAQAAAAEAAIAAAALAAUAAAAEAAIAAAAMAAIAAAAEAAIAAAAMAAQAAAAEAAIAAAAMAAUAAAAEAAIAAAANAAIAAAAEAAIAAAANAAQAAAAEAAIAAAANAAUAAAAEAAIAAAAOAAIAAAAEAAIAAAAOAAQAAAAEAAIAAAAOAAUAAAAEAAIAAAAPAAIAAAAEAAIAAAAPAAMAAAAEAAIAAAAPAAQAAAAEAAIAAAAPAAUAAAAEAAIAAAACAAEAAAABAAAAAAADAAEAAAABAAAAAAAEAAEAAAABAAAAAAAFAAEAAAABAAAAAAAGAAEAAAABAAAAAAAHAAEAAAABAAAAAAAIAAEAAAABAAAAAAAJAAEAAAABAAAAAAAKAAEAAAABAAAAAAALAAEAAAABAAAAAAAMAAEAAAABAAAAAAANAAEAAAABAAAAAAAOAAEAAAABAAAAAAAPAAEAAAABAAAAAAAPAAYAAAAEAAQAAAAOAAYAAAAEAAQAAAANAAYAAAAEAAQAAAAMAAYAAAAEAAQAAAALAAYAAAAEAAQAAAAKAAYAAAAEAAQAAAAJAAYAAAAEAAQAAAAIAAYAAAAEAAQAAAAHAAYAAAAEAAQAAAAGAAYAAAAEAAQAAAAFAAYAAAAEAAQAAAAEAAYAAAAEAAQAAAADAAYAAAAEAAQAAAACAAYAAAAEAAQAAAABAAUAAAAAAAMAAAABAAQAAAAAAAMAAAABAAMAAAAAAAMAAAABAAIAAAAAAAMAAAAQAAUAAAAFAAMAAAAQAAQAAAAFAAMAAAAQAAMAAAAFAAMAAAAQAAIAAAAFAAMAAAA=")
+tile_set = ExtResource("31_8fq6b")
+
+[node name="RandomSpawnPicker" type="Node2D" parent="." node_paths=PackedStringArray("tile_map_layer")]
+script = ExtResource("30_7kp7o")
+tile_map_layer = NodePath("../TileMapLayer")
+
+[node name="PackedSceneSpawner" type="Node2D" parent="." node_paths=PackedStringArray("random_spawn_picker")]
+script = ExtResource("26_8fq6b")
+weight_table = ExtResource("27_oy8sc")
+random_spawn_picker = NodePath("../RandomSpawnPicker")
+
 [node name="Player" parent="." node_paths=PackedStringArray("hp_bar") instance=ExtResource("7_8pr8v")]
 position = Vector2(531, 486)
 starting_hp = 150.0
@@ -870,20 +885,6 @@ loop_start = 3.5
 loop_end = 31.0
 end_tolerance = 0.016
 
-[node name="TempController" type="Node2D" parent="."]
-script = ExtResource("28_077gh")
-
-[node name="DashingEnemy" parent="TempController" instance=ExtResource("27_mfkbt")]
-position = Vector2(69, 85)
-
-[node name="DashingEnemy2" parent="TempController" instance=ExtResource("27_mfkbt")]
-position = Vector2(910, 174)
-
-[node name="DashingEnemy4" parent="TempController" instance=ExtResource("27_mfkbt")]
-position = Vector2(1011, 524)
-
-[node name="RangedEnemy" parent="TempController" instance=ExtResource("31_8fq6b")]
-position = Vector2(501, 95)
-
-[node name="BaseEnemy" parent="TempController" instance=ExtResource("30_7kp7o")]
-position = Vector2(123, 527)
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(801, 225)
+gizmo_extents = 1000.0
