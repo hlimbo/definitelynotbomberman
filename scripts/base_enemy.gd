@@ -47,6 +47,8 @@ enum AI_State
 @onready var slow_timer: Timer = $slow_timer
 @onready var hurt_audio_player: AudioStreamPlayer2D = $hurt_audio_player
 @onready var death_audio_player: AudioStreamPlayer2D = $death_audio_player
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
+
 
 @onready var aim_line : Line2D = $"AimLine"
 var _aim_dir : Vector2 = Vector2.RIGHT
@@ -91,7 +93,6 @@ func can_attack() -> bool:
 	return AI_State.FOLLOW == ai_state and (is_instance_valid(target) and position.distance_to(target.position) < follow_distance)
 
 func _ready():
-	print("base enemy ready!")
 	detection_area.body_entered.connect(on_body_entered)
 	event_bus.on_enter_impact_area.connect(on_enter_impact_area)
 	event_bus.on_exit_impact_area.connect(on_exit_impact_area)
@@ -116,8 +117,15 @@ func _ready():
 	ui_root.add_child(hp_ui_view)
 	
 	enemy_id = self.get_canvas_item().get_id()
-	print("emitting on initialize hp as enemy")
 	event_bus.on_initialize_hp.emit(enemy_id, max_hp, max_hp)
+	
+	# not ideal code, it may be better if the animation reference is stored in a single library instead... if planning on using the same exact spawn animation for all enemies
+	if animation_player.has_animation_library(&"base_enemy"):
+		animation_player.play(&"base_enemy/spawn")
+	elif animation_player.has_animation_library(&"dashing_enemy"):
+		animation_player.play(&"dashing_enemy/spawn")
+	elif animation_player.has_animation_library(&"ranged_enemy"):
+		animation_player.play(&"ranged_enemy/spawn")
 
 # gets called when about to leave the SceneTree
 func _exit_tree():

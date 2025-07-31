@@ -5,6 +5,7 @@ extends Node
 
 @export var bg_music_player: AudioStreamPlayer
 @export var menu_music_player: AudioStreamPlayer
+@export var scene_spawner: PackedSceneSpawner
 
 #region Animation Names
 const HIDE_START_GAME_SCREEN: StringName = &"ui_canvas_layer/hide_start_game_screen"
@@ -61,6 +62,7 @@ func on_play_pressed():
 	toggle_player_hud(false)
 	toggle_clock_hud(false)
 	clock_hud.start_countdown()
+	scene_spawner.start_spawning()
 		
 	await transition_track()
 

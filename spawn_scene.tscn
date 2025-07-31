@@ -22,3 +22,5 @@ tile_map_layer = NodePath("../TileMapLayer")
 script = ExtResource("3_im263")
 weight_table = ExtResource("4_kkygp")
 random_spawn_picker = NodePath("../RandomSpawnPicker")
+
+[node name="spawn_delay_timer" type="Timer" parent="PackedSceneSpawner"]

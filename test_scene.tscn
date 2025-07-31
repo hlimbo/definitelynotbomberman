@@ -189,10 +189,11 @@ shader_parameter/wave_threshold = 0.5
 
 [node name="TestScene" type="Node2D"]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." node_paths=PackedStringArray("bg_music_player", "menu_music_player")]
+[node name="CanvasLayer" type="CanvasLayer" parent="." node_paths=PackedStringArray("bg_music_player", "menu_music_player", "scene_spawner")]
 script = ExtResource("7_6m80x")
 bg_music_player = NodePath("../BG_Music")
 menu_music_player = NodePath("../Menu_Music")
+scene_spawner = NodePath("../PackedSceneSpawner")
 
 [node name="SpawnExplosion" type="Button" parent="CanvasLayer"]
 visible = false
@@ -863,6 +864,10 @@ tile_map_layer = NodePath("../TileMapLayer")
 script = ExtResource("26_8fq6b")
 weight_table = ExtResource("27_oy8sc")
 random_spawn_picker = NodePath("../RandomSpawnPicker")
+spawn_count = 8
+
+[node name="spawn_delay_timer" type="Timer" parent="PackedSceneSpawner"]
+wait_time = 0.5
 
 [node name="Player" parent="." node_paths=PackedStringArray("hp_bar") instance=ExtResource("7_8pr8v")]
 position = Vector2(531, 486)

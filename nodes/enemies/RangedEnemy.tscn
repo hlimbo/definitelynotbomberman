@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://b7vl0o5ey7gae"]
+[gd_scene load_steps=18 format=3 uid="uid://b7vl0o5ey7gae"]
 
 [ext_resource type="Script" uid="uid://brnbeliuhlboh" path="res://scripts/ranged_enemy.gd" id="1_oqdl1"]
 [ext_resource type="PackedScene" uid="uid://dlryu3u30yhb3" path="res://nodes/ui/DamageText.tscn" id="2_87mjh"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://dv6re8a0stc2o" path="res://assets/mindless_blob2.png" id="6_iv11w"]
 [ext_resource type="AudioStream" uid="uid://h8ogsv2e6qjq" path="res://assets/Shapeforms Audio Free Sound Effects/Hit and Punch Preview/HIT_METAL_WRENCH_HEAVIEST_02.wav" id="8_0cwua"]
 [ext_resource type="AudioStream" uid="uid://ba8ij1nyuc4mp" path="res://assets/JDSherbert-PixelExplosionsSFXPackFree/JDSherbert - Pixel Explosions SFX Pack - Flashbang (2).ogg" id="9_twncv"]
+[ext_resource type="AnimationLibrary" uid="uid://bsbci6l3m8m4i" path="res://animation/ui_canvas_layer/ranged_enemy_animations.res" id="11_f2ie3"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dbob3"]
 radius = 36.0
@@ -21,6 +22,50 @@ radius = 42.0
 radius = 340.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_twncv"]
+
+[sub_resource type="Animation" id="Animation_f2ie3"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:ai_state")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_jq5i8"]
+_data = {
+&"RESET": SubResource("Animation_f2ie3")
+}
 
 [node name="RangedEnemy" type="CharacterBody2D"]
 collision_layer = 4
@@ -122,3 +167,9 @@ pitch_scale = 2.0
 stream = ExtResource("9_twncv")
 volume_db = 6.0
 pitch_scale = 2.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_jq5i8"),
+&"ranged_enemy": ExtResource("11_f2ie3")
+}
