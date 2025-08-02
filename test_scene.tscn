@@ -894,7 +894,7 @@ loop_end = 31.0
 end_tolerance = 0.016
 
 [node name="Marker2D" type="Marker2D" parent="."]
-position = Vector2(801, 225)
+position = Vector2(801, 400)
 gizmo_extents = 1000.0
 
 [node name="Sprite2D" type="Sprite2D" parent="Marker2D"]
