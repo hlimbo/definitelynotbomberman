@@ -21,6 +21,7 @@ buses/default_bus_layout="res://default_audio_bus_layout.tres"
 
 [autoload]
 
+Constants="*res://scripts/constants.gd"
 EventBus="*res://scripts/event_bus.gd"
 
 [display]

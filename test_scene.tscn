@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=4 uid="uid://d2t2yd8avamds"]
+[gd_scene load_steps=57 format=4 uid="uid://d2t2yd8avamds"]
 
 [ext_resource type="Script" uid="uid://ho55ru8dkukc" path="res://scripts/test_dummy.gd" id="1_uhqqe"]
 [ext_resource type="Shader" uid="uid://b1cldd7wx5mnx" path="res://shaders/wave_death.gdshader" id="2_8pr8v"]
@@ -33,6 +33,11 @@
 [ext_resource type="Script" uid="uid://c1xvnako1kh2c" path="res://scripts/manual_bg_music_looper.gd" id="28_mfkbt"]
 [ext_resource type="Script" uid="uid://ba7aq3ww6ipbx" path="res://scripts/random_spawn_picker.gd" id="30_7kp7o"]
 [ext_resource type="TileSet" uid="uid://m0ie6u7rp81y" path="res://tiles/maze_tileset.tres" id="31_8fq6b"]
+[ext_resource type="PackedScene" uid="uid://v2rg16pifsvg" path="res://nodes/bomb_pickups/GooBomb.tscn" id="34_8k62k"]
+[ext_resource type="PackedScene" uid="uid://05kqhybqkhok" path="res://nodes/bomb_pickups/GravityBomb.tscn" id="35_akknq"]
+[ext_resource type="PackedScene" uid="uid://bk28kiyi48jcs" path="res://nodes/bomb_pickups/PoisonBomb.tscn" id="36_chy0g"]
+[ext_resource type="PackedScene" uid="uid://b457dk0elmq4n" path="res://nodes/bomb_pickups/RootBomb.tscn" id="37_pknf1"]
+[ext_resource type="PackedScene" uid="uid://dldmtj2xjrrt0" path="res://nodes/bomb_pickups/BaseBomb.tscn" id="38_b6ixm"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_cqn77"]
 blend_mode = 1
@@ -900,3 +905,18 @@ gizmo_extents = 1000.0
 [node name="Sprite2D" type="Sprite2D" parent="Marker2D"]
 scale = Vector2(16, 16)
 texture = SubResource("PlaceholderTexture2D_oy8sc")
+
+[node name="GooBomb" parent="." instance=ExtResource("34_8k62k")]
+position = Vector2(401, 355)
+
+[node name="GravityBomb" parent="." instance=ExtResource("35_akknq")]
+position = Vector2(554, 358)
+
+[node name="PoisonBomb" parent="." instance=ExtResource("36_chy0g")]
+position = Vector2(693, 353)
+
+[node name="RootBomb" parent="." instance=ExtResource("37_pknf1")]
+position = Vector2(851, 352)
+
+[node name="BaseBomb" parent="." instance=ExtResource("38_b6ixm")]
+position = Vector2(260, 345)

@@ -1,3 +1,33 @@
-[gd_scene format=3 uid="uid://bk28kiyi48jcs"]
+[gd_scene load_steps=6 format=3 uid="uid://bk28kiyi48jcs"]
+
+[ext_resource type="Script" uid="uid://cigsvq8w13ojr" path="res://scripts/bomb_pickup.gd" id="1_g32m0"]
+[ext_resource type="Shader" uid="uid://c8t8w8y624j27" path="res://shaders/outline.gdshader" id="1_rbyej"]
+[ext_resource type="Texture2D" uid="uid://c6qr7h2ptogfd" path="res://assets/bomb.png" id="2_g32m0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rbyej"]
+shader = ExtResource("1_rbyej")
+shader_parameter/outline_color = Color(1, 1, 1, 1)
+shader_parameter/outline_thickness = 42.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7gx2f"]
+radius = 72.0278
 
 [node name="PoisonBomb" type="Node2D"]
+script = ExtResource("1_g32m0")
+bomb_type = 1
+
+[node name="BombSprite" type="Sprite2D" parent="."]
+modulate = Color(0.933, 0.51, 0.933, 1)
+material = SubResource("ShaderMaterial_rbyej")
+scale = Vector2(0.08, 0.08)
+texture = ExtResource("2_g32m0")
+
+[node name="PickupArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PickupArea"]
+position = Vector2(0, 2)
+scale = Vector2(0.5, 0.5)
+shape = SubResource("CircleShape2D_7gx2f")
+debug_color = Color(0, 0.6, 0.7, 0)

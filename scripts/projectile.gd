@@ -18,8 +18,9 @@ func launch(position: Vector2, dir: Vector2):
 	self.dir = dir
 
 func on_impact(other: Node2D):
-	event_bus.on_projectile_hit.emit(self, other)
-	queue_free()
+	if other is Player:
+		event_bus.on_projectile_hit.emit(self, other)
+		queue_free()
 
 func _ready():
 	hit_area.body_entered.connect(on_impact)

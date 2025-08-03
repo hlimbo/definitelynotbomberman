@@ -33,6 +33,9 @@ var bomb_inventory: Array[BombUIData] = [
 func _ready():
 	up_arrow_button.pressed.connect(view_next_bomb.bind(true))
 	down_arrow_button.pressed.connect(view_next_bomb.bind(false))
+	event_bus.on_bomb_picked_up.connect(on_bomb_picked_up)
+	event_bus.on_bomb_thrown.connect(on_bomb_thrown)
+	
 	set_bomb_type(view_index)
 
 func _input(event):
@@ -48,6 +51,12 @@ func view_next_bomb(is_arrow_up: bool):
 	if view_index < 0:
 		view_index = len(bomb_inventory) - 1
 	
+	# skip to the next bomb that isn't empty -- for now the base bomb (default) will be infinite
+	while bomb_inventory[view_index].count == 0:
+		view_index = (view_index + direction) % len(bomb_inventory)
+		if view_index < 0:
+			view_index = len(bomb_inventory) - 1
+	
 	set_bomb_type(view_index)
 	event_bus.on_player_bomb_switched.emit(view_index)
 	audio_stream_player.play()
@@ -56,3 +65,23 @@ func set_bomb_type(view_index: int):
 	print("bomb type: %s" % bomb_inventory[view_index].name)
 	bomb_texture.modulate = bomb_inventory[view_index].color
 	counter_label.text = "%d" % bomb_inventory[view_index].count
+
+func on_bomb_picked_up(bomb_type: Constants.BombType, count: int):
+	var bomb_index: int = int(bomb_type)
+	assert(bomb_index >= 0 and bomb_index < Constants.BombType.LENGTH)
+	bomb_inventory[bomb_index].count += count
+	update_bomb_count_by_index(bomb_index)
+
+func on_bomb_thrown(bomb_type: Constants.BombType):
+	# infinite default bombs
+	if bomb_type == Constants.BombType.DEFAULT:
+		return
+	
+	var bomb_index: int = int(bomb_type)
+	assert(bomb_index >= 0 and bomb_index < Constants.BombType.LENGTH)
+	bomb_inventory[bomb_index].count = maxi(bomb_inventory[bomb_index].count - 1, 0)
+	update_bomb_count_by_index(bomb_index)
+	
+func update_bomb_count_by_index(index: int):
+	if index == view_index:
+		counter_label.text = "%d" % bomb_inventory[view_index].count

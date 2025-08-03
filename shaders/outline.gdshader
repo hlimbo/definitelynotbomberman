@@ -1,7 +1,7 @@
 shader_type canvas_item;
 
 uniform vec3 outline_color: source_color = vec3(1.0, 1.0, 1.0);
-uniform float outline_thickness = 1.0;
+uniform float outline_thickness = 42.0;
 
 void fragment() {
 	vec4 color = texture(TEXTURE, UV);
@@ -12,9 +12,7 @@ void fragment() {
 	vec2 right_offset = outline_thickness * vec2(TEXTURE_PIXEL_SIZE.x, 0.0);
 	
 	// if current fragment is opaque (not transparent), return its original color
-	if (color.a > 0.0) {
-		COLOR = color;
-	} else {
+	if (color.a == 0.0) {
 		// sample neighboring fragments alpha values to see if they are not transparent
 		float alpha_sum = 0.0;
 		alpha_sum += texture(TEXTURE, vec2(UV.x, max(UV.y + top_offset.y, 0.0))).a;
@@ -24,10 +22,7 @@ void fragment() {
 		
 		// apply outline
 		if (alpha_sum > 0.0) {
-			COLOR = vec4(outline_color.rgb, 1.0);
-		} else {
-			// don't apply outline
-			COLOR = color;
+			COLOR = vec4(outline_color.rgb + color.rgb, 1.0);
 		}
 	}
 }
