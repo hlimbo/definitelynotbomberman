@@ -907,16 +907,16 @@ scale = Vector2(16, 16)
 texture = SubResource("PlaceholderTexture2D_oy8sc")
 
 [node name="GooBomb" parent="." instance=ExtResource("34_8k62k")]
-position = Vector2(401, 355)
+position = Vector2(401, 576)
 
 [node name="GravityBomb" parent="." instance=ExtResource("35_akknq")]
-position = Vector2(554, 358)
+position = Vector2(554, 579)
 
 [node name="PoisonBomb" parent="." instance=ExtResource("36_chy0g")]
-position = Vector2(693, 353)
+position = Vector2(693, 574)
 
 [node name="RootBomb" parent="." instance=ExtResource("37_pknf1")]
-position = Vector2(851, 352)
+position = Vector2(851, 573)
 
 [node name="BaseBomb" parent="." instance=ExtResource("38_b6ixm")]
-position = Vector2(260, 345)
+position = Vector2(260, 566)

@@ -71,6 +71,8 @@ func on_bomb_picked_up(bomb_type: Constants.BombType, count: int):
 	assert(bomb_index >= 0 and bomb_index < Constants.BombType.LENGTH)
 	bomb_inventory[bomb_index].count += count
 	update_bomb_count_by_index(bomb_index)
+	set_bomb_type(bomb_index)
+	event_bus.on_player_bomb_switched.emit(bomb_index)
 
 func on_bomb_thrown(bomb_type: Constants.BombType):
 	# infinite default bombs
@@ -81,6 +83,12 @@ func on_bomb_thrown(bomb_type: Constants.BombType):
 	assert(bomb_index >= 0 and bomb_index < Constants.BombType.LENGTH)
 	bomb_inventory[bomb_index].count = maxi(bomb_inventory[bomb_index].count - 1, 0)
 	update_bomb_count_by_index(bomb_index)
+	
+	var is_out_of_bombs: bool = bomb_inventory[bomb_index].count == 0
+	
+	while bomb_inventory[bomb_index].count == 0:
+		set_bomb_type(bomb_index)
+		event_bus.on_player_bomb_switched.emit(bomb_index)
 	
 func update_bomb_count_by_index(index: int):
 	if index == view_index:
