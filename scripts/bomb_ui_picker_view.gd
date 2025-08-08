@@ -6,11 +6,14 @@ class BombUIData:
 	var name: String
 	var color: Color
 	var count: int
+	# represents how many bombs gained/lost by the player
+	var count_delta: int
 	
 	func _init(name: String = "default bomb", color: Color = Color.WHITE, count: int = 999):
 		self.name = name
 		self.color = color
 		self.count = count
+		self.count_delta = 0
 
 ### dependencies
 @export var event_bus: EventBus = EventBus
@@ -21,13 +24,18 @@ class BombUIData:
 @onready var counter_label: Label = $CounterLabel
 @onready var audio_stream_player: AudioStreamPlayer = $AudioStreamPlayer
 
+var can_animate_bomb_text: bool = false
+var curr_animation_time: float = 0.0
+var text_update_delay: float = 0.0
+@export var text_animation_duration: float = 0.75
+
 @export var view_index = 0
 var bomb_inventory: Array[BombUIData] = [
 	BombUIData.new(), # default bomb
-	BombUIData.new("poison bomb", Color.VIOLET, 20),
-	BombUIData.new("gravity bomb", Color.DARK_SLATE_BLUE, 40),
-	BombUIData.new("goo bomb", Color.GREEN, 60),
-	BombUIData.new("root bomb",  Color.GOLDENROD, 80)
+	BombUIData.new("poison bomb", Color.VIOLET, 1),
+	BombUIData.new("gravity bomb", Color.DARK_SLATE_BLUE, 1),
+	BombUIData.new("goo bomb", Color.GREEN, 1),
+	BombUIData.new("root bomb",  Color.GOLDENROD, 1)
 ]
 
 func _ready():
@@ -45,7 +53,36 @@ func _input(event):
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
 			view_next_bomb(false)
 
+func _process(delta: float):
+	if can_animate_bomb_text:
+		if curr_animation_time >= text_update_delay:
+			curr_animation_time = 0
+			
+			if bomb_inventory[view_index].count_delta > 0:
+				bomb_inventory[view_index].count += 1
+				bomb_inventory[view_index].count_delta -= 1
+			elif bomb_inventory[view_index].count_delta < 0:
+				bomb_inventory[view_index].count -= 1
+				bomb_inventory[view_index].count_delta += 1
+		
+			update_bomb_count_by_index(view_index)
+		else:
+			curr_animation_time += delta
+		if bomb_inventory[view_index].count_delta == 0:
+			can_animate_bomb_text = false
+	
+
 func view_next_bomb(is_arrow_up: bool):
+	# get bomb types count
+	var bomb_types_count: int = 0
+	for i in range(len(bomb_inventory)):
+		if bomb_inventory[i].count > 0:
+			bomb_types_count += 1
+	
+	# default/base bomb only
+	if bomb_types_count == 1:
+		return
+	
 	var direction: int = -1 if is_arrow_up else 1
 	view_index = (view_index + direction) % len(bomb_inventory)
 	if view_index < 0:
@@ -63,15 +100,28 @@ func view_next_bomb(is_arrow_up: bool):
 
 func set_bomb_type(view_index: int):
 	print("bomb type: %s" % bomb_inventory[view_index].name)
+	self.view_index = view_index
 	bomb_texture.modulate = bomb_inventory[view_index].color
 	counter_label.text = "%d" % bomb_inventory[view_index].count
 
 func on_bomb_picked_up(bomb_type: Constants.BombType, count: int):
 	var bomb_index: int = int(bomb_type)
+	assert(count > 0)
 	assert(bomb_index >= 0 and bomb_index < Constants.BombType.LENGTH)
-	bomb_inventory[bomb_index].count += count
-	update_bomb_count_by_index(bomb_index)
+	
+	print("count: %d" % count)
+	
+	# edge case - if 2 bomb pickups of different types are close to one another
+	# then immediately update the count of the previous bomb index to ensure data consistency
+	if bomb_inventory[view_index].count_delta != 0:
+		bomb_inventory[view_index].count += bomb_inventory[view_index].count_delta
+		bomb_inventory[view_index].count_delta = 0
+	
 	set_bomb_type(bomb_index)
+	bomb_inventory[bomb_index].count_delta += count
+	can_animate_bomb_text = true
+	curr_animation_time = 0
+	text_update_delay = text_animation_duration / count
 	event_bus.on_player_bomb_switched.emit(bomb_index)
 
 func on_bomb_thrown(bomb_type: Constants.BombType):
@@ -84,11 +134,13 @@ func on_bomb_thrown(bomb_type: Constants.BombType):
 	bomb_inventory[bomb_index].count = maxi(bomb_inventory[bomb_index].count - 1, 0)
 	update_bomb_count_by_index(bomb_index)
 	
-	var is_out_of_bombs: bool = bomb_inventory[bomb_index].count == 0
-	
+	# go to the next bomb that has ammo left... by default it will go to the Base Bomb
+	# as it should have infinite ammo
 	while bomb_inventory[bomb_index].count == 0:
-		set_bomb_type(bomb_index)
-		event_bus.on_player_bomb_switched.emit(bomb_index)
+		bomb_index = (bomb_index + 1) % Constants.BombType.LENGTH
+	
+	set_bomb_type(bomb_index)
+	event_bus.on_player_bomb_switched.emit(bomb_index)
 	
 func update_bomb_count_by_index(index: int):
 	if index == view_index:

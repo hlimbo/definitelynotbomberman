@@ -10,7 +10,7 @@ shader_parameter/outline_color = Color(1, 1, 1, 1)
 shader_parameter/outline_thickness = 42.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hew6i"]
-radius = 72.0278
+radius = 125.0
 
 [node name="GooBomb" type="Node2D"]
 script = ExtResource("1_t7wcn")

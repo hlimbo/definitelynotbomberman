@@ -116,6 +116,14 @@ func _get_move_input() -> Vector2:
 	).normalized()
 
 # ─────────────────────────────────────────────────────────────────────────────
+#   ── Getters ──
+# ─────────────────────────────────────────────────────────────────────────────
+func get_collision_shape() -> CapsuleShape2D:
+	var shape: CapsuleShape2D = $CollisionShape2D.shape as CapsuleShape2D
+	assert(shape != null)
+	return shape
+
+# ─────────────────────────────────────────────────────────────────────────────
 #   ── Life‑cycle ──
 # ─────────────────────────────────────────────────────────────────────────────
 func _ready() -> void:
@@ -383,7 +391,7 @@ func _on_attacked(enemy: BaseEnemy, target: Node2D):
 
 func _on_projectile_hit(projectile: Projectile, target: Node2D):
 	# if not the same target, skip
-	if self != target:
+	if self != target or target is not Player:
 		return
 	
 	# display damage above player
@@ -392,7 +400,7 @@ func _on_projectile_hit(projectile: Projectile, target: Node2D):
 	damage_text.play_animation(projectile.base_damage)
 	
 	current_hp -= projectile.base_damage
-	event_bus.on_player_hp_updated.emit(projectile.base_damage)
+	event_bus.on_hp_updated.emit(player_id, projectile.base_damage)
 	
 	hurt_audio_player.set_stream(ranged_enemy_hurt_sfx)
 	hurt_audio_player.play()
