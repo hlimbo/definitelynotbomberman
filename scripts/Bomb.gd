@@ -13,6 +13,8 @@ class_name Bomb extends CharacterBody2D
 	preload("res://nodes/explosions/RootExplosion.tscn")
 ]
 
+@onready var impact_area_2d: Area2D = $ImpactArea2D
+
 var _amplitude : float       # current hop height
 var _t         : float = 0.0 # time inside current hop
 var _bounces   : int   = 0
@@ -25,9 +27,10 @@ const Y_OFFSET        : int= 16
 
 var _speed : float = 450.0
 var _direction : Vector2 = Vector2.ZERO
-var _damage          :float= 50
+var _damage          :float = 50
 var _max_bounces : int = 4              # after this → explode
-var _hop_time        :float= 0.40           # time from lift-off to next impact
+var _hop_time        :float = 0.40           # time from lift-off to next impact
+var _height          :float = 0.0
 var _explosion_index :int = 0 # used to pick which explosion to instantiate
 
 # used to visually determine which kind of bomb is being thrown
@@ -51,6 +54,7 @@ func launch(dir: Vector2, ground_speed: float, max_bounces: int, explosion_index
 
 func _ready():
 	_bomb.modulate = colors[_explosion_index]
+	impact_area_2d.body_entered.connect(_on_body_entered)
 
 func _physics_process(delta: float) -> void:
 	# ── 1. ground motion ─────────────────────────────────────────
@@ -71,12 +75,12 @@ func _physics_process(delta: float) -> void:
 	if phase >= 1.0:
 		_next_bounce()
 		phase = _t / _hop_time
-	var height := sin(phase * PI) * _amplitude
+	_height = sin(phase * PI) * _amplitude
 
-	_bomb.position  = Vector2(0, -height - Y_OFFSET)
+	_bomb.position  = Vector2(0, -_height - Y_OFFSET)
 	_shadow.position = Vector2.ZERO
 
-	_update_shadow(height)
+	_update_shadow(_height)
 	
 	# increase flash frequency the more bounces the bomb makes
 	var t: float = clampf(float(_bounces) / float(_max_bounces), 0.0, 1.0)
@@ -102,6 +106,12 @@ func _update_shadow(h: float) -> void:
 
 func _explode() -> void:
 	var explosion: BaseExplosion = explosion_nodes[_explosion_index].instantiate()
-	get_tree().current_scene.add_child(explosion)
-	explosion.start(_shadow.global_position)
+	# call at the end of the frame as Godot returns error messages recommending to do so
+	self.get_tree().current_scene.call_deferred(&"add_child", explosion)
+	explosion.call_deferred(&"start", _shadow.global_position)
 	queue_free()
+	
+func _on_body_entered(body: Node2D):
+	var is_descending: bool = _height > 0.0
+	if is_descending and body is BaseEnemy:
+		_explode()

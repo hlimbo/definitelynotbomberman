@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://b37kn8slg4afs"]
+[gd_scene load_steps=9 format=3 uid="uid://b37kn8slg4afs"]
 
 [ext_resource type="Script" uid="uid://gbk5fu6oyv6x" path="res://scripts/Bomb.gd" id="1_4f8ai"]
 [ext_resource type="Shader" uid="uid://caw6qgxxaapj4" path="res://shaders/color_blinking.gdshader" id="1_qf65r"]
@@ -13,6 +13,9 @@ shader_parameter/color_fill = Color(0.752941, 0.752941, 0.752941, 1)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_4f8ai"]
 radius = 35.0143
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qf65r"]
+radius = 25.1794
 
 [node name="Bomb" type="CharacterBody2D"]
 collision_layer = 8
@@ -37,3 +40,11 @@ texture = ExtResource("4_ma0oj")
 position = Vector2(0, 2)
 scale = Vector2(0.5, 0.5)
 shape = SubResource("CircleShape2D_4f8ai")
+
+[node name="ImpactArea2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ImpactArea2D"]
+shape = SubResource("CircleShape2D_qf65r")
