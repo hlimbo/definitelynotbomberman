@@ -12,6 +12,7 @@ const EXPLOSION_TYPE_COUNT = 5
 #   ── Dependencies ──
 # ─────────────────────────────────────────────────────────────────────────────
 @export var event_bus: EventBus = EventBus
+@export var camera_controller: CameraController
 
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Movement ──
@@ -148,6 +149,8 @@ func _ready() -> void:
 	shader_mat = (material as ShaderMaterial)
 	current_hp = starting_hp
 	
+	camera_controller.add_target(self)
+	
 
 func _input(event: InputEvent) -> void:
 	# Bomb charge / release handling
@@ -178,6 +181,7 @@ func _process(delta: float) -> void:
 	_update_charge(delta)
 	_update_aim_line(delta)
 	_update_animation()
+	_update_camera()
 
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Dash logic ──
@@ -192,10 +196,12 @@ func _begin_dash() -> void:
 
 func _update_dash(delta: float) -> void:
 	if _is_dashing:
+		camera_controller.motion_kind = CameraController.MotionKind.INTERPOLATION
 		_dash_timer -= delta
 		velocity = _dash_dir * dash_speed
 		if _dash_timer <= 0.0:
 			_is_dashing = false
+			camera_controller.motion_kind = CameraController.MotionKind.INSTANT
 	elif _cooldown_timer > 0.0:
 		_cooldown_timer = maxf(0.0, _cooldown_timer - delta)
 
@@ -269,6 +275,11 @@ func _update_knockback(_delta: float) -> void:
 		var s : float = lerp(0.5, 0.2, t)
 		_shadow.scale = Vector2.ONE * s * 0.1
 		_shadow.modulate.a = lerp(0.6, 0.15, t)
+	
+	if knockback_force_vector.is_equal_approx(Vector2.ZERO):
+		camera_controller.motion_kind = CameraController.MotionKind.INSTANT
+	else:
+		camera_controller.motion_kind = CameraController.MotionKind.INTERPOLATION
 	
 	velocity += knockback_force_vector
 
@@ -346,7 +357,16 @@ func _update_animation() -> void:
 	else:
 		_anim.stop()
 		move_particles.emitting = false
-		
+
+# ─────────────────────────────────────────────────────────────────────────────
+#   ── Camera ──
+# ─────────────────────────────────────────────────────────────────────────────
+func _update_camera() -> void:
+	var dist: float = (self.position - camera_controller.position).length()
+	var tolerance: float = 16.0 # 8.0
+	if dist > tolerance:
+		camera_controller.move_to_position_by_index(0)
+
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Signal Callbacks ──
 # ─────────────────────────────────────────────────────────────────────────────

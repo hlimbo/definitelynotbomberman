@@ -1,5 +1,6 @@
-[gd_scene load_steps=56 format=4 uid="uid://d2t2yd8avamds"]
+[gd_scene load_steps=57 format=4 uid="uid://d2t2yd8avamds"]
 
+[ext_resource type="PackedScene" uid="uid://iqbmn2foagao" path="res://nodes/CameraController.tscn" id="1_8k62k"]
 [ext_resource type="Script" uid="uid://ho55ru8dkukc" path="res://scripts/test_dummy.gd" id="1_uhqqe"]
 [ext_resource type="Shader" uid="uid://b1cldd7wx5mnx" path="res://shaders/wave_death.gdshader" id="2_8pr8v"]
 [ext_resource type="Texture2D" uid="uid://da4h3jou13i3f" path="res://assets/mindless_blob.png" id="2_coq8p"]
@@ -877,10 +878,14 @@ spawn_count = 8
 [node name="spawn_delay_timer" type="Timer" parent="PackedSceneSpawner"]
 wait_time = 0.5
 
-[node name="Player" parent="." node_paths=PackedStringArray("hp_bar") instance=ExtResource("7_8pr8v")]
+[node name="Player" parent="." node_paths=PackedStringArray("camera_controller", "hp_bar") instance=ExtResource("7_8pr8v")]
 position = Vector2(531, 486)
+camera_controller = NodePath("../CameraController")
 starting_hp = 150.0
 hp_bar = NodePath("../CanvasLayer/GameHUD/HpBar")
+
+[node name="CameraController" parent="." instance=ExtResource("1_8k62k")]
+movement_delay_duration = 0.25
 
 [node name="BG_Music" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("26_b11sm")
