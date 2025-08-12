@@ -1,6 +1,5 @@
 class_name CameraController extends Node2D
 
-
 enum MotionKind {
 	INSTANT, # set position directly
 	INTERPOLATION, # use interpolation to move camera precisely from one position to the next over a set time duration
