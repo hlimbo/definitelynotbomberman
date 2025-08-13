@@ -1,12 +1,16 @@
-[gd_scene load_steps=61 format=4 uid="uid://cm8h24l78l07d"]
+[gd_scene load_steps=65 format=4 uid="uid://cm8h24l78l07d"]
 
 [ext_resource type="TileSet" uid="uid://m0ie6u7rp81y" path="res://tiles/maze_tileset.tres" id="1_emoqq"]
 [ext_resource type="PackedScene" uid="uid://deh3txb4jfjc5" path="res://nodes/Player.tscn" id="2_8c3is"]
 [ext_resource type="PackedScene" uid="uid://iqbmn2foagao" path="res://nodes/CameraController.tscn" id="3_g7twh"]
+[ext_resource type="Texture2D" uid="uid://dvaru74jeica5" path="res://assets/New free backgrounds part3/background 3/1.png" id="4_1ekq6"]
 [ext_resource type="PackedScene" uid="uid://bk28kiyi48jcs" path="res://nodes/bomb_pickups/PoisonBomb.tscn" id="4_d2jbv"]
 [ext_resource type="PackedScene" uid="uid://v2rg16pifsvg" path="res://nodes/bomb_pickups/GooBomb.tscn" id="5_r046j"]
+[ext_resource type="Texture2D" uid="uid://bbe0xn5qlv0k" path="res://assets/New free backgrounds part3/background 3/3.png" id="6_irsq2"]
 [ext_resource type="PackedScene" uid="uid://b457dk0elmq4n" path="res://nodes/bomb_pickups/RootBomb.tscn" id="6_lvbgs"]
+[ext_resource type="Texture2D" uid="uid://de2fdvmo43nr" path="res://assets/New free backgrounds part3/background 3/4.png" id="7_0exh5"]
 [ext_resource type="PackedScene" uid="uid://05kqhybqkhok" path="res://nodes/bomb_pickups/GravityBomb.tscn" id="7_nujpw"]
+[ext_resource type="Texture2D" uid="uid://cbwgn4tuic1ji" path="res://assets/New free backgrounds part3/background 3/5.png" id="8_mdrk0"]
 [ext_resource type="Script" uid="uid://bh1k114ppb87h" path="res://scripts/wave_manager.gd" id="8_r046j"]
 [ext_resource type="Script" uid="uid://dbm3bflji5k25" path="res://scripts/packed_scene_spawner.gd" id="9_nujpw"]
 [ext_resource type="Resource" uid="uid://r7eewuc33ttq" path="res://resources/monsters_weight_table.tres" id="10_h7edw"]
@@ -199,11 +203,84 @@ size = Vector2(1000, 450)
 
 [node name="LevelPrototype" type="Node2D"]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." node_paths=PackedStringArray("bg_music_player", "menu_music_player", "scene_spawner")]
+[node name="ParallaxBg" type="Node2D" parent="."]
+scale = Vector2(3, 3)
+
+[node name="Sky" type="Parallax2D" parent="ParallaxBg"]
+repeat_size = Vector2(576, 324)
+autoscroll = Vector2(8, 0)
+repeat_times = 16
+follow_viewport = false
+ignore_camera_scroll = true
+
+[node name="Sky3" type="Sprite2D" parent="ParallaxBg/Sky"]
+texture = ExtResource("4_1ekq6")
+centered = false
+
+[node name="Clouds1" type="Parallax2D" parent="ParallaxBg"]
+repeat_size = Vector2(576, 324)
+autoscroll = Vector2(-4, 0)
+repeat_times = 16
+follow_viewport = false
+ignore_camera_scroll = true
+
+[node name="Sprite2D3" type="Sprite2D" parent="ParallaxBg/Clouds1"]
+texture = ExtResource("6_irsq2")
+centered = false
+
+[node name="Clouds2" type="Parallax2D" parent="ParallaxBg"]
+repeat_size = Vector2(576, 324)
+autoscroll = Vector2(-4, 0)
+repeat_times = 16
+follow_viewport = false
+ignore_camera_scroll = true
+
+[node name="Sprite2D3" type="Sprite2D" parent="ParallaxBg/Clouds2"]
+texture = ExtResource("8_mdrk0")
+centered = false
+offset = Vector2(80, 100)
+
+[node name="Clouds3" type="Parallax2D" parent="ParallaxBg"]
+repeat_size = Vector2(576, 324)
+autoscroll = Vector2(-4, 0)
+repeat_times = 16
+follow_viewport = false
+ignore_camera_scroll = true
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBg/Clouds3"]
+texture = ExtResource("7_0exh5")
+centered = false
+offset = Vector2(0, -85)
+
+[node name="Clouds4" type="Parallax2D" parent="ParallaxBg"]
+repeat_size = Vector2(576, 324)
+autoscroll = Vector2(-4, 0)
+repeat_times = 16
+follow_viewport = false
+ignore_camera_scroll = true
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBg/Clouds4"]
+texture = ExtResource("8_mdrk0")
+centered = false
+offset = Vector2(-180, 0)
+
+[node name="Clouds5" type="Parallax2D" parent="ParallaxBg"]
+scroll_offset = Vector2(113.667, 0)
+repeat_size = Vector2(576, 324)
+autoscroll = Vector2(-4, 0)
+repeat_times = 16
+follow_viewport = false
+ignore_camera_scroll = true
+
+[node name="Sprite2D" type="Sprite2D" parent="ParallaxBg/Clouds5"]
+texture = ExtResource("7_0exh5")
+centered = false
+offset = Vector2(300, 200)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." node_paths=PackedStringArray("bg_music_player", "menu_music_player")]
 script = ExtResource("12_c3kfy")
 bg_music_player = NodePath("../BG_Music")
 menu_music_player = NodePath("../Menu_Music")
-scene_spawner = NodePath("")
 
 [node name="StartGameScreen" type="Control" parent="CanvasLayer"]
 layout_mode = 3
@@ -914,13 +991,13 @@ tile_map_data = PackedByteArray("AAALAHIAAAAUAAAAAAAOAHIAAAAWAAAAAAAOAHUAAAAWAAI
 tile_set = ExtResource("1_emoqq")
 
 [node name="Player" parent="." node_paths=PackedStringArray("camera_controller", "hp_bar") instance=ExtResource("2_8c3is")]
-position = Vector2(345, 7951)
+position = Vector2(271, 335)
 camera_controller = NodePath("../CameraController")
 starting_hp = 150.0
 hp_bar = NodePath("../CanvasLayer/GameHUD/HpBar")
 
 [node name="CameraController" parent="." instance=ExtResource("3_g7twh")]
-position = Vector2(601, 7906)
+position = Vector2(524, 548)
 movement_delay_duration = 0.25
 
 [node name="MobsContainer" type="Node2D" parent="."]
@@ -1066,6 +1143,7 @@ end_tolerance = 0.016
 position = Vector2(630, 6666)
 collision_layer = 0
 collision_mask = 2
+monitoring = false
 monitorable = false
 script = ExtResource("40_fxrpe")
 hazards_layer = NodePath("../HazardLayer")
@@ -1077,6 +1155,7 @@ shape = SubResource("RectangleShape2D_fxrpe")
 position = Vector2(630, 5374)
 collision_layer = 0
 collision_mask = 2
+monitoring = false
 monitorable = false
 script = ExtResource("40_fxrpe")
 hazards_layer = NodePath("../HazardLayer")
@@ -1088,6 +1167,7 @@ shape = SubResource("RectangleShape2D_onc2j")
 position = Vector2(630, 4129)
 collision_layer = 0
 collision_mask = 2
+monitoring = false
 monitorable = false
 script = ExtResource("40_fxrpe")
 hazards_layer = NodePath("../HazardLayer")
@@ -1099,6 +1179,7 @@ shape = SubResource("RectangleShape2D_onc2j")
 position = Vector2(630, 2872)
 collision_layer = 0
 collision_mask = 2
+monitoring = false
 monitorable = false
 script = ExtResource("40_fxrpe")
 hazards_layer = NodePath("../HazardLayer")
@@ -1110,6 +1191,7 @@ shape = SubResource("RectangleShape2D_onc2j")
 position = Vector2(630, 1626)
 collision_layer = 0
 collision_mask = 2
+monitoring = false
 monitorable = false
 script = ExtResource("40_fxrpe")
 hazards_layer = NodePath("../HazardLayer")
@@ -1121,6 +1203,7 @@ shape = SubResource("RectangleShape2D_onc2j")
 position = Vector2(630, 399)
 collision_layer = 0
 collision_mask = 2
+monitoring = false
 monitorable = false
 script = ExtResource("40_fxrpe")
 hazards_layer = NodePath("../HazardLayer")
