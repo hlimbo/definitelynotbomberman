@@ -25,18 +25,22 @@ func spawn_random_scene() -> Node:
 	return node
 	
 func _ready():
+	assert(parent_spawner_node != null)
+	assert(random_spawn_picker != null)
 	weight_table.construct()
-	for i in range(spawn_count):
-		var node: Node = spawn_random_scene()
-		nodes.append(node)
-	
 	spawn_delay_timer.timeout.connect(on_spawn_enemy)
 	
 	if parent_spawner_node == null:
 		push_warning("PackedSceneManager is missing a reference to parent_spawner_node. Ensure a Node2D reference is assigned to parent_spawner_node to remove the warning. Defaulting to current scene as root node.")
 		parent_spawner_node = self.get_tree().current_scene
 
-func start_spawning():
+func start_spawning(count: int = spawn_count):
+	spawn_count = count
+	for i in range(spawn_count):
+		var node: Node = spawn_random_scene()
+		nodes.append(node)
+	
+	random_spawn_picker.reset()
 	spawn_delay_timer.start()
 
 func on_spawn_enemy():
@@ -45,7 +49,7 @@ func on_spawn_enemy():
 		on_spawning_finished.emit()
 	else:
 		var base_enemy: BaseEnemy = nodes[enemy_index] as BaseEnemy
-		self.get_tree().current_scene.add_child(base_enemy)
+		parent_spawner_node.add_child(base_enemy)
 		var position: Vector2 = random_spawn_picker.pick_random_world_position()
 		base_enemy.position = position
 		

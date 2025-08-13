@@ -1,4 +1,4 @@
-[gd_scene load_steps=54 format=4 uid="uid://cm8h24l78l07d"]
+[gd_scene load_steps=57 format=4 uid="uid://cm8h24l78l07d"]
 
 [ext_resource type="TileSet" uid="uid://m0ie6u7rp81y" path="res://tiles/maze_tileset.tres" id="1_emoqq"]
 [ext_resource type="PackedScene" uid="uid://deh3txb4jfjc5" path="res://nodes/Player.tscn" id="2_8c3is"]
@@ -31,9 +31,12 @@
 [ext_resource type="AnimationLibrary" uid="uid://coh8ge25dmuqo" path="res://animation/ui_canvas_layer/game_hud.res" id="29_qv2kb"]
 [ext_resource type="PackedScene" uid="uid://dwryu2l051w1y" path="res://nodes/ui/HPBar.tscn" id="30_irsq2"]
 [ext_resource type="PackedScene" uid="uid://4k3yawlmr7qu" path="res://nodes/ui/BombUIPicker.tscn" id="31_0exh5"]
+[ext_resource type="Resource" uid="uid://dj514a8o7fy57" path="res://resources/noob_mobs_weight_table.tres" id="31_37106"]
 [ext_resource type="Script" uid="uid://cw3bb55h136vj" path="res://scripts/clock_countdown.gd" id="32_mdrk0"]
 [ext_resource type="AnimationLibrary" uid="uid://culg486cgxkhy" path="res://animation/ui_canvas_layer/clock_hud.res" id="33_ffnwn"]
+[ext_resource type="Resource" uid="uid://3vkoa4ev06ex" path="res://resources/ranged_mobs_weight_table.tres" id="33_fxrpe"]
 [ext_resource type="AudioStream" uid="uid://2sulg4fdcpyd" path="res://assets/SHMUP BGM Pack 2 ogg&m4a/stg_st003-loop.ogg" id="34_ja18n"]
+[ext_resource type="Resource" uid="uid://chvs7jsaw3iqb" path="res://resources/dashing_mobs_weight_table.tres" id="34_onc2j"]
 [ext_resource type="AudioStream" uid="uid://cv3k3xrhsxq57" path="res://assets/SHMUP BGM Pack 2 ogg&m4a/stg_theme008.ogg" id="35_1coxa"]
 [ext_resource type="Script" uid="uid://c1xvnako1kh2c" path="res://scripts/manual_bg_music_looper.gd" id="36_yga73"]
 
@@ -814,7 +817,7 @@ text = "03:45"
 horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("32_mdrk0")
-start_time_seconds = 85
+start_time_seconds = 300
 
 [node name="Timer" type="Timer" parent="CanvasLayer/ClockHUD/Label"]
 
@@ -934,7 +937,7 @@ position = Vector2(624, 1822)
 
 [node name="MobSpawner0" type="Node2D" parent="MobSpawners" node_paths=PackedStringArray("random_spawn_picker", "marker", "parent_spawner_node")]
 script = ExtResource("9_nujpw")
-weight_table = ExtResource("10_h7edw")
+weight_table = ExtResource("31_37106")
 random_spawn_picker = NodePath("../RandomSpawnPicker0")
 marker = NodePath("../../Marker2D")
 parent_spawner_node = NodePath("../../MobsContainer")
@@ -949,7 +952,7 @@ tile_map_layer = NodePath("../../LevelSections/Area0")
 
 [node name="MobSpawner1" type="Node2D" parent="MobSpawners" node_paths=PackedStringArray("random_spawn_picker", "marker", "parent_spawner_node")]
 script = ExtResource("9_nujpw")
-weight_table = ExtResource("10_h7edw")
+weight_table = ExtResource("31_37106")
 random_spawn_picker = NodePath("../RandomSpawnPicker1")
 marker = NodePath("../../Marker2D")
 parent_spawner_node = NodePath("../../MobsContainer")
@@ -964,7 +967,7 @@ tile_map_layer = NodePath("../../LevelSections/Area1")
 
 [node name="MobSpawner2" type="Node2D" parent="MobSpawners" node_paths=PackedStringArray("random_spawn_picker", "marker", "parent_spawner_node")]
 script = ExtResource("9_nujpw")
-weight_table = ExtResource("10_h7edw")
+weight_table = ExtResource("33_fxrpe")
 random_spawn_picker = NodePath("../RandomSpawnPicker2")
 marker = NodePath("../../Marker2D")
 parent_spawner_node = NodePath("../../MobsContainer")
@@ -979,7 +982,7 @@ tile_map_layer = NodePath("../../LevelSections/Area2")
 
 [node name="MobSpawner3" type="Node2D" parent="MobSpawners" node_paths=PackedStringArray("random_spawn_picker", "marker", "parent_spawner_node")]
 script = ExtResource("9_nujpw")
-weight_table = ExtResource("10_h7edw")
+weight_table = ExtResource("34_onc2j")
 random_spawn_picker = NodePath("../RandomSpawnPicker3")
 marker = NodePath("../../Marker2D")
 parent_spawner_node = NodePath("../../MobsContainer")
@@ -1022,9 +1025,10 @@ wait_time = 0.5
 script = ExtResource("11_h7edw")
 tile_map_layer = NodePath("../../LevelSections/Area5")
 
-[node name="WaveManager" type="Node2D" parent="." node_paths=PackedStringArray("mob_spawners")]
+[node name="WaveManager" type="Node2D" parent="." node_paths=PackedStringArray("mob_spawners", "parent_spawner_node")]
 script = ExtResource("8_r046j")
-mob_spawners = [NodePath("../MobSpawners/MobSpawner0")]
+mob_spawners = [NodePath("../MobSpawners/MobSpawner0"), NodePath("../MobSpawners/MobSpawner1"), NodePath("../MobSpawners/MobSpawner2"), NodePath("../MobSpawners/MobSpawner3"), NodePath("../MobSpawners/MobSpawner4"), NodePath("../MobSpawners/MobSpawner5")]
+parent_spawner_node = NodePath("../MobsContainer")
 
 [node name="Marker2D" type="Marker2D" parent="."]
 position = Vector2(224, 2144)
