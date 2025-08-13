@@ -62,8 +62,10 @@ func on_play_pressed():
 	toggle_player_hud(false)
 	toggle_clock_hud(false)
 	clock_hud.start_countdown()
-	scene_spawner.start_spawning()
-		
+	#scene_spawner.start_spawning()
+	
+	event_bus.on_game_start.emit()
+	
 	await transition_track()
 
 func reset_scene():

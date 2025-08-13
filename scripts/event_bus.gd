@@ -21,4 +21,5 @@ signal on_bomb_picked_up(bomb_type: Constants.BombType, count: int)
 signal on_bomb_thrown(bomb_type: Constants.BombType)
 #endregion
 
+signal on_game_start()
 signal on_game_end(game_state: String)

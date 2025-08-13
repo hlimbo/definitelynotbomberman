@@ -5,12 +5,16 @@ class_name PackedSceneSpawner extends Node
 @export var weight_table: WeightTable
 @export var random_spawn_picker: RandomSpawnPicker
 @export var marker: Marker2D
+# node to attach spawned packed scenes to -- defaults to current scene's root node
+@export var parent_spawner_node: Node2D
 
 var debug_markers: Array[Marker2D] = []
 
 @export var spawn_count: int = 12
 
 @onready var spawn_delay_timer: Timer = $spawn_delay_timer
+
+signal on_spawning_finished
 
 var enemy_index: int = 0
 var nodes: Array[Node] = []
@@ -27,6 +31,10 @@ func _ready():
 		nodes.append(node)
 	
 	spawn_delay_timer.timeout.connect(on_spawn_enemy)
+	
+	if parent_spawner_node == null:
+		push_warning("PackedSceneManager is missing a reference to parent_spawner_node. Ensure a Node2D reference is assigned to parent_spawner_node to remove the warning. Defaulting to current scene as root node.")
+		parent_spawner_node = self.get_tree().current_scene
 
 func start_spawning():
 	spawn_delay_timer.start()
@@ -34,6 +42,7 @@ func start_spawning():
 func on_spawn_enemy():
 	if enemy_index >= len(nodes):
 		spawn_delay_timer.stop()
+		on_spawning_finished.emit()
 	else:
 		var base_enemy: BaseEnemy = nodes[enemy_index] as BaseEnemy
 		self.get_tree().current_scene.add_child(base_enemy)
@@ -41,6 +50,8 @@ func on_spawn_enemy():
 		base_enemy.position = position
 		
 		var clone: Marker2D = marker.duplicate()
+		# TODO: add node that will hold all child nodes spawned in for better scene node management
+		clone.visible = true
 		self.get_tree().current_scene.add_child(clone)
 		debug_markers.append(clone)
 		clone.position = position

@@ -27,7 +27,7 @@ func _ready():
 
 	# returns enclosing rect space of the tile map layer
 	var rect_area: Rect2i = tile_map_layer.get_used_rect()
-	root_position = tile_map_layer.position + Vector2(rect_area.position.x * tile_map_layer_scale.x, rect_area.position.y * tile_map_layer_scale.y)
+	root_position = tile_map_layer.position + Vector2(rect_area.position.x * tile_map_layer_scale.x * tile_dimensions.x, rect_area.position.y * tile_map_layer_scale.y * tile_dimensions.y)
 	tile_root_position = rect_area.position
 	tile_map_width = rect_area.size.x
 	tile_map_height = rect_area.size.y
@@ -40,12 +40,6 @@ func _ready():
 	print("tile dimensions: %v" % tile_dimensions)
 
 	reset()
-	
-	#for i in range(4):
-		#var random_position: Vector2i = pick_random_spawn_location()
-		#print("random position picked: %.0v" % random_position)
-		#var world_coords: Vector2 = convert_tile_coords_to_world_coords(random_position)
-		#print("world coords: %v" % world_coords)
 
 func pick_random_spawn_location() -> Vector2i:
 	# collect all randomly available positions
@@ -79,7 +73,8 @@ func convert_tile_coords_to_world_coords(tile_coord: Vector2i) -> Vector2:
 	var x_offset: float = tile_coord.x * float(tile_dimensions.x) * tile_map_layer_scale.x
 	var y_offset: float = tile_coord.y * float(tile_dimensions.y) * tile_map_layer_scale.y
 	var mid_offset: Vector2 = 0.5 * Vector2(float(tile_dimensions.x) * tile_map_layer_scale.x, float(tile_dimensions.y) * tile_map_layer_scale.y)
-	return root_position + Vector2(x_offset, y_offset) + mid_offset
+	# return root_position + Vector2(x_offset, y_offset) + mid_offset
+	return Vector2(x_offset, y_offset) + mid_offset
 
 func pick_random_world_position() -> Vector2:
 	var spawn_pos: Vector2i = pick_random_spawn_location()
