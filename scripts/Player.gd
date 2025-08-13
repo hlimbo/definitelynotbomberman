@@ -414,6 +414,13 @@ func _on_projectile_hit(projectile: Projectile, target: Node2D):
 	if self != target or target is not Player:
 		return
 	
+	if is_hurt:
+		return
+	
+	# if already dead, don't re-trigger the death animation
+	if !self.is_alive or self.is_dead or self.is_queued_for_deletion():
+		return
+	
 	# display damage above player
 	var damage_text: DamageText = damage_text_node.instantiate()
 	damage_text_root.add_child(damage_text)
