@@ -23,6 +23,7 @@ script = ExtResource("1_4f8ai")
 explosion_node = ExtResource("3_qf65r")
 
 [node name="BombSprite" type="Sprite2D" parent="."]
+z_index = 1
 material = SubResource("ShaderMaterial_qf65r")
 scale = Vector2(0.08, 0.08)
 texture = ExtResource("3_tkkff")
@@ -31,7 +32,6 @@ texture = ExtResource("3_tkkff")
 
 [node name="ShadowSprite" type="Sprite2D" parent="."]
 modulate = Color(0, 0, 0, 1)
-z_index = -1
 position = Vector2(1, 1)
 scale = Vector2(0.1, 0.1)
 texture = ExtResource("4_ma0oj")

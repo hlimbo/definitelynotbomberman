@@ -25,6 +25,8 @@ enum WaveState {
 
 @export var wave_state: WaveState = WaveState.START
 
+signal on_all_waves_finished
+
 
 func _ready():
 	assert(parent_spawner_node != null)
@@ -39,24 +41,24 @@ func _ready():
 
 	
 func _process(delta: float):
-	if wave_state == WaveState.IDLE:
-		start_spawning_wave()
-	elif wave_state == WaveState.FINISHED:
+	if wave_state == WaveState.FINISHED:
 		# go to the next wave when all enemies for the current wave are defeated
 		if parent_spawner_node.get_child_count() == 0 and wave_index < wave_count:
 			wave_state = WaveState.IDLE
 		# start spawning mobs in the next area
-		elif parent_spawner_node.get_child_count() == 0 and wave_index >= wave_count and mob_spawner_index < len(mob_spawners) - 1:
+		elif parent_spawner_node.get_child_count() == 0 and wave_index >= wave_count and mob_spawner_index < len(mob_spawners):
 			mob_spawner_index += 1
 			wave_index = 0
 			wave_state = WaveState.IDLE
+			on_all_waves_finished.emit()
 
 func on_wave_spawning_finished():
 	wave_state = WaveState.FINISHED
 	wave_index += 1
 
 func on_game_start():
-	start_spawning_wave()
+	pass
+	# start_spawning_wave()
 	
 func start_spawning_wave():
 	assert(mob_spawner_index < len(mob_spawners))

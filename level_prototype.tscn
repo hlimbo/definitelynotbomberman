@@ -1,4 +1,4 @@
-[gd_scene load_steps=57 format=4 uid="uid://cm8h24l78l07d"]
+[gd_scene load_steps=61 format=4 uid="uid://cm8h24l78l07d"]
 
 [ext_resource type="TileSet" uid="uid://m0ie6u7rp81y" path="res://tiles/maze_tileset.tres" id="1_emoqq"]
 [ext_resource type="PackedScene" uid="uid://deh3txb4jfjc5" path="res://nodes/Player.tscn" id="2_8c3is"]
@@ -39,6 +39,8 @@
 [ext_resource type="Resource" uid="uid://chvs7jsaw3iqb" path="res://resources/dashing_mobs_weight_table.tres" id="34_onc2j"]
 [ext_resource type="AudioStream" uid="uid://cv3k3xrhsxq57" path="res://assets/SHMUP BGM Pack 2 ogg&m4a/stg_theme008.ogg" id="35_1coxa"]
 [ext_resource type="Script" uid="uid://c1xvnako1kh2c" path="res://scripts/manual_bg_music_looper.gd" id="36_yga73"]
+[ext_resource type="Script" uid="uid://cpglgs3gchrlh" path="res://scripts/room_trigger.gd" id="40_fxrpe"]
+[ext_resource type="Script" uid="uid://bu20eirwe62bp" path="res://scripts/room_manager.gd" id="41_onc2j"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_hqv6w"]
 blend_mode = 1
@@ -188,6 +190,12 @@ _data = {
 }
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_nujpw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fxrpe"]
+size = Vector2(1000, 550)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_onc2j"]
+size = Vector2(1000, 450)
 
 [node name="LevelPrototype" type="Node2D"]
 
@@ -915,8 +923,6 @@ hp_bar = NodePath("../CanvasLayer/GameHUD/HpBar")
 position = Vector2(601, 7906)
 movement_delay_duration = 0.25
 
-[node name="BombContainer" type="Node2D" parent="."]
-
 [node name="MobsContainer" type="Node2D" parent="."]
 
 [node name="BombPickups" type="Node2D" parent="."]
@@ -1030,6 +1036,8 @@ script = ExtResource("8_r046j")
 mob_spawners = [NodePath("../MobSpawners/MobSpawner0"), NodePath("../MobSpawners/MobSpawner1"), NodePath("../MobSpawners/MobSpawner2"), NodePath("../MobSpawners/MobSpawner3"), NodePath("../MobSpawners/MobSpawner4"), NodePath("../MobSpawners/MobSpawner5")]
 parent_spawner_node = NodePath("../MobsContainer")
 
+[node name="BombContainer" type="Node2D" parent="."]
+
 [node name="Marker2D" type="Marker2D" parent="."]
 position = Vector2(224, 2144)
 gizmo_extents = 1000.0
@@ -1053,3 +1061,74 @@ script = ExtResource("36_yga73")
 loop_start = 3.5
 loop_end = 31.0
 end_tolerance = 0.016
+
+[node name="RoomTrigger" type="Area2D" parent="." node_paths=PackedStringArray("hazards_layer")]
+position = Vector2(630, 6666)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("40_fxrpe")
+hazards_layer = NodePath("../HazardLayer")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomTrigger"]
+shape = SubResource("RectangleShape2D_fxrpe")
+
+[node name="RoomTrigger2" type="Area2D" parent="." node_paths=PackedStringArray("hazards_layer")]
+position = Vector2(630, 5374)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("40_fxrpe")
+hazards_layer = NodePath("../HazardLayer")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomTrigger2"]
+shape = SubResource("RectangleShape2D_onc2j")
+
+[node name="RoomTrigger3" type="Area2D" parent="." node_paths=PackedStringArray("hazards_layer")]
+position = Vector2(630, 4129)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("40_fxrpe")
+hazards_layer = NodePath("../HazardLayer")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomTrigger3"]
+shape = SubResource("RectangleShape2D_onc2j")
+
+[node name="RoomTrigger4" type="Area2D" parent="." node_paths=PackedStringArray("hazards_layer")]
+position = Vector2(630, 2872)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("40_fxrpe")
+hazards_layer = NodePath("../HazardLayer")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomTrigger4"]
+shape = SubResource("RectangleShape2D_onc2j")
+
+[node name="RoomTrigger5" type="Area2D" parent="." node_paths=PackedStringArray("hazards_layer")]
+position = Vector2(630, 1626)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("40_fxrpe")
+hazards_layer = NodePath("../HazardLayer")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomTrigger5"]
+shape = SubResource("RectangleShape2D_onc2j")
+
+[node name="RoomTrigger6" type="Area2D" parent="." node_paths=PackedStringArray("hazards_layer")]
+position = Vector2(630, 399)
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("40_fxrpe")
+hazards_layer = NodePath("../HazardLayer")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoomTrigger6"]
+shape = SubResource("RectangleShape2D_onc2j")
+
+[node name="RoomManager" type="Node2D" parent="." node_paths=PackedStringArray("wave_manager", "room_triggers")]
+script = ExtResource("41_onc2j")
+wave_manager = NodePath("../WaveManager")
+room_triggers = [NodePath("../RoomTrigger"), NodePath("../RoomTrigger2"), NodePath("../RoomTrigger3"), NodePath("../RoomTrigger4"), NodePath("../RoomTrigger5"), NodePath("../RoomTrigger6")]
