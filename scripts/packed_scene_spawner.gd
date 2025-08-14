@@ -24,7 +24,9 @@ func spawn_random_scene() -> Node:
 	var scene: PackedScene = weight_table.pick_random_spawnable()
 	var node: Node = scene.instantiate()
 	return node
-	
+
+# this will depend on the player object as it needs to know its position in real time
+# to avoid spawning enemies in that location
 func _ready():
 	assert(parent_spawner_node != null)
 	assert(random_spawn_picker != null)

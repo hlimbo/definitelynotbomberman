@@ -29,7 +29,8 @@ var curr_animation_time: float = 0.0
 var text_update_delay: float = 0.0
 @export var text_animation_duration: float = 0.75
 
-@export var view_index = 0
+@export var view_index: int = 0
+const DEFAULT_BOMB_INDEX: int = 0
 var bomb_inventory: Array[BombUIData] = [
 	BombUIData.new(), # default bomb
 	BombUIData.new("poison bomb", Color.VIOLET, 1),
@@ -99,10 +100,14 @@ func view_next_bomb(is_arrow_up: bool):
 	audio_stream_player.play()
 
 func set_bomb_type(view_index: int):
-	print("bomb type: %s" % bomb_inventory[view_index].name)
 	self.view_index = view_index
 	bomb_texture.modulate = bomb_inventory[view_index].color
 	counter_label.text = "%d" % bomb_inventory[view_index].count
+	
+	if self.view_index == DEFAULT_BOMB_INDEX:
+		toggle_text_counter(false)
+	else:
+		toggle_text_counter(true)
 
 func on_bomb_picked_up(bomb_type: Constants.BombType, count: int):
 	var bomb_index: int = int(bomb_type)
@@ -145,3 +150,6 @@ func on_bomb_thrown(bomb_type: Constants.BombType):
 func update_bomb_count_by_index(index: int):
 	if index == view_index:
 		counter_label.text = "%d" % bomb_inventory[view_index].count
+		
+func toggle_text_counter(is_visible: bool):
+	counter_label.visible = is_visible
