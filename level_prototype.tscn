@@ -1,4 +1,4 @@
-[gd_scene load_steps=70 format=4 uid="uid://cm8h24l78l07d"]
+[gd_scene load_steps=72 format=4 uid="uid://cm8h24l78l07d"]
 
 [ext_resource type="TileSet" uid="uid://m0ie6u7rp81y" path="res://tiles/maze_tileset.tres" id="1_emoqq"]
 [ext_resource type="PackedScene" uid="uid://deh3txb4jfjc5" path="res://nodes/Player.tscn" id="2_8c3is"]
@@ -46,6 +46,8 @@
 [ext_resource type="Script" uid="uid://cpglgs3gchrlh" path="res://scripts/room_trigger.gd" id="40_fxrpe"]
 [ext_resource type="Script" uid="uid://bu20eirwe62bp" path="res://scripts/room_manager.gd" id="41_onc2j"]
 [ext_resource type="AudioStream" uid="uid://dd78j1uj44pgd" path="res://assets/SHMUP BGM Pack 2 ogg&m4a/stg_theme008-loop.ogg" id="44_uste2"]
+[ext_resource type="AudioStream" uid="uid://bbw05qpmd4uq6" path="res://assets/winner-is/winneris.ogg" id="47_bx43x"]
+[ext_resource type="AudioStream" uid="uid://eelm85i5y0c8" path="res://assets/game-over-sound/GameOver.wav" id="48_bx43x"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_hqv6w"]
 blend_mode = 1
@@ -390,10 +392,12 @@ texture = ExtResource("7_0exh5")
 centered = false
 offset = Vector2(300, 200)
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." node_paths=PackedStringArray("bg_music_player", "menu_music_player")]
+[node name="CanvasLayer" type="CanvasLayer" parent="." node_paths=PackedStringArray("bg_music_player", "menu_music_player", "game_won_music_player", "game_over_music_player")]
 script = ExtResource("12_c3kfy")
 bg_music_player = NodePath("../BG_Music")
 menu_music_player = NodePath("../Menu_Music")
+game_won_music_player = NodePath("../BG_GameWonMusic")
+game_over_music_player = NodePath("../BG_GameOverMusic")
 
 [node name="StartGameScreen" type="Control" parent="CanvasLayer"]
 layout_mode = 3
@@ -1255,19 +1259,6 @@ gizmo_extents = 1000.0
 scale = Vector2(16, 16)
 texture = SubResource("PlaceholderTexture2D_nujpw")
 
-[node name="BG_Music" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("34_ja18n")
-volume_db = -24.0
-bus = &"BG"
-parameters/looping = true
-
-[node name="Menu_Music" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("44_uste2")
-volume_db = -24.0
-autoplay = true
-bus = &"BG"
-parameters/looping = true
-
 [node name="RoomTrigger" type="Area2D" parent="." node_paths=PackedStringArray("hazards_layer")]
 position = Vector2(630, 6666)
 collision_layer = 0
@@ -1338,3 +1329,25 @@ shape = SubResource("RectangleShape2D_onc2j")
 script = ExtResource("41_onc2j")
 wave_manager = NodePath("../WaveManager")
 room_triggers = [NodePath("../RoomTrigger"), NodePath("../RoomTrigger2"), NodePath("../RoomTrigger3"), NodePath("../RoomTrigger4"), NodePath("../RoomTrigger5"), NodePath("../RoomTrigger6")]
+
+[node name="BG_Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("34_ja18n")
+volume_db = -24.0
+bus = &"BG"
+parameters/looping = true
+
+[node name="Menu_Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("44_uste2")
+volume_db = -24.0
+autoplay = true
+bus = &"BG"
+parameters/looping = true
+
+[node name="BG_GameWonMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("47_bx43x")
+bus = &"BG"
+
+[node name="BG_GameOverMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("48_bx43x")
+volume_db = -8.0
+bus = &"BG"

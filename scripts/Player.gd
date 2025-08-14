@@ -344,8 +344,9 @@ func _update_animation() -> void:
 		_anim.play(&"hurt")
 		move_particles.emitting = false
 	elif is_dead:
-		_anim.play(&"death")
-		move_particles.emitting = false
+		if !_anim.is_playing():
+			_anim.play(&"death")
+			move_particles.emitting = false
 	elif !is_alive:
 		_anim.play(&"invisible")
 		move_particles.emitting = false
@@ -405,6 +406,7 @@ func _on_attacked(enemy: BaseEnemy, target: Node2D):
 		hurt_timer.start()
 	else:
 		is_dead = true
+		knockback_force_vector = Vector2.ZERO
 		shader_mat.shader = death_shader
 		death_audio_player.play()
 		death_timer.start()
@@ -438,6 +440,7 @@ func _on_projectile_hit(projectile: Projectile, target: Node2D):
 		hurt_timer.start()
 	else:
 		is_dead = true
+		knockback_force_vector = Vector2.ZERO
 		shader_mat.shader = death_shader
 		death_audio_player.play()
 		death_timer.start()

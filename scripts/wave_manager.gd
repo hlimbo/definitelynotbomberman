@@ -32,12 +32,12 @@ func _ready():
 	assert(parent_spawner_node != null)
 	assert(mob_spawner_index < len(mob_spawners))
 	
+	wave_count = randi_range(min_wave_count, max_wave_count)
+	
 	for i in range(len(mob_spawners)):
 		var mob_spawner: PackedSceneSpawner = mob_spawners[i]
 		mob_spawner.on_spawning_finished.connect(on_wave_spawning_finished)
 		mob_spawner.spawn_delay_timer.wait_time = enemy_wave_spawn_delay
-		
-	event_bus.on_game_start.connect(on_game_start)
 
 	
 func _process(delta: float):
@@ -49,20 +49,17 @@ func _process(delta: float):
 		elif parent_spawner_node.get_child_count() == 0 and wave_index >= wave_count and mob_spawner_index < len(mob_spawners):
 			mob_spawner_index += 1
 			wave_index = 0
+			wave_count = randi_range(min_wave_count, max_wave_count)
 			wave_state = WaveState.IDLE
 			on_all_waves_finished.emit()
 
 func on_wave_spawning_finished():
 	wave_state = WaveState.FINISHED
 	wave_index += 1
-
-func on_game_start():
-	pass
-	# start_spawning_wave()
 	
 func start_spawning_wave():
 	assert(mob_spawner_index < len(mob_spawners))
 	wave_state = WaveState.SPAWNING
-	enemies_per_wave = 3 # randi_range(min_enemies_to_spawn_per_wave, max_enemies_to_spawn_per_wave)
+	enemies_per_wave = randi_range(min_enemies_to_spawn_per_wave, max_enemies_to_spawn_per_wave)
 	print("enemies to spawn per wave: ", enemies_per_wave)
 	mob_spawners[mob_spawner_index].start_spawning(enemies_per_wave)
