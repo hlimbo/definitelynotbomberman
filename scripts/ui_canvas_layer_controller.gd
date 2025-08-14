@@ -5,7 +5,6 @@ extends Node
 
 @export var bg_music_player: AudioStreamPlayer
 @export var menu_music_player: AudioStreamPlayer
-@export var scene_spawner: PackedSceneSpawner
 
 #region Animation Names
 const HIDE_START_GAME_SCREEN: StringName = &"ui_canvas_layer/hide_start_game_screen"
@@ -17,19 +16,24 @@ const TOGGLE_CLOCK_HUD: StringName = &"clock_hud/toggle"
 @onready var game_hud_anim_player: AnimationPlayer = $GameHUD/AnimationPlayer
 @onready var clock_hud_anim_player: AnimationPlayer = $ClockHUD/AnimationPlayer
 @onready var play_button: TextureButton = $StartGameScreen/TitleBorder/PlayButton
-@onready var play_again_button: TextureButton = $GameOverScreen/PlayAgainButton
-@onready var play_again_button2: TextureButton = $GameWonScreen/PlayAgainButton
+@onready var play_again_button: TextureButton = $GameOverScreen/Container/PlayAgainButton
+@onready var play_again_button2: TextureButton = $GameWonScreen/Container/PlayAgainButton
+@onready var play_again_button_audio: AudioStreamPlayer = $PlayAgainButtonAudio
 
 @onready var game_over_screen: Control = $GameOverScreen
 @onready var game_won_screen: Control = $GameWonScreen
+@onready var game_over_anim: AnimationPlayer = $GameOverScreen/AnimationPlayer
+@onready var game_won_anim: AnimationPlayer = $GameWonScreen/AnimationPlayer
+
 
 @onready var audio_crossfade_timer: Timer = $audio_crossfade_timer
 @onready var clock_hud: ClockHUD = $ClockHUD/Label
 
 func _ready():
 	play_button.pressed.connect(on_play_pressed)
-	play_again_button.pressed.connect(reset_scene)
-	play_again_button2.pressed.connect(reset_scene)
+	play_again_button.pressed.connect(on_play_again_button_pressed)
+	play_again_button2.pressed.connect(on_play_again_button_pressed)
+	play_again_button_audio.finished.connect(reset_scene)
 	
 	event_bus.on_game_end.connect(on_game_end)
 
@@ -62,22 +66,32 @@ func on_play_pressed():
 	toggle_player_hud(false)
 	toggle_clock_hud(false)
 	clock_hud.start_countdown()
-	#scene_spawner.start_spawning()
 	
 	event_bus.on_game_start.emit()
 	
 	await transition_track()
 
+func on_play_again_button_pressed():
+	if !play_again_button_audio.playing:
+		play_again_button_audio.play()
+
 func reset_scene():
 	get_tree().reload_current_scene()
-	# get_tree().change_scene_to_packed(game_scene)
-
+	
 func on_game_end(game_state: String):
+	if game_over_screen.visible or game_won_screen.visible:
+		return
+	
 	toggle_player_hud()
+	toggle_clock_hud()
+	clock_hud.stop_countdown()
 	if game_state == "GameOver":
 		game_over_screen.visible = true
+		game_over_anim.play(&"game_over_screen/toggle")
 	else:
 		game_won_screen.visible = true
+		game_won_anim.play(&"game_won_screen_animations/toggle")
+
 
 func toggle_start_game_screen(is_hidden: bool = true):
 	if is_hidden:

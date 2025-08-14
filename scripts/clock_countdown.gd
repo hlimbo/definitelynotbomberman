@@ -21,12 +21,14 @@ func _ready():
 
 func start_countdown():
 	timer.start()
+	
+func stop_countdown():
+	timer.stop()
 
 func on_time_elapsed():
 	_curr_time = max(_curr_time - 1, 0)
-	
 	self.text = convert_to_minutes_seconds(_curr_time)
 	
 	if _curr_time == 0:
 		timer.stop()
-		event_bus.on_game_end.emit("GameWon")
+		event_bus.on_game_end.emit("GameOver")

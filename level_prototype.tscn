@@ -1,4 +1,4 @@
-[gd_scene load_steps=65 format=4 uid="uid://cm8h24l78l07d"]
+[gd_scene load_steps=70 format=4 uid="uid://cm8h24l78l07d"]
 
 [ext_resource type="TileSet" uid="uid://m0ie6u7rp81y" path="res://tiles/maze_tileset.tres" id="1_emoqq"]
 [ext_resource type="PackedScene" uid="uid://deh3txb4jfjc5" path="res://nodes/Player.tscn" id="2_8c3is"]
@@ -25,8 +25,10 @@
 [ext_resource type="Texture2D" uid="uid://mvfn4lhv8dxl" path="res://atlas_textures/rect_button_pressed.tres" id="19_fxrpe"]
 [ext_resource type="Texture2D" uid="uid://mmxqphhb16n7" path="res://atlas_textures/rect_button_hover.tres" id="20_onc2j"]
 [ext_resource type="Script" uid="uid://cjhhr5ig8p0ig" path="res://scripts/play_ui_sfx.gd" id="21_64koe"]
+[ext_resource type="AnimationLibrary" uid="uid://cwldn3l1b7u4c" path="res://animation/ui_canvas_layer/game_over_screen_animations.res" id="22_uste2"]
 [ext_resource type="AudioStream" uid="uid://ou0us1ja6n0m" path="res://assets/UISoundpack/Retro8.ogg" id="22_x6rbd"]
 [ext_resource type="Texture2D" uid="uid://bal1mky00pmnb" path="res://atlas_textures/button_normal.tres" id="23_4twkq"]
+[ext_resource type="AnimationLibrary" uid="uid://carcw71g10cwi" path="res://animation/ui_canvas_layer/game_won_screen_animations.res" id="23_bx43x"]
 [ext_resource type="Texture2D" uid="uid://cbe2sma3jt5sk" path="res://atlas_textures/button_pressed.tres" id="24_jie2q"]
 [ext_resource type="Texture2D" uid="uid://dapnfalgc31fh" path="res://atlas_textures/button_hover.tres" id="25_wf4mx"]
 [ext_resource type="Texture2D" uid="uid://cxbkcu3uype26" path="res://assets/mouse-icons/Mouse right click.png" id="26_uste2"]
@@ -41,10 +43,9 @@
 [ext_resource type="Resource" uid="uid://3vkoa4ev06ex" path="res://resources/ranged_mobs_weight_table.tres" id="33_fxrpe"]
 [ext_resource type="AudioStream" uid="uid://2sulg4fdcpyd" path="res://assets/SHMUP BGM Pack 2 ogg&m4a/stg_st003-loop.ogg" id="34_ja18n"]
 [ext_resource type="Resource" uid="uid://chvs7jsaw3iqb" path="res://resources/dashing_mobs_weight_table.tres" id="34_onc2j"]
-[ext_resource type="AudioStream" uid="uid://cv3k3xrhsxq57" path="res://assets/SHMUP BGM Pack 2 ogg&m4a/stg_theme008.ogg" id="35_1coxa"]
-[ext_resource type="Script" uid="uid://c1xvnako1kh2c" path="res://scripts/manual_bg_music_looper.gd" id="36_yga73"]
 [ext_resource type="Script" uid="uid://cpglgs3gchrlh" path="res://scripts/room_trigger.gd" id="40_fxrpe"]
 [ext_resource type="Script" uid="uid://bu20eirwe62bp" path="res://scripts/room_manager.gd" id="41_onc2j"]
+[ext_resource type="AudioStream" uid="uid://dd78j1uj44pgd" path="res://assets/SHMUP BGM Pack 2 ogg&m4a/stg_theme008-loop.ogg" id="44_uste2"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_hqv6w"]
 blend_mode = 1
@@ -128,6 +129,118 @@ animations = [{
 "name": &"default",
 "speed": 6.0
 }]
+
+[sub_resource type="Animation" id="Animation_uste2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Container:anchor_right")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Container:anchor_left")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Container:anchor_top")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-0.5]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Container:anchor_bottom")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bx43x"]
+_data = {
+&"RESET": SubResource("Animation_uste2")
+}
+
+[sub_resource type="Animation" id="Animation_bx43x"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Container:anchor_left")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Container:anchor_right")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Container:anchor_top")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-0.5]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Container:anchor_bottom")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1ekq6"]
+_data = {
+&"RESET": SubResource("Animation_bx43x")
+}
 
 [sub_resource type="Animation" id="Animation_g6y4b"]
 length = 0.001
@@ -708,6 +821,10 @@ scale = Vector2(0.8, 0.8)
 sprite_frames = SubResource("SpriteFrames_jvbxh")
 autoplay = "default"
 
+[node name="PlayAgainButtonAudio" type="AudioStreamPlayer" parent="CanvasLayer"]
+stream = ExtResource("28_1ekq6")
+bus = &"UI"
+
 [node name="GameOverScreen" type="Control" parent="CanvasLayer"]
 visible = false
 layout_mode = 3
@@ -717,29 +834,37 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="CanvasLayer/GameOverScreen"]
+[node name="Container" type="Control" parent="CanvasLayer/GameOverScreen"]
+layout_mode = 1
+anchor_top = -0.5
+anchor_right = 1.0
+offset_bottom = 0.0799866
+grow_horizontal = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/GameOverScreen/Container"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -268.0
+offset_top = 53.0
 offset_right = 268.0
-offset_bottom = 80.0
+offset_bottom = 133.0
 grow_horizontal = 2
 theme = ExtResource("17_yga73")
 theme_override_constants/outline_size = 24
 theme_override_font_sizes/font_size = 64
 text = "GAME OVER"
 
-[node name="PlayAgainButton" type="TextureButton" parent="CanvasLayer/GameOverScreen"]
+[node name="PlayAgainButton" type="TextureButton" parent="CanvasLayer/GameOverScreen/Container"]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -172.0
-offset_top = 79.0
+offset_top = 161.0
 offset_right = 172.0
-offset_bottom = 190.0
+offset_bottom = 272.0
 grow_horizontal = 2
 focus_mode = 0
 texture_normal = ExtResource("18_37106")
@@ -747,7 +872,7 @@ texture_pressed = ExtResource("19_fxrpe")
 texture_hover = ExtResource("20_onc2j")
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="CanvasLayer/GameOverScreen/PlayAgainButton"]
+[node name="Label" type="Label" parent="CanvasLayer/GameOverScreen/Container/PlayAgainButton"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -762,8 +887,11 @@ text = "Play Again"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="CanvasLayer/GameOverScreen/PlayAgainButton"]
-stream = ExtResource("28_1ekq6")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/GameOverScreen"]
+libraries = {
+&"": SubResource("AnimationLibrary_bx43x"),
+&"game_over_screen": ExtResource("22_uste2")
+}
 
 [node name="GameWonScreen" type="Control" parent="CanvasLayer"]
 visible = false
@@ -774,44 +902,45 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="CanvasLayer/GameWonScreen"]
+[node name="Container" type="Control" parent="CanvasLayer/GameWonScreen"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -196.0
-offset_top = -40.0
-offset_right = 196.0
-offset_bottom = 40.0
+anchor_top = -0.5
+anchor_right = 1.0
+offset_bottom = 0.359985
 grow_horizontal = 2
-grow_vertical = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/GameWonScreen/Container"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -196.0
+offset_top = 80.0
+offset_right = 196.0
+offset_bottom = 160.0
+grow_horizontal = 2
 theme = ExtResource("17_yga73")
 theme_override_constants/outline_size = 24
 theme_override_font_sizes/font_size = 64
 text = "YOU WIN!"
 
-[node name="PlayAgainButton" type="TextureButton" parent="CanvasLayer/GameWonScreen"]
+[node name="PlayAgainButton" type="TextureButton" parent="CanvasLayer/GameWonScreen/Container"]
 layout_mode = 1
-anchors_preset = 8
+anchors_preset = 5
 anchor_left = 0.5
-anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 0.5
 offset_left = -172.0
-offset_top = 56.0
+offset_top = 174.0
 offset_right = 172.0
-offset_bottom = 167.0
+offset_bottom = 285.0
 grow_horizontal = 2
-grow_vertical = 2
 focus_mode = 0
 texture_normal = ExtResource("18_37106")
 texture_pressed = ExtResource("19_fxrpe")
 texture_hover = ExtResource("20_onc2j")
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="CanvasLayer/GameWonScreen/PlayAgainButton"]
+[node name="Label" type="Label" parent="CanvasLayer/GameWonScreen/Container/PlayAgainButton"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -826,8 +955,11 @@ text = "Play Again"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="CanvasLayer/GameWonScreen/PlayAgainButton"]
-stream = ExtResource("28_1ekq6")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/GameWonScreen"]
+libraries = {
+&"": SubResource("AnimationLibrary_1ekq6"),
+&"game_won_screen_animations": ExtResource("23_bx43x")
+}
 
 [node name="GameHUD" type="Control" parent="CanvasLayer"]
 visible = false
@@ -1130,14 +1262,11 @@ bus = &"BG"
 parameters/looping = true
 
 [node name="Menu_Music" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("35_1coxa")
+stream = ExtResource("44_uste2")
 volume_db = -24.0
 autoplay = true
 bus = &"BG"
-script = ExtResource("36_yga73")
-loop_start = 3.5
-loop_end = 31.0
-end_tolerance = 0.016
+parameters/looping = true
 
 [node name="RoomTrigger" type="Area2D" parent="." node_paths=PackedStringArray("hazards_layer")]
 position = Vector2(630, 6666)
