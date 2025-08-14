@@ -19,8 +19,16 @@ func on_enter_room():
 	# spawn as soon as the hazards fully block player from leaving the room
 	room_triggers[room_index].enable_hazards()
 	wave_manager.start_spawning_wave()
+	# a bit hacky -- the first room by design doesn't spawn any bomb pickups as the player
+	# isn't introduced to it yet until the 2nd room
+	if room_index > 0:
+		wave_manager.start_bomb_pickup_chance_timer()
 
 func on_all_waves_finished():
+	wave_manager.stop_bomb_pickup_chance_timer()
+	if room_index > 0:
+		wave_manager.bomb_pickups_spawn_index += 1
+	
 	room_triggers[room_index].disable_hazards()
 	room_index += 1
 	

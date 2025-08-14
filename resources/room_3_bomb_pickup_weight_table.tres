@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="WeightTable" load_steps=5 format=3 uid="uid://v8kyw8iildha"]
+
+[ext_resource type="PackedScene" uid="uid://bk28kiyi48jcs" path="res://nodes/bomb_pickups/PoisonBomb.tscn" id="1_epltn"]
+[ext_resource type="Script" uid="uid://d3njcutgqbltx" path="res://scripts/weight_table.gd" id="1_xivgq"]
+[ext_resource type="PackedScene" uid="uid://v2rg16pifsvg" path="res://nodes/bomb_pickups/GooBomb.tscn" id="2_8budc"]
+[ext_resource type="PackedScene" uid="uid://b457dk0elmq4n" path="res://nodes/bomb_pickups/RootBomb.tscn" id="3_2wjug"]
+
+[resource]
+script = ExtResource("1_xivgq")
+original_pool = Dictionary[PackedScene, float]({
+ExtResource("1_epltn"): 4.0,
+ExtResource("2_8budc"): 8.0,
+ExtResource("3_2wjug"): 16.0
+})
+is_unique_only = false
+metadata/_custom_type_script = "uid://d3njcutgqbltx"

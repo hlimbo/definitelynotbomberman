@@ -17,8 +17,9 @@ var debug_markers: Array[Marker2D] = []
 
 signal on_spawning_finished
 
-var enemy_index: int = 0
+var spawn_index: int = 0
 var nodes: Array[Node] = []
+var is_spawning: bool = false
 
 func spawn_random_scene() -> Node:
 	var scene: PackedScene = weight_table.pick_random_spawnable()
@@ -31,13 +32,17 @@ func _ready():
 	assert(parent_spawner_node != null)
 	assert(random_spawn_picker != null)
 	weight_table.construct()
-	spawn_delay_timer.timeout.connect(on_spawn_enemy)
+	spawn_delay_timer.timeout.connect(on_spawn_node)
 	
 	if parent_spawner_node == null:
 		push_warning("PackedSceneManager is missing a reference to parent_spawner_node. Ensure a Node2D reference is assigned to parent_spawner_node to remove the warning. Defaulting to current scene as root node.")
 		parent_spawner_node = self.get_tree().current_scene
 
 func start_spawning(count: int = spawn_count):
+	if is_spawning:
+		return
+	
+	is_spawning = true
 	spawn_count = count
 	for i in range(spawn_count):
 		var node: Node = spawn_random_scene()
@@ -46,16 +51,20 @@ func start_spawning(count: int = spawn_count):
 	random_spawn_picker.reset()
 	spawn_delay_timer.start()
 
-func on_spawn_enemy():
-	if enemy_index >= len(nodes):
-		spawn_delay_timer.stop()
+func stop_spawning():
+	is_spawning = false
+	spawn_delay_timer.stop()
+
+func on_spawn_node():
+	if spawn_index >= len(nodes):
+		stop_spawning()
 		on_spawning_finished.emit()
 	else:
-		var base_enemy: BaseEnemy = nodes[enemy_index] as BaseEnemy
-		parent_spawner_node.add_child(base_enemy)
+		var node: Node = nodes[spawn_index]
+		parent_spawner_node.add_child(node)
 		var position: Vector2 = random_spawn_picker.pick_random_world_position()
-		base_enemy.position = position
-		enemy_index += 1
+		node.position = position
+		spawn_index += 1
 		
 		if is_debug_mode_on:
 			var clone: Marker2D = marker.duplicate()

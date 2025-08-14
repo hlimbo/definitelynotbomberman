@@ -1,4 +1,4 @@
-extends Control
+class_name BombUIPickerView extends Control
 
 # it would be better if this was its own script that inherited from
 # Resource class so that it can be serialized and viewed in the editor if need be
@@ -9,6 +9,7 @@ class BombUIData:
 	# represents how many bombs gained/lost by the player
 	var count_delta: int
 	
+	# count of 999 represents infinity
 	func _init(name: String = "default bomb", color: Color = Color.WHITE, count: int = 999):
 		self.name = name
 		self.color = color
@@ -33,10 +34,10 @@ var text_update_delay: float = 0.0
 const DEFAULT_BOMB_INDEX: int = 0
 var bomb_inventory: Array[BombUIData] = [
 	BombUIData.new(), # default bomb
-	BombUIData.new("poison bomb", Color.VIOLET, 1),
-	BombUIData.new("gravity bomb", Color.DARK_SLATE_BLUE, 1),
-	BombUIData.new("goo bomb", Color.GREEN, 1),
-	BombUIData.new("root bomb",  Color.GOLDENROD, 1)
+	BombUIData.new("poison bomb", Color.VIOLET, 0),
+	BombUIData.new("gravity bomb", Color.DARK_SLATE_BLUE, 0),
+	BombUIData.new("goo bomb", Color.GREEN, 0),
+	BombUIData.new("root bomb",  Color.GOLDENROD, 0)
 ]
 
 func _ready():
@@ -153,3 +154,11 @@ func update_bomb_count_by_index(index: int):
 		
 func toggle_text_counter(is_visible: bool):
 	counter_label.visible = is_visible
+	
+func get_bomb_count() -> int:
+	var total: int = 0
+	# start at index 1 because index 0 is default bomb with infinite count
+	for i in range(1, len(bomb_inventory)):
+		total += bomb_inventory[i].count
+
+	return total

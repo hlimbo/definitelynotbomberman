@@ -9,3 +9,5 @@ enum BombType {
 	ROOT,
 	LENGTH
 }
+
+const MAX_BOMB_COUNT_PER_TYPE = 999

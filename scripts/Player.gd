@@ -305,6 +305,7 @@ func _launch_bomb() -> void:
 	var bomb: Bomb = _bomb_scene.instantiate()
 	bomb.position = global_position + _aim_dir * 20.0
 	bomb.launch(_aim_dir, speed, max_bounces, explosion_index)
+	# TODO: add BombContainer node as an @export variable
 	get_tree().current_scene.get_node("BombContainer").add_child(bomb)
 	
 	var bomb_type: Constants.BombType = explosion_index
