@@ -8,6 +8,7 @@ class_name PackedSceneSpawner extends Node
 # node to attach spawned packed scenes to -- defaults to current scene's root node
 @export var parent_spawner_node: Node2D
 
+@export var is_debug_mode_on: bool = false
 var debug_markers: Array[Marker2D] = []
 
 @export var spawn_count: int = 12
@@ -52,12 +53,13 @@ func on_spawn_enemy():
 		parent_spawner_node.add_child(base_enemy)
 		var position: Vector2 = random_spawn_picker.pick_random_world_position()
 		base_enemy.position = position
-		
-		var clone: Marker2D = marker.duplicate()
-		# TODO: add node that will hold all child nodes spawned in for better scene node management
-		clone.visible = true
-		self.get_tree().current_scene.add_child(clone)
-		debug_markers.append(clone)
-		clone.position = position
-		
 		enemy_index += 1
+		
+		if is_debug_mode_on:
+			var clone: Marker2D = marker.duplicate()
+			# TODO: add node that will hold all child nodes spawned in for better scene node management
+			clone.visible = true
+			self.get_tree().current_scene.add_child(clone)
+			debug_markers.append(clone)
+			clone.position = position
+		

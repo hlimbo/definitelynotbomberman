@@ -45,6 +45,7 @@ func _process(delta: float):
 		# go to the next wave when all enemies for the current wave are defeated
 		if parent_spawner_node.get_child_count() == 0 and wave_index < wave_count:
 			wave_state = WaveState.IDLE
+			start_spawning_wave()
 		# start spawning mobs in the next area
 		elif parent_spawner_node.get_child_count() == 0 and wave_index >= wave_count and mob_spawner_index < len(mob_spawners):
 			mob_spawner_index += 1
