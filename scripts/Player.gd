@@ -168,7 +168,6 @@ func _input(event: InputEvent) -> void:
 	# Dash detection must NOT call missing event methods –
 	# use the Input singleton instead of the event.
 	if Input.is_action_just_pressed("dash") and _can_dash():
-		dash_audio_player.play()
 		_begin_dash()
 
 func _physics_process(delta: float) -> void:
@@ -187,6 +186,10 @@ func _process(delta: float) -> void:
 #   ── Dash logic ──
 # ─────────────────────────────────────────────────────────────────────────────
 func _begin_dash() -> void:
+	if is_dead or _is_dashing:
+		return
+	
+	dash_audio_player.play()
 	_is_dashing = true
 	_dash_timer = dash_duration
 	_cooldown_timer = dash_cooldown
@@ -195,6 +198,10 @@ func _begin_dash() -> void:
 		_dash_dir = _aim_dir   # default to aim direction
 
 func _update_dash(delta: float) -> void:
+	if is_dead:
+		_is_dashing = false
+		_cooldown_timer = 0.0
+	
 	if _is_dashing:
 		camera_controller.motion_kind = CameraController.MotionKind.INTERPOLATION
 		_dash_timer -= delta
@@ -345,7 +352,7 @@ func _update_animation() -> void:
 		_anim.play(&"hurt")
 		move_particles.emitting = false
 	elif is_dead:
-		if !_anim.is_playing():
+		if !_anim.is_playing() or _anim.current_animation != "death":
 			_anim.play(&"death")
 			move_particles.emitting = false
 	elif !is_alive:
