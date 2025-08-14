@@ -1156,7 +1156,7 @@ position = Vector2(624, 1822)
 
 [node name="MobSpawner0" type="Node2D" parent="MobSpawners" node_paths=PackedStringArray("random_spawn_picker", "marker", "parent_spawner_node")]
 script = ExtResource("9_nujpw")
-weight_table = ExtResource("31_37106")
+weight_table = ExtResource("33_fxrpe")
 random_spawn_picker = NodePath("../RandomSpawnPicker0")
 marker = NodePath("../../Marker2D")
 parent_spawner_node = NodePath("../../MobsContainer")

@@ -129,7 +129,7 @@ func _ready():
 
 	# wait for the next idle frame to call this function
 	# this is needed because enemies spawn in during runtime and the player can already be overlapping with its area2d node
-	call_deferred(&"check_for_overlapping_bodies")
+	# call_deferred(&"check_for_overlapping_bodies")
 
 func check_for_overlapping_bodies():
 	var bodies: Array[Node2D] = detection_area.get_overlapping_bodies()
@@ -210,10 +210,6 @@ func on_debuff_applied(dmg: float):
 
 func _physics_process(delta_time: float):
 	self.handle_states()
-	
-	#if self.is_first_frame:
-		#self.is_first_frame = false
-		#self.check_for_overlapping_bodies()
 	
 	# handle status effects
 	if applied_status_effects.has(GRAVITY):
