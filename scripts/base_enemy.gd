@@ -12,13 +12,13 @@ const ROOT: String = "ROOT"
 
 enum AI_State
 {
-	INACTIVE,
 	IDLE,
 	FOLLOW,
 	HURT,
 	ATTACK,
 	PREP_ATTACK,
 	DEATH,
+	INACTIVE,
 }
 
 @export var max_hp: float = 1000.0
@@ -127,6 +127,15 @@ func _ready():
 	elif animation_player.has_animation_library(&"ranged_enemy"):
 		animation_player.play(&"ranged_enemy/spawn")
 
+	# wait for the next idle frame to call this function
+	# this is needed because enemies spawn in during runtime and the player can already be overlapping with its area2d node
+	call_deferred(&"check_for_overlapping_bodies")
+
+func check_for_overlapping_bodies():
+	var bodies: Array[Node2D] = detection_area.get_overlapping_bodies()
+	for body in bodies:
+		detection_area.body_entered.emit(body)
+	
 # gets called when about to leave the SceneTree
 func _exit_tree():
 	ai_state = AI_State.INACTIVE
@@ -134,7 +143,7 @@ func _exit_tree():
 	visible = false
 	
 func on_body_entered(body: Node2D):
-	if body.name == "Player" and ai_state == AI_State.IDLE:
+	if body is Player and ai_state == AI_State.IDLE:
 		ai_state = AI_State.FOLLOW
 		target = body
 		
@@ -201,6 +210,10 @@ func on_debuff_applied(dmg: float):
 
 func _physics_process(delta_time: float):
 	self.handle_states()
+	
+	#if self.is_first_frame:
+		#self.is_first_frame = false
+		#self.check_for_overlapping_bodies()
 	
 	# handle status effects
 	if applied_status_effects.has(GRAVITY):

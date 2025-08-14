@@ -70,6 +70,7 @@ _data = {
 collision_layer = 4
 collision_mask = 5
 script = ExtResource("1_tsmau")
+ai_state = 1
 damage_text_node = ExtResource("3_iqw6n")
 hurt_shader = ExtResource("4_dbob3")
 death_shader = ExtResource("1_u2ds8")

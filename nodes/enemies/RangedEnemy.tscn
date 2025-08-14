@@ -73,6 +73,7 @@ collision_mask = 5
 script = ExtResource("1_oqdl1")
 projectile_node = ExtResource("2_xx71m")
 follow_distance = 300.0
+ai_state = 1
 damage_text_node = ExtResource("2_87mjh")
 hurt_shader = ExtResource("3_xx71m")
 death_shader = ExtResource("4_4favd")

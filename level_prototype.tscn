@@ -1038,7 +1038,7 @@ text = "03:45"
 horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("32_mdrk0")
-start_time_seconds = 300
+start_time_seconds = 600
 
 [node name="Timer" type="Timer" parent="CanvasLayer/ClockHUD/Label"]
 
