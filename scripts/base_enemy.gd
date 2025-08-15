@@ -325,9 +325,7 @@ func handle_enter_explosion_area(explosion: BaseExplosion):
 		
 	
 	# Default Explosion Behavior
-	# random damage numbers for fun
-	var flat_dmg: float = randf_range(12.0, 512.0) # explosion.flat_dmg
-	
+	var flat_dmg: float = explosion.flat_dmg
 	var damage_text: DamageText = damage_text_node.instantiate()
 	damage_text_root.add_child(damage_text)
 	damage_text.play_animation(flat_dmg) 

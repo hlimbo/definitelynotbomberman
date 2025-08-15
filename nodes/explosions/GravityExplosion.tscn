@@ -150,6 +150,9 @@ script = ExtResource("1_d56ox")
 max_pull_force = 50000.0
 pull_force_per_physics_step = 10000.0
 pull_decay = 0.01
+flat_dmg = 500.0
+min_dmg = 256.0
+max_dmg = 384.0
 explosion_duration = 1.25
 
 [node name="ExplosionTimer" type="Timer" parent="."]

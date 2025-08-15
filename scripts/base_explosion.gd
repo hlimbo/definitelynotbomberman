@@ -4,6 +4,8 @@ class_name BaseExplosion extends Node2D
 @export var event_bus: EventBus = EventBus
 
 @export var flat_dmg: float = 12.0
+@export var min_dmg: float = 32.0
+@export var max_dmg: float = 64.0
 @export var explosion_duration: float = 0.3
 # used to determine if more collision events should be sent through event bus
 # since toggling off collision happens at the end of the frame causing some delays
@@ -59,6 +61,7 @@ func on_area_entered(area: Area2D):
 	if is_disabled:
 		return
 	
+	flat_dmg = randf_range(min_dmg, max_dmg)
 	event_bus.on_enter_impact_area.emit(self, area.owner)
 	
 func on_area_exited(area: Area2D):

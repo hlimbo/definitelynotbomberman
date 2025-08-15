@@ -1,18 +1,18 @@
 [gd_resource type="Resource" script_class="WeightTable" load_steps=6 format=3 uid="uid://dhpjv5mqjyjfv"]
 
-[ext_resource type="PackedScene" uid="uid://bk28kiyi48jcs" path="res://nodes/bomb_pickups/PoisonBomb.tscn" id="1_5dwuj"]
-[ext_resource type="Script" uid="uid://d3njcutgqbltx" path="res://scripts/weight_table.gd" id="1_mxslf"]
-[ext_resource type="PackedScene" uid="uid://v2rg16pifsvg" path="res://nodes/bomb_pickups/GooBomb.tscn" id="2_dbjea"]
-[ext_resource type="PackedScene" uid="uid://b457dk0elmq4n" path="res://nodes/bomb_pickups/RootBomb.tscn" id="3_3y3go"]
-[ext_resource type="PackedScene" uid="uid://05kqhybqkhok" path="res://nodes/bomb_pickups/GravityBomb.tscn" id="4_j736t"]
+[ext_resource type="PackedScene" uid="uid://bk28kiyi48jcs" path="res://nodes/bomb_pickups/PoisonBomb.tscn" id="1_ja5dw"]
+[ext_resource type="Script" uid="uid://d3njcutgqbltx" path="res://scripts/weight_table.gd" id="1_o4ek6"]
+[ext_resource type="PackedScene" uid="uid://v2rg16pifsvg" path="res://nodes/bomb_pickups/GooBomb.tscn" id="2_cxrsk"]
+[ext_resource type="PackedScene" uid="uid://b457dk0elmq4n" path="res://nodes/bomb_pickups/RootBomb.tscn" id="3_niyfu"]
+[ext_resource type="PackedScene" uid="uid://05kqhybqkhok" path="res://nodes/bomb_pickups/GravityBomb.tscn" id="4_t0ivw"]
 
 [resource]
-script = ExtResource("1_mxslf")
+script = ExtResource("1_o4ek6")
 original_pool = Dictionary[PackedScene, float]({
-ExtResource("1_5dwuj"): 16.0,
-ExtResource("2_dbjea"): 16.0,
-ExtResource("3_3y3go"): 8.0,
-ExtResource("4_j736t"): 1.0
+ExtResource("1_ja5dw"): 8.0,
+ExtResource("2_cxrsk"): 16.0,
+ExtResource("3_niyfu"): 8.0,
+ExtResource("4_t0ivw"): 4.0
 })
 is_unique_only = false
 metadata/_custom_type_script = "uid://d3njcutgqbltx"

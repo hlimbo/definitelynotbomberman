@@ -147,7 +147,9 @@ radius = 50.0
 
 [node name="PoisonExplosion" type="Node2D"]
 script = ExtResource("1_2eg5r")
-dot_dmg = 50.0
+dot_dmg = 64.0
+min_dmg = 16.0
+max_dmg = 32.0
 
 [node name="ExplosionTimer" type="Timer" parent="."]
 process_callback = 0

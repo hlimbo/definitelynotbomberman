@@ -32,7 +32,7 @@ func move_to_target(body: Node2D, delta: float):
 	assert(player != null)
 	if diff.length() <= player.get_collision_shape().radius:
 		# return a random range of bombs
-		var count: int = randi_range(4, 16)
+		var count: int = randi_range(3,6)
 		event_bus.on_bomb_picked_up.emit(bomb_type, count)
 		is_moving_to_target = false
 	

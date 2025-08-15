@@ -9,8 +9,8 @@ const SECONDS_TO_MINUTES: int = 60
 var _curr_time: int = 0
 
 func convert_to_minutes_seconds(curr_time: int) -> String:
-	var minutes: int = curr_time / SECONDS_TO_MINUTES
-	var seconds: int = curr_time % SECONDS_TO_MINUTES
+	var minutes: int = int(curr_time / SECONDS_TO_MINUTES)
+	var seconds: int = int(curr_time % SECONDS_TO_MINUTES)
 	
 	return "%02d:%02d" % [minutes, seconds] 
 	
