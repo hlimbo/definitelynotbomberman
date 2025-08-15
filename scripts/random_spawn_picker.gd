@@ -41,14 +41,15 @@ func _ready():
 
 	reset()
 
-func pick_random_spawn_location() -> Vector2i:
+func pick_random_spawn_location(excluded_tile_positions_set: Dictionary[Vector2i, bool]) -> Vector2i:
 	# collect all randomly available positions
 	var valid_positions: Array[Vector2i] = []
 	for y in range(tile_map_height):
 		for x in range(tile_map_width):
+			var possible_position = Vector2i(x, y)
 			var is_available: bool = available_positions[y][x]
-			if is_available:
-				valid_positions.append(Vector2i(x,y))
+			if is_available and (possible_position + tile_root_position) not in excluded_tile_positions_set:
+				valid_positions.append(possible_position)
 	
 	var random_index: int = -1 if len(valid_positions) == 0 else randi_range(0, len(valid_positions) - 1)
 	if random_index == -1:
@@ -76,11 +77,58 @@ func convert_tile_coords_to_world_coords(tile_coord: Vector2i) -> Vector2:
 	# return root_position + Vector2(x_offset, y_offset) + mid_offset
 	return Vector2(x_offset, y_offset) + mid_offset
 
-func pick_random_world_position() -> Vector2:
-	var spawn_pos: Vector2i = pick_random_spawn_location()
+# assumption: all tilemap layers are positioned at (0,0) world coordinates
+func convert_world_coords_to_tile_coords(coord: Vector2) -> Vector2i:
+	assert(tile_dimensions.x != 0 and tile_dimensions.y != 0)
+	var scaled_dimensions = Vector2i(tile_dimensions.x * tile_map_layer.scale.x, tile_dimensions.y * tile_map_layer.scale.y)
+	return Vector2i(int(coord.x / scaled_dimensions.x), int(coord.y / scaled_dimensions.y))
+
+func pick_random_world_position(excluded_tile_positions_set: Dictionary[Vector2i, bool] = {}) -> Vector2:
+	var spawn_pos: Vector2i = pick_random_spawn_location(excluded_tile_positions_set)
 	var spawn_world_pos: Vector2 = convert_tile_coords_to_world_coords(spawn_pos)
 	
 	print("spawn pos: %.0v" % spawn_pos)
 	print("spawn world pos: %v" % spawn_world_pos)
 	
 	return spawn_world_pos
+
+func compute_dynamically_excluded_positions(excluded_world_positions: Array[Vector2]) -> Dictionary[Vector2i, bool]:
+	var excluded_tile_positions: Array[Vector2i] = []
+	for excluded_position in excluded_world_positions:
+		var excluded_tile_position: Vector2i = convert_world_coords_to_tile_coords(excluded_position)
+		excluded_tile_positions.append(excluded_tile_position)
+	
+	var excluded_tile_positions_set: Dictionary[Vector2i, bool] = {}
+	for tile_position in excluded_tile_positions:
+		var neighboring_positions: Array[Vector2i] = get_neighboring_positions(tile_position)
+		excluded_tile_positions_set[tile_position] = true
+		for neighbor in neighboring_positions:
+			excluded_tile_positions_set[neighbor] = true
+	
+	print("excluded world positions ", excluded_world_positions)
+	print("excluded tile positions ", excluded_tile_positions_set.keys())
+	return excluded_tile_positions_set
+
+func get_neighboring_positions(tile_position: Vector2i) -> Array[Vector2i]:
+	var result: Array[Vector2i] = []
+	
+	var directions: Array[Vector2i] = [
+		Vector2i(1, 0), # right
+		Vector2i(-1, 0), # left
+		Vector2i(0, 1), # down
+		Vector2i(0, -1), # up
+		Vector2i(1, 1), # down-right
+		Vector2i(-1, 1), # down-left
+		Vector2i(-1, -1), # up-left
+		Vector2i(1, -1), # up-right
+	]
+	
+	for dir in directions:
+		var neighbor: Vector2i = tile_position + dir
+		var offset: Vector2i = tile_root_position + Vector2i(tile_map_width, tile_map_height)
+		if neighbor.x < tile_root_position.x or neighbor.x >= offset.x or neighbor.y < tile_root_position.y or neighbor.y >= offset.y:
+			continue
+			
+		result.append(neighbor)
+	
+	return result

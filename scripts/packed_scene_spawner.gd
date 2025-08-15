@@ -21,6 +21,10 @@ var spawn_index: int = 0
 var nodes: Array[Node] = []
 var is_spawning: bool = false
 
+# these positions are dynamic and can change over time such as a player moving
+var excluded_tile_positions_set: Dictionary[Vector2i, bool] = {}
+var player: Player
+
 func spawn_random_scene() -> Node:
 	var scene: PackedScene = weight_table.pick_random_spawnable()
 	var node: Node = scene.instantiate()
@@ -32,6 +36,11 @@ func _ready():
 	assert(parent_spawner_node != null)
 	assert(random_spawn_picker != null)
 	weight_table.construct()
+	
+	var player_node: Node = get_tree().get_first_node_in_group(&"player")
+	assert((player_node as Player) != null)
+	player = player_node as Player
+	
 	spawn_delay_timer.timeout.connect(on_spawn_node)
 	
 	if parent_spawner_node == null:
@@ -48,6 +57,12 @@ func start_spawning(count: int = spawn_count):
 		var node: Node = spawn_random_scene()
 		nodes.append(node)
 	
+	var bomb_pickups: Array[Node] = get_tree().get_nodes_in_group(&"bomb_pickups")
+	var excluded_world_positions: Array[Vector2] = [player.position]
+	for bomb_pickup in bomb_pickups:
+		excluded_world_positions.append(bomb_pickup.position)
+	excluded_tile_positions_set = random_spawn_picker.compute_dynamically_excluded_positions(excluded_world_positions)
+	
 	random_spawn_picker.reset()
 	spawn_delay_timer.start()
 
@@ -62,7 +77,7 @@ func on_spawn_node():
 	else:
 		var node: Node = nodes[spawn_index]
 		parent_spawner_node.add_child(node)
-		var position: Vector2 = random_spawn_picker.pick_random_world_position()
+		var position: Vector2 = random_spawn_picker.pick_random_world_position(excluded_tile_positions_set)
 		node.position = position
 		spawn_index += 1
 		

@@ -1131,7 +1131,7 @@ scale = Vector2(3, 3)
 tile_map_data = PackedByteArray("AAALAHIAAAAUAAAAAAAOAHIAAAAWAAAAAAAOAHUAAAAWAAIAAAALAHUAAAAUAAIAAAALAHQAAAAUAAEAAAALAHMAAAAUAAEAAAAMAHQAAAAVAAEAAAAMAHUAAAAVAAIAAAANAHQAAAAVAAEAAAANAHUAAAAVAAIAAAAOAHQAAAAWAAEAAAAOAHMAAAAWAAEAAAANAHIAAAAVAAAAAAAMAHIAAAAVAAAAAAANAHMAAAAVAAEAAAAMAHMAAAAVAAEAAAALAFgAAAAUAAAAAAALAFkAAAAUAAEAAAALAFoAAAAUAAEAAAALAFsAAAAUAAIAAAAMAFgAAAAVAAAAAAAMAFkAAAAVAAEAAAAMAFoAAAAVAAEAAAAMAFsAAAAVAAIAAAANAFgAAAAVAAAAAAANAFkAAAAVAAEAAAANAFoAAAAVAAEAAAANAFsAAAAVAAIAAAAOAFgAAAAWAAAAAAAOAFkAAAAWAAEAAAAOAFoAAAAWAAEAAAAOAFsAAAAWAAIAAAALAD4AAAAUAAAAAAALAD8AAAAUAAEAAAALAEAAAAAUAAEAAAALAEEAAAAUAAIAAAAMAD4AAAAVAAAAAAAMAD8AAAAVAAEAAAAMAEAAAAAVAAEAAAAMAEEAAAAVAAIAAAANAD4AAAAVAAAAAAANAD8AAAAVAAEAAAANAEAAAAAVAAEAAAANAEEAAAAVAAIAAAAOAD4AAAAWAAAAAAAOAD8AAAAWAAEAAAAOAEAAAAAWAAEAAAAOAEEAAAAWAAIAAAALACQAAAAUAAAAAAALACUAAAAUAAEAAAALACYAAAAUAAEAAAALACcAAAAUAAIAAAAMACQAAAAVAAAAAAAMACUAAAAVAAEAAAAMACYAAAAVAAEAAAAMACcAAAAVAAIAAAANACQAAAAVAAAAAAANACUAAAAVAAEAAAANACYAAAAVAAEAAAANACcAAAAVAAIAAAAOACQAAAAWAAAAAAAOACUAAAAWAAEAAAAOACYAAAAWAAEAAAAOACcAAAAWAAIAAAA=")
 tile_set = ExtResource("1_emoqq")
 
-[node name="Player" parent="." node_paths=PackedStringArray("camera_controller", "hp_bar") instance=ExtResource("2_8c3is")]
+[node name="Player" parent="." node_paths=PackedStringArray("camera_controller", "hp_bar") groups=["player"] instance=ExtResource("2_8c3is")]
 position = Vector2(634, 7954)
 camera_controller = NodePath("../CameraController")
 starting_hp = 150.0
@@ -1145,16 +1145,16 @@ movement_delay_duration = 0.25
 
 [node name="BombPickups" type="Node2D" parent="."]
 
-[node name="PoisonBomb" parent="BombPickups" instance=ExtResource("4_d2jbv")]
+[node name="PoisonBomb" parent="BombPickups" groups=["bomb_pickups"] instance=ExtResource("4_d2jbv")]
 position = Vector2(623, 4319)
 
-[node name="GooBomb" parent="BombPickups" instance=ExtResource("5_r046j")]
+[node name="GooBomb" parent="BombPickups" groups=["bomb_pickups"] instance=ExtResource("5_r046j")]
 position = Vector2(623, 5569)
 
-[node name="RootBomb" parent="BombPickups" instance=ExtResource("6_lvbgs")]
+[node name="RootBomb" parent="BombPickups" groups=["bomb_pickups"] instance=ExtResource("6_lvbgs")]
 position = Vector2(622, 3073)
 
-[node name="GravityBomb" parent="BombPickups" instance=ExtResource("7_nujpw")]
+[node name="GravityBomb" parent="BombPickups" groups=["bomb_pickups"] instance=ExtResource("7_nujpw")]
 position = Vector2(624, 1822)
 
 [node name="RandomBombPickups" type="Node2D" parent="."]
