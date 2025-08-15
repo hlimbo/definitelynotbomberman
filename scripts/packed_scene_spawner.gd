@@ -58,7 +58,10 @@ func start_spawning(count: int = spawn_count):
 		nodes.append(node)
 	
 	var bomb_pickups: Array[Node] = get_tree().get_nodes_in_group(&"bomb_pickups")
-	var excluded_world_positions: Array[Vector2] = [player.position]
+	var excluded_world_positions: Array[Vector2] = []
+	if is_instance_valid(player):
+		excluded_world_positions.append(player.position)
+	
 	for bomb_pickup in bomb_pickups:
 		excluded_world_positions.append(bomb_pickup.position)
 	excluded_tile_positions_set = random_spawn_picker.compute_dynamically_excluded_positions(excluded_world_positions)
@@ -88,4 +91,3 @@ func on_spawn_node():
 			self.get_tree().current_scene.add_child(clone)
 			debug_markers.append(clone)
 			clone.position = position
-		
