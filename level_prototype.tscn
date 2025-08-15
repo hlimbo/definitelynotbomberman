@@ -1,4 +1,4 @@
-[gd_scene load_steps=79 format=4 uid="uid://cm8h24l78l07d"]
+[gd_scene load_steps=88 format=4 uid="uid://cm8h24l78l07d"]
 
 [ext_resource type="TileSet" uid="uid://m0ie6u7rp81y" path="res://tiles/maze_tileset.tres" id="1_emoqq"]
 [ext_resource type="PackedScene" uid="uid://deh3txb4jfjc5" path="res://nodes/Player.tscn" id="2_8c3is"]
@@ -34,10 +34,13 @@
 [ext_resource type="Texture2D" uid="uid://cxbkcu3uype26" path="res://assets/mouse-icons/Mouse right click.png" id="26_uste2"]
 [ext_resource type="Texture2D" uid="uid://dqf8c4w5qyelg" path="res://assets/mouse-icons/Mouse scroll.png" id="27_bx43x"]
 [ext_resource type="AudioStream" uid="uid://csck5ime6epox" path="res://assets/UISoundpack/Retro3.ogg" id="28_1ekq6"]
+[ext_resource type="Texture2D" uid="uid://df7b7rsnr1ll0" path="res://atlas_textures/pause_icon.tres" id="29_ffnwn"]
+[ext_resource type="AnimationLibrary" uid="uid://bi0h1w7hiqhrn" path="res://animation/ui_canvas_layer/pause_screen_animations.res" id="29_hqv6w"]
 [ext_resource type="AnimationLibrary" uid="uid://coh8ge25dmuqo" path="res://animation/ui_canvas_layer/game_hud.res" id="29_qv2kb"]
 [ext_resource type="PackedScene" uid="uid://dwryu2l051w1y" path="res://nodes/ui/HPBar.tscn" id="30_irsq2"]
 [ext_resource type="PackedScene" uid="uid://4k3yawlmr7qu" path="res://nodes/ui/BombUIPicker.tscn" id="31_0exh5"]
 [ext_resource type="Resource" uid="uid://dj514a8o7fy57" path="res://resources/noob_mobs_weight_table.tres" id="31_37106"]
+[ext_resource type="AnimationLibrary" uid="uid://enanpqumqi3a" path="res://animation/ui_canvas_layer/pause_hud_animations.res" id="31_ii5en"]
 [ext_resource type="Script" uid="uid://cw3bb55h136vj" path="res://scripts/clock_countdown.gd" id="32_mdrk0"]
 [ext_resource type="AnimationLibrary" uid="uid://culg486cgxkhy" path="res://animation/ui_canvas_layer/clock_hud.res" id="33_ffnwn"]
 [ext_resource type="Resource" uid="uid://3vkoa4ev06ex" path="res://resources/ranged_mobs_weight_table.tres" id="33_fxrpe"]
@@ -321,6 +324,89 @@ _data = {
 &"RESET": SubResource("Animation_2nf64")
 }
 
+[sub_resource type="Gradient" id="Gradient_ffnwn"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.00298507)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_hqv6w"]
+gradient = SubResource("Gradient_ffnwn")
+
+[sub_resource type="Animation" id="Animation_hqv6w"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HowToPlayContainer:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("VBoxContainer:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath(".:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hqv6w"]
+_data = {
+&"RESET": SubResource("Animation_hqv6w")
+}
+
+[sub_resource type="Animation" id="Animation_jvbxh"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:anchor_top")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [-0.119]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:anchor_bottom")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_5oanb"]
+_data = {
+&"RESET": SubResource("Animation_jvbxh")
+}
+
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_nujpw"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fxrpe"]
@@ -414,6 +500,7 @@ game_won_music_player = NodePath("../BG_GameWonMusic")
 game_over_music_player = NodePath("../BG_GameOverMusic")
 
 [node name="StartGameScreen" type="Control" parent="CanvasLayer"]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -1066,6 +1153,439 @@ libraries = {
 
 [node name="audio_crossfade_timer" type="Timer" parent="CanvasLayer"]
 wait_time = 0.06
+
+[node name="PauseScreen" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="TextureRect" parent="CanvasLayer/PauseScreen"]
+modulate = Color(0.25098, 0.25098, 0.25098, 0.501961)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture1D_hqv6w")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/PauseScreen"]
+visible = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -181.0
+offset_top = 34.0
+offset_right = 181.0
+offset_bottom = 185.0
+grow_horizontal = 2
+theme_override_constants/separation = 18
+
+[node name="PausedLabel" type="Label" parent="CanvasLayer/PauseScreen/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("17_yga73")
+theme_override_colors/font_shadow_color = Color(0.501961, 0.501961, 0.501961, 1)
+theme_override_constants/shadow_offset_y = 8
+theme_override_constants/outline_size = 18
+theme_override_font_sizes/font_size = 48
+text = "Paused"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ResumeButton" type="TextureButton" parent="CanvasLayer/PauseScreen/VBoxContainer"]
+custom_minimum_size = Vector2(362, 73)
+layout_mode = 2
+focus_mode = 0
+texture_normal = ExtResource("18_37106")
+texture_pressed = ExtResource("19_fxrpe")
+texture_hover = ExtResource("20_onc2j")
+stretch_mode = 1
+script = ExtResource("21_64koe")
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseScreen/VBoxContainer/ResumeButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 5.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("17_yga73")
+theme_override_font_sizes/font_size = 32
+text = "Resume"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="CanvasLayer/PauseScreen/VBoxContainer/ResumeButton"]
+stream = ExtResource("22_x6rbd")
+volume_db = 16.0
+bus = &"UI"
+
+[node name="HowToPlayContainer" type="Control" parent="CanvasLayer/PauseScreen"]
+visible = false
+layout_mode = 1
+anchor_top = 0.286
+anchor_right = 1.0
+anchor_bottom = 0.806
+offset_top = 0.0799866
+offset_bottom = -0.320068
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="HowToPlayLabel" type="Label" parent="CanvasLayer/PauseScreen/HowToPlayContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.066
+anchor_right = 1.0
+anchor_bottom = 0.252
+offset_top = 0.124001
+offset_bottom = -0.0719986
+grow_horizontal = 2
+theme = ExtResource("17_yga73")
+theme_override_colors/font_shadow_color = Color(0.501961, 0.501961, 0.501961, 1)
+theme_override_constants/shadow_offset_y = 8
+theme_override_constants/outline_size = 18
+theme_override_font_sizes/font_size = 42
+text = "How to play?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GridContainer" type="GridContainer" parent="CanvasLayer/PauseScreen/HowToPlayContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -456.5
+offset_top = -67.0
+offset_right = 456.5
+offset_bottom = 157.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 64
+columns = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer"]
+layout_mode = 2
+theme_override_constants/separation = 48
+
+[node name="SpacebarContainer" type="Control" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer"]
+custom_minimum_size = Vector2(237, 50)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Spacebar" type="TextureButton" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer/SpacebarContainer"]
+custom_minimum_size = Vector2(312, 70)
+layout_mode = 1
+offset_right = 312.0
+offset_bottom = 70.0
+scale = Vector2(0.75, 0.75)
+focus_mode = 0
+texture_normal = ExtResource("18_37106")
+texture_pressed = ExtResource("19_fxrpe")
+texture_hover = ExtResource("20_onc2j")
+stretch_mode = 1
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer/SpacebarContainer/Spacebar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 5.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("17_yga73")
+theme_override_font_sizes/font_size = 32
+text = "spacebar"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DashLabel" type="Label" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("17_yga73")
+theme_override_colors/font_shadow_color = Color(0.501961, 0.501961, 0.501961, 1)
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 30
+text = "Dash"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer"]
+layout_mode = 2
+theme_override_constants/separation = 64
+
+[node name="RightMouse" type="Control" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer3"]
+custom_minimum_size = Vector2(85, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="RightMouseClick" type="AnimatedSprite2D" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer3/RightMouse"]
+position = Vector2(66.5, 41)
+scale = Vector2(0.7, 0.7)
+sprite_frames = SubResource("SpriteFrames_ii5en")
+autoplay = "default"
+
+[node name="ThrowBombLabel" type="Label" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer3"]
+layout_mode = 2
+theme = ExtResource("17_yga73")
+theme_override_colors/font_shadow_color = Color(0.501961, 0.501961, 0.501961, 1)
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 30
+text = "Throw Bomb"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer"]
+layout_mode = 2
+theme_override_constants/separation = 80
+
+[node name="WASD_Controls" type="Control" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(196, 140)
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="Button" type="TextureButton" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer2/WASD_Controls"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.337
+anchor_top = 0.138
+anchor_right = 0.633
+anchor_bottom = 0.5
+offset_left = -0.052002
+offset_top = -0.012001
+offset_right = -0.0680008
+focus_mode = 0
+texture_normal = ExtResource("23_4twkq")
+texture_pressed = ExtResource("24_jie2q")
+texture_hover = ExtResource("25_wf4mx")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer2/WASD_Controls/Button"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -14.0
+offset_top = -25.5
+offset_right = 18.0
+offset_bottom = 14.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("17_yga73")
+theme_override_font_sizes/font_size = 32
+text = "W"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button2" type="TextureButton" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer2/WASD_Controls"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.337
+anchor_top = 0.5
+anchor_right = 0.633
+anchor_bottom = 0.845
+offset_left = -0.052002
+offset_top = -3.0
+offset_right = -0.0680008
+offset_bottom = -0.0299988
+focus_mode = 0
+texture_normal = ExtResource("23_4twkq")
+texture_pressed = ExtResource("24_jie2q")
+texture_hover = ExtResource("25_wf4mx")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer2/WASD_Controls/Button2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -14.0
+offset_top = -25.5
+offset_right = 18.0
+offset_bottom = 14.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("17_yga73")
+theme_override_font_sizes/font_size = 32
+text = "S"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button4" type="TextureButton" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer2/WASD_Controls"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.643
+anchor_top = 0.5
+anchor_right = 0.939
+anchor_bottom = 0.845
+offset_left = -0.0279999
+offset_top = -3.0
+offset_right = -0.0440063
+offset_bottom = -0.0299988
+focus_mode = 0
+texture_normal = ExtResource("23_4twkq")
+texture_pressed = ExtResource("24_jie2q")
+texture_hover = ExtResource("25_wf4mx")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer2/WASD_Controls/Button4"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -14.0
+offset_top = -25.5
+offset_right = 18.0
+offset_bottom = 14.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("17_yga73")
+theme_override_font_sizes/font_size = 32
+text = "D"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button3" type="TextureButton" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer2/WASD_Controls"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.031
+anchor_top = 0.483
+anchor_right = 0.327
+anchor_bottom = 0.845
+offset_left = -0.0760002
+offset_top = -0.0419998
+offset_right = -0.0920029
+offset_bottom = -0.0299988
+focus_mode = 0
+texture_normal = ExtResource("23_4twkq")
+texture_pressed = ExtResource("24_jie2q")
+texture_hover = ExtResource("25_wf4mx")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer2/WASD_Controls/Button3"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -14.0
+offset_top = -25.5
+offset_right = 18.0
+offset_bottom = 14.5
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("17_yga73")
+theme_override_font_sizes/font_size = 32
+text = "A"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MoveLabel" type="Label" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme = ExtResource("17_yga73")
+theme_override_colors/font_shadow_color = Color(0.501961, 0.501961, 0.501961, 1)
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 30
+text = "Move"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer"]
+layout_mode = 2
+theme_override_constants/separation = 64
+
+[node name="MiddleMouse" type="Control" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer4"]
+custom_minimum_size = Vector2(85, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="MiddleMouseScroll" type="AnimatedSprite2D" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer4/MiddleMouse"]
+position = Vector2(67.5, 69)
+scale = Vector2(0.7, 0.7)
+sprite_frames = SubResource("SpriteFrames_jvbxh")
+autoplay = "default"
+
+[node name="SwitchBombLabel" type="Label" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer/HBoxContainer4"]
+custom_minimum_size = Vector2(295, 79)
+layout_mode = 2
+theme = ExtResource("17_yga73")
+theme_override_colors/font_shadow_color = Color(0.501961, 0.501961, 0.501961, 1)
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 30
+text = "switch bomb type"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/PauseScreen"]
+libraries = {
+&"": SubResource("AnimationLibrary_hqv6w"),
+&"PauseScreen": ExtResource("29_hqv6w")
+}
+
+[node name="PauseHUD" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchor_top = -0.119
+anchor_right = 1.0
+offset_bottom = 0.32
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PauseButton" type="TextureButton" parent="CanvasLayer/PauseHUD"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -96.0
+offset_top = 12.0
+offset_right = -20.0
+offset_bottom = 84.0
+grow_horizontal = 0
+focus_mode = 0
+texture_normal = ExtResource("23_4twkq")
+texture_pressed = ExtResource("24_jie2q")
+texture_hover = ExtResource("25_wf4mx")
+stretch_mode = 5
+
+[node name="PauseIcon" type="TextureRect" parent="CanvasLayer/PauseHUD/PauseButton"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -28.0
+offset_top = -29.0
+offset_right = 27.0
+offset_bottom = 22.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("29_ffnwn")
+stretch_mode = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/PauseHUD"]
+libraries = {
+&"": SubResource("AnimationLibrary_5oanb"),
+&"pause_hud": ExtResource("31_ii5en")
+}
 
 [node name="LevelTest" type="TileMapLayer" parent="."]
 visible = false
