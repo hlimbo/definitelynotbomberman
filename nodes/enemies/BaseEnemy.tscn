@@ -76,6 +76,7 @@ ai_state = 1
 damage_text_node = ExtResource("3_iqw6n")
 hurt_shader = ExtResource("4_dbob3")
 death_shader = ExtResource("1_u2ds8")
+base_damage = 25.0
 hp_ui_view_node = ExtResource("7_rpb3k")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

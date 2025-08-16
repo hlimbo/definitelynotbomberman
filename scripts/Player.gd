@@ -36,6 +36,7 @@ var _dash_dir: Vector2     = Vector2.ZERO
 @export var max_launch_speed: float = 800.0  # px/s
 @export var min_launch_speed: float = 200.0  # px/s
 @export var max_bounces: int = 4
+@export var bomb_container: Node2D
 
 var _charge: float    = 0.0
 var _charging: bool   = false
@@ -128,6 +129,7 @@ func get_collision_shape() -> CapsuleShape2D:
 #   ── Life‑cycle ──
 # ─────────────────────────────────────────────────────────────────────────────
 func _ready() -> void:
+	assert(bomb_container != null)
 	death_timer.wait_time = death_audio_player.stream.get_length() + 1.0
 	
 	#Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -312,8 +314,7 @@ func _launch_bomb() -> void:
 	var bomb: Bomb = _bomb_scene.instantiate()
 	bomb.position = global_position + _aim_dir * 20.0
 	bomb.launch(_aim_dir, speed, max_bounces, explosion_index)
-	# TODO: add BombContainer node as an @export variable
-	get_tree().current_scene.get_node("BombContainer").add_child(bomb)
+	bomb_container.add_child(bomb)
 	
 	var bomb_type: Constants.BombType = explosion_index
 	event_bus.on_bomb_thrown.emit(bomb_type)

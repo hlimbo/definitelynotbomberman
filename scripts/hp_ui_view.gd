@@ -45,7 +45,10 @@ func initialize(owner_id: int, current_hp: float, max_hp: float):
 	set_progress_values(ratio)
 	
 func deduct_hp(owner_id: int, damage: float):
-	assert(actor_node != null and is_instance_valid(actor_node))
+	# silent error?
+	if actor_node == null or !is_instance_valid(actor_node):
+		return
+	
 	if owner_id != actor_node.get_canvas_item().get_id():
 		return
 	
