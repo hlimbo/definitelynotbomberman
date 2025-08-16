@@ -92,7 +92,7 @@ func pick_random_world_position(excluded_tile_positions_set: Dictionary[Vector2i
 	
 	return spawn_world_pos
 
-func compute_dynamically_excluded_positions(excluded_world_positions: Array[Vector2]) -> Dictionary[Vector2i, bool]:
+func compute_dynamically_excluded_positions(excluded_world_positions: Array[Vector2], exclusion_radius: int = 4) -> Dictionary[Vector2i, bool]:
 	var excluded_tile_positions: Array[Vector2i] = []
 	for excluded_position in excluded_world_positions:
 		var excluded_tile_position: Vector2i = convert_world_coords_to_tile_coords(excluded_position)
@@ -100,7 +100,7 @@ func compute_dynamically_excluded_positions(excluded_world_positions: Array[Vect
 	
 	var excluded_tile_positions_set: Dictionary[Vector2i, bool] = {}
 	for tile_position in excluded_tile_positions:
-		var neighboring_positions: Array[Vector2i] = get_neighboring_positions(tile_position)
+		var neighboring_positions: Array[Vector2i] = get_neighboring_positions(tile_position, exclusion_radius)
 		excluded_tile_positions_set[tile_position] = true
 		for neighbor in neighboring_positions:
 			excluded_tile_positions_set[neighbor] = true
@@ -109,7 +109,8 @@ func compute_dynamically_excluded_positions(excluded_world_positions: Array[Vect
 	print("excluded tile positions ", excluded_tile_positions_set.keys())
 	return excluded_tile_positions_set
 
-func get_neighboring_positions(tile_position: Vector2i) -> Array[Vector2i]:
+# radius controls how many units away spawnable objects are not allowed to spawn from
+func get_neighboring_positions(tile_position: Vector2i, radius: int = 1) -> Array[Vector2i]:
 	var result: Array[Vector2i] = []
 	
 	var directions: Array[Vector2i] = [
@@ -122,13 +123,14 @@ func get_neighboring_positions(tile_position: Vector2i) -> Array[Vector2i]:
 		Vector2i(-1, -1), # up-left
 		Vector2i(1, -1), # up-right
 	]
-	
+
 	for dir in directions:
-		var neighbor: Vector2i = tile_position + dir
-		var offset: Vector2i = tile_root_position + Vector2i(tile_map_width, tile_map_height)
-		if neighbor.x < tile_root_position.x or neighbor.x >= offset.x or neighbor.y < tile_root_position.y or neighbor.y >= offset.y:
-			continue
+		for r in range(1, radius + 1):
+			var neighbor: Vector2i = tile_position + (r * dir)
+			var offset: Vector2i = tile_root_position + Vector2i(tile_map_width, tile_map_height)
+			if neighbor.x < tile_root_position.x or neighbor.x >= offset.x or neighbor.y < tile_root_position.y or neighbor.y >= offset.y:
+				continue
 			
-		result.append(neighbor)
+			result.append(neighbor)
 	
 	return result

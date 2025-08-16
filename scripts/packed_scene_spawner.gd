@@ -57,6 +57,7 @@ func start_spawning(count: int = spawn_count):
 		var node: Node = spawn_random_scene()
 		nodes.append(node)
 	
+	# mark last known player position and static bomb pickup positions as invalid tile positions to spawn additional bomb pickups and enemies
 	var bomb_pickups: Array[Node] = get_tree().get_nodes_in_group(&"bomb_pickups")
 	var excluded_world_positions: Array[Vector2] = []
 	if is_instance_valid(player):

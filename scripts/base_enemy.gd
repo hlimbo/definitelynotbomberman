@@ -25,7 +25,7 @@ enum AI_State
 @export var hp: float
 @export var follow_speed: float = 100.0 # pixels per second
 @export var follow_distance: float = 32.0
-@export var ai_state: AI_State = AI_State.IDLE
+@export var ai_state: AI_State = AI_State.INACTIVE
 @export var target: Node2D
 @export var damage_text_node: PackedScene
 @export var hurt_shader: Shader
@@ -126,16 +126,25 @@ func _ready():
 		animation_player.play(&"dashing_enemy/spawn")
 	elif animation_player.has_animation_library(&"ranged_enemy"):
 		animation_player.play(&"ranged_enemy/spawn")
-
-	# wait for the next idle frame to call this function
-	# this is needed because enemies spawn in during runtime and the player can already be overlapping with its area2d node
-	# call_deferred(&"check_for_overlapping_bodies")
+	
+	# this is to ensure enemies are disabled until their spawn animation completes
+	if target == null:
+		ai_state = AI_State.INACTIVE
+	
+	animation_player.animation_finished.connect(on_animation_finished)
 
 func check_for_overlapping_bodies():
 	var bodies: Array[Node2D] = detection_area.get_overlapping_bodies()
 	for body in bodies:
 		detection_area.body_entered.emit(body)
-	
+
+func on_animation_finished(anim_name: StringName):
+	if anim_name.ends_with("spawn"):
+		# add a delay before ai starts doing its own thing
+		await get_tree().create_timer(2.0).timeout
+		ai_state = AI_State.IDLE
+		check_for_overlapping_bodies()
+
 # gets called when about to leave the SceneTree
 func _exit_tree():
 	ai_state = AI_State.INACTIVE
@@ -152,6 +161,8 @@ func on_iframes_completed():
 	clear_shader()
 	
 func on_death_completed():
+	self.set_process(false)
+	self.set_physics_process(false)
 	queue_free()
 
 func find_and_remove_status_effect(status_effect: String):
@@ -378,16 +389,23 @@ func interrupt():
 	pass
 
 func handle_states():
-	if ai_state == AI_State.FOLLOW:
+	# this is to ensure enemies don't change their state when marked for deletion
+	# without this, it causes graphical issues where they appear idle for a few frames then get deleted
+	if hp <= 0.0 or is_queued_for_deletion():
+		return
+	
+	if ai_state == AI_State.INACTIVE:
+		self.velocity = Vector2.ZERO
+		self.accumulated_pull_force = Vector2.ZERO
+	elif ai_state == AI_State.FOLLOW:
 		if not is_instance_valid(target):
+			if is_queued_for_deletion():
+				print("queued for deletion")
 			ai_state = AI_State.IDLE
 		else:
 			_aim_dir = (target.position - position).normalized()
 			follow()
 	elif ai_state == AI_State.IDLE:
-		self.velocity = Vector2.ZERO
-		self.accumulated_pull_force = Vector2.ZERO
-	elif ai_state == AI_State.INACTIVE:
 		self.velocity = Vector2.ZERO
 		self.accumulated_pull_force = Vector2.ZERO
 
