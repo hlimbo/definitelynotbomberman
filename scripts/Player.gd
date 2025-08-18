@@ -41,7 +41,7 @@ var _dash_dir: Vector2     = Vector2.ZERO
 var _charge: float    = 0.0
 var _charging: bool   = false
 var _bomb_scene: PackedScene = preload("res://nodes/Bomb.tscn")
-var explosion_index: int = 0 # used to pick which explosion to use when swapping between different bombs
+var _explosion_index: int = 0 # used to pick which explosion to use when swapping between different bombs
 
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Aim reticle ──
@@ -313,16 +313,16 @@ func _launch_bomb() -> void:
 
 	var bomb: Bomb = _bomb_scene.instantiate()
 	bomb.position = global_position + _aim_dir * 20.0
-	bomb.launch(_aim_dir, speed, max_bounces, explosion_index)
+	bomb.launch(_aim_dir, speed, max_bounces, _explosion_index)
 	bomb_container.add_child(bomb)
 	
-	var bomb_type: Constants.BombType = explosion_index
+	var bomb_type: Constants.BombType = _explosion_index as Constants.BombType
 	event_bus.on_bomb_thrown.emit(bomb_type)
 
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Aim & reticle ──
 # ─────────────────────────────────────────────────────────────────────────────
-func _update_aim_line(delta: float) -> void:
+func _update_aim_line(_delta: float) -> void:
 	var center_to_mouse_diff: Vector2 = get_global_mouse_position() - global_position
 	_aim_dir = center_to_mouse_diff.normalized()
 	#aim_line_length = Vector2.ZERO.distance_to(center_to_mouse_diff)
@@ -456,7 +456,7 @@ func _on_projectile_hit(projectile: Projectile, target: Node2D):
 
 func _on_bomb_switched(explosion_index: int):
 	assert(explosion_index >= 0 and explosion_index < EXPLOSION_TYPE_COUNT)
-	self.explosion_index = explosion_index
+	self._explosion_index = explosion_index
 
 func _on_hurt_finished():
 	is_hurt = false

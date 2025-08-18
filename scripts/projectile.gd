@@ -13,9 +13,9 @@ var curr_duration: float = 0.0
 
 @export var base_damage: float = 10.0
 
-func launch(position: Vector2, dir: Vector2):
-	self.position = position
-	self.dir = dir
+func launch(_position: Vector2, _dir: Vector2):
+	self.position = _position
+	self.dir = _dir
 
 func on_impact(other: Node2D):
 	if other is Player:

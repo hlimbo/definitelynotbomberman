@@ -36,7 +36,7 @@ func get_average_position() -> Vector2:
 	
 func get_median_position() -> Vector2:
 	assert(len(target_positions) > 0)
-	var half_index: int = len(target_positions) / 2
+	var half_index: int = int(len(target_positions) / 2)
 	if len(target_positions) % 2 == 0:
 		return 0.5 * (target_positions[half_index] + target_positions[half_index + 1])
 	

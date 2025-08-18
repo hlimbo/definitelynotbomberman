@@ -12,5 +12,5 @@ func play_animation(dmg: float = 0.0):
 	label.text = "%d" % int(dmg)
 	animation_player.play(&"damage_text")
 	
-func destroy_self(anim_name: StringName):
+func destroy_self(_anim_name: StringName):
 	queue_free()

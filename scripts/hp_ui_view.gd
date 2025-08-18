@@ -8,8 +8,8 @@ var event_bus: EventBus = EventBus
 @onready var current_hp_label: Label = $HP_Label_Container/CurrentHP
 @onready var max_hp_label: Label = $HP_Label_Container/MaxHP
 
-@export var current_hp: float = 0.0
-@export var max_hp: float = 0.0
+@export var _current_hp: float = 0.0
+@export var _max_hp: float = 0.0
 
 # amount of time to reduce hp bar
 @export var min_tween_duration_seconds: float = 0.25
@@ -52,15 +52,14 @@ func deduct_hp(owner_id: int, damage: float):
 	if owner_id != actor_node.get_canvas_item().get_id():
 		return
 	
-	var new_hp: float = maxf(current_hp - damage, 0.0)
+	var new_hp: float = maxf(_current_hp - damage, 0.0)
 	# interpolate from current to new_hp
 	var hp_tween: Tween = create_tween()
-	var hp_tween_duration_seconds: float = 0.25
-	var target_ratio: float = new_hp / max_hp
+	var target_ratio: float = new_hp / _max_hp
 	
 	# the lower the damage, the faster the damage progress tweens
 	# the higher the damage, the slower the damage progress tweens
-	var max_damage_ratio: float = damage / max_hp
+	var max_damage_ratio: float = damage / _max_hp
 	var damage_duration: float = (max_tween_duration_seconds - min_tween_duration_seconds) * max_damage_ratio + min_tween_duration_seconds
 	
 	hp_tween.tween_property(hp_progress, "value", target_ratio * hp_progress.max_value, min_tween_duration_seconds)
@@ -70,11 +69,11 @@ func deduct_hp(owner_id: int, damage: float):
 	hp_tween.finished.connect(set_progress_values.bind(target_ratio))
 	
 func set_hp(hp: float):
-	current_hp = hp
+	_current_hp = hp
 	current_hp_label.text = "%d" % int(hp)
 	
 func set_max_hp(hp: float):
-	max_hp = hp
+	_max_hp = hp
 	max_hp_label.text = "%d" % int(hp)
 	
 func set_progress_values(ratio: float):

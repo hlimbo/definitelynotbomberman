@@ -35,8 +35,8 @@ func on_explosion_finished():
 	queue_free()
 	event_bus.on_end_explosion.emit(self)
 
-func start(position: Vector2 = Vector2.ZERO):
-	self.position = position
+func start(_position: Vector2 = Vector2.ZERO):
+	self.position = _position
 	enable()
 	explosion_timer.start()
 	

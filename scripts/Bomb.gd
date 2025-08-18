@@ -18,7 +18,6 @@ class_name Bomb extends CharacterBody2D
 var _amplitude : float       # current hop height
 var _t         : float = 0.0 # time inside current hop
 var _bounces   : int   = 0
-var _blast_radius    :float = 96.0
 var _first_amplitude :float = 64.0           # initial hop height (px)
 var _restitution     : float= 0.70           # vertical amplitude multiplier per bounce
 var _ground_restitution :float= 0.7        # 0 – 1; 1 = no slow-down
@@ -27,7 +26,6 @@ const Y_OFFSET        : int= 16
 
 var _speed : float = 450.0
 var _direction : Vector2 = Vector2.ZERO
-var _damage          :float = 50
 var _max_bounces : int = 4              # after this → explode
 var _hop_time        :float = 0.40           # time from lift-off to next impact
 var _height          :float = 0.0

@@ -61,7 +61,7 @@ func _ready():
 	bomb_pickups_spawn_chance_timer.wait_time = bomb_pickups_spawn_chance_delay
 	bomb_pickups_spawn_chance_timer.timeout.connect(check_if_bomb_pickups_should_spawn)
 
-func _process(delta: float):
+func _process(_delta: float):
 	if wave_state == WaveState.FINISHED:
 		var are_all_wave_enemies_defeated: bool = parent_spawner_node.get_child_count() == 0
 		# go to the next wave when all enemies for the current wave are defeated

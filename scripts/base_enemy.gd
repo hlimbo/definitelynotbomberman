@@ -384,7 +384,7 @@ func handle_enter_explosion_area(explosion: BaseExplosion):
 		self.disable()
 		death_timer.start()
 	
-func handle_exit_explosion_area(explosion: BaseExplosion):
+func handle_exit_explosion_area(_explosion: BaseExplosion):
 	pass
 
 # Separation Pseudocode
