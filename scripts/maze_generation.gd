@@ -4,8 +4,6 @@ enum MazeType
 {
 	DFS,
 	Kruskal,
-	DFS_Kruskal_Hybrid,
-	WaveFunctionCollapse,
 }
 
 enum TileType

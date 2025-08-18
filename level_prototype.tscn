@@ -356,12 +356,12 @@ _data = {
 &"RESET": SubResource("Animation_bx43x")
 }
 
-[sub_resource type="Gradient" id="Gradient_ffnwn"]
+[sub_resource type="Gradient" id="Gradient_ii5en"]
 interpolation_mode = 1
 offsets = PackedFloat32Array(0, 0.00298507)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_hqv6w"]
-gradient = SubResource("Gradient_ffnwn")
+gradient = SubResource("Gradient_ii5en")
 
 [sub_resource type="Animation" id="Animation_hqv6w"]
 length = 0.001
