@@ -74,6 +74,10 @@ var slow_factor: float = 0.0
 @export var hp_ui_view: HpUiView
 @onready var ui_root: Node2D = $UIRoot
 
+# how far apart enemies should be to avoid clumping
+@export var enemy_separation_distance: float = 256.0
+@onready var separation_radius: Line2D = $SeparationRadius
+
 func set_shader(shader: Shader):
 	var shader_mat: ShaderMaterial = sprite_2d.material as ShaderMaterial
 	assert(shader_mat != null)
@@ -259,6 +263,26 @@ func _physics_process(delta_time: float):
 	if applied_status_effects.has(SLOW):
 		self.velocity = self.velocity - (self.velocity * slow_factor)
 	
+	
+	if ![AI_State.PREP_ATTACK, AI_State.ATTACK].has(ai_state):
+		# steering behavior - separation
+		var enemies: Array[BaseEnemy] = self.find_all_nearby_enemies()
+		var separation_force: Vector2 = self.separate_steering_behavior(enemies)
+		
+		var steer: Vector2 = separation_force - self.velocity
+		steer = steer.limit_length(50.0)
+		self.velocity += steer
+	
+	# prevent moving enemy
+	if [AI_State.DEATH, AI_State.HURT, AI_State.INACTIVE].has(ai_state):
+		self.velocity = Vector2.ZERO
+	
+	# draw debug line to see separation distance
+	separation_radius.points = [
+		Vector2.ZERO,
+		Vector2(1.0, 0.0) * enemy_separation_distance,
+	]
+	
 	aim_line.points = [
 		Vector2.ZERO,                         
 		_aim_dir * aim_line_length
@@ -348,7 +372,6 @@ func handle_enter_explosion_area(explosion: BaseExplosion):
 	# default hurt and death logic
 	if hp > 0 and ![AI_State.HURT, AI_State.INACTIVE, AI_State.DEATH].has(ai_state):
 		ai_state = AI_State.HURT
-		self.velocity = Vector2(0.0, 0.0)
 		set_shader(hurt_shader)
 		hurt_timer.start()
 		self.interrupt()
@@ -363,6 +386,59 @@ func handle_enter_explosion_area(explosion: BaseExplosion):
 	
 func handle_exit_explosion_area(explosion: BaseExplosion):
 	pass
+
+# Separation Pseudocode
+# 1. search for all nearby enemies -> store in array
+#	circle circle overlap check
+#	for every other enemy
+#		dist = (self.position - other.position).length()
+#		if dist < desired_separation_distance
+#			add enemy to list
+#	return enemy list
+# 2. separate function(array of enemies)
+# for each other enemy
+#    compute vector diff between current enemy position and other enemy position
+#    check 0 < distance < desired_separation_distance
+#		unit vector = normalize vector diff
+#		divide unit vector by the distance --> the further away, the less unit vector changes, closer, the more unit vector changes
+# 		add to unit vector weighted to velocity sum
+#		increment count by 1
+# if count == 0 return zero velocity
+# if count > 0
+# 	compute average velocity = velocity_sum / count
+# 	return average velocity
+
+# can be a slow function depending on how many enemies are in the current scene
+# optimizations that can be explored later on are spatial partitioning
+# but not used here due to interest in prototyping only
+func find_all_nearby_enemies() -> Array[BaseEnemy]:
+	var enemy_nodes: Array[Node] = self.get_tree().get_nodes_in_group(&"enemy")
+	var enemies: Array[BaseEnemy] = []
+	for enemy in enemy_nodes:
+		if enemy != self and enemy is BaseEnemy:
+			var dist: float = self.position.distance_to(enemy.position)
+			if dist < enemy_separation_distance:
+				enemies.append(enemy as BaseEnemy)
+	
+	return enemies
+
+func separate_steering_behavior(enemies: Array[BaseEnemy]) -> Vector2:
+	var desired_velocity: Vector2 = Vector2.ZERO
+	var average_count: int = 0
+	
+	for enemy in enemies:
+		var diff: Vector2 = self.position - enemy.position
+		var dist: float = diff.length()
+		if dist > 0:
+			diff.normalized()
+			# diff /= dist
+			desired_velocity += diff
+			average_count += 1
+			
+	if average_count > 0:
+		desired_velocity = desired_velocity / average_count
+	
+	return desired_velocity
 
 #region overridable functions
 func disable():

@@ -19,7 +19,7 @@ func _ready():
 	dash_attack_timer.timeout.connect(start_dash_attack)
 	cooldown_timer.timeout.connect(on_refresh_cooldown)
 	attack_area.body_entered.connect(on_dash_attack_connected)
-	
+
 func on_dash_attack_connected(other: Node2D):
 	if other.name != "Player":
 		return

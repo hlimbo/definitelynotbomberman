@@ -31,6 +31,10 @@ window/size/viewport_height=720
 mouse_cursor/custom_image="uid://d2dwao7wixlfs"
 mouse_cursor/custom_image_hotspot=Vector2(16, 16)
 
+[global_group]
+
+enemy=""
+
 [input]
 
 move_left={
