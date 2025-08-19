@@ -1,4 +1,4 @@
-[gd_scene load_steps=88 format=4 uid="uid://cm8h24l78l07d"]
+[gd_scene load_steps=89 format=4 uid="uid://cm8h24l78l07d"]
 
 [ext_resource type="TileSet" uid="uid://m0ie6u7rp81y" path="res://tiles/maze_tileset.tres" id="1_emoqq"]
 [ext_resource type="PackedScene" uid="uid://deh3txb4jfjc5" path="res://nodes/Player.tscn" id="2_8c3is"]
@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://bx3tr4di3066b" path="res://atlas_textures/paper.tres" id="14_efb0n"]
 [ext_resource type="Texture2D" uid="uid://c6qr7h2ptogfd" path="res://assets/bomb.png" id="15_ja18n"]
 [ext_resource type="Texture2D" uid="uid://dk5slhp45a01f" path="res://assets/sparks.png" id="16_1coxa"]
+[ext_resource type="PackedScene" uid="uid://d2ipopg6nt4ce" path="res://nodes/ui/AudioToggleButton.tscn" id="17_jvbxh"]
 [ext_resource type="Theme" uid="uid://g8ijm1c5d00t" path="res://ui_theme.tres" id="17_yga73"]
 [ext_resource type="Texture2D" uid="uid://du8jbnwmy21gx" path="res://atlas_textures/rect_button.tres" id="18_37106"]
 [ext_resource type="Texture2D" uid="uid://mvfn4lhv8dxl" path="res://atlas_textures/rect_button_pressed.tres" id="19_fxrpe"]
@@ -615,10 +616,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -456.5
-offset_top = -94.0
-offset_right = 456.5
-offset_bottom = 130.0
+offset_left = -456.0
+offset_top = -100.0
+offset_right = 457.0
+offset_bottom = 199.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/h_separation = 64
@@ -888,6 +889,10 @@ theme_override_font_sizes/font_size = 30
 text = "switch bomb type"
 vertical_alignment = 1
 autowrap_mode = 3
+
+[node name="AudioToggleButton" parent="CanvasLayer/StartGameScreen/HowToPlayContainer/GridContainer" node_paths=PackedStringArray("menu_music") instance=ExtResource("17_jvbxh")]
+layout_mode = 2
+menu_music = NodePath("../../../../../GameRoot/Menu_Music")
 
 [node name="PlayAgainButtonAudio" type="AudioStreamPlayer" parent="CanvasLayer"]
 stream = ExtResource("28_1ekq6")
@@ -1186,7 +1191,6 @@ grow_vertical = 2
 texture = SubResource("GradientTexture1D_hqv6w")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/PauseScreen"]
-visible = false
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -1276,9 +1280,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -456.5
-offset_top = -67.0
+offset_top = -81.0
 offset_right = 456.5
-offset_bottom = 157.0
+offset_bottom = 218.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/h_separation = 64
@@ -1548,6 +1552,10 @@ theme_override_font_sizes/font_size = 30
 text = "switch bomb type"
 vertical_alignment = 1
 autowrap_mode = 3
+
+[node name="AudioToggleButton" parent="CanvasLayer/PauseScreen/HowToPlayContainer/GridContainer" node_paths=PackedStringArray("menu_music") instance=ExtResource("17_jvbxh")]
+layout_mode = 2
+menu_music = NodePath("../../../../../GameRoot/Menu_Music")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer/PauseScreen"]
 libraries = {
@@ -1985,7 +1993,6 @@ parameters/looping = true
 [node name="Menu_Music" type="AudioStreamPlayer" parent="GameRoot"]
 stream = ExtResource("44_uste2")
 volume_db = -24.0
-autoplay = true
 bus = &"BG"
 parameters/looping = true
 

@@ -23,3 +23,5 @@ signal on_bomb_thrown(bomb_type: Constants.BombType)
 
 signal on_game_start()
 signal on_game_end(game_state: String)
+
+signal on_mute_setting_changed()

@@ -1,0 +1,37 @@
+[gd_scene load_steps=7 format=3 uid="uid://d2ipopg6nt4ce"]
+
+[ext_resource type="Texture2D" uid="uid://du8jbnwmy21gx" path="res://atlas_textures/rect_button.tres" id="1_7frg3"]
+[ext_resource type="Texture2D" uid="uid://mvfn4lhv8dxl" path="res://atlas_textures/rect_button_pressed.tres" id="2_rdtma"]
+[ext_resource type="Texture2D" uid="uid://mmxqphhb16n7" path="res://atlas_textures/rect_button_hover.tres" id="3_omh1e"]
+[ext_resource type="Script" uid="uid://0fwrmm45ytnr" path="res://scripts/master_audio_toggle.gd" id="4_87r55"]
+[ext_resource type="Theme" uid="uid://g8ijm1c5d00t" path="res://ui_theme.tres" id="5_8wupa"]
+[ext_resource type="AudioStream" uid="uid://ou0us1ja6n0m" path="res://assets/UISoundpack/Retro8.ogg" id="6_tt4cw"]
+
+[node name="AudioToggleButton" type="TextureButton"]
+custom_minimum_size = Vector2(262, 71)
+focus_mode = 0
+texture_normal = ExtResource("1_7frg3")
+texture_pressed = ExtResource("2_rdtma")
+texture_hover = ExtResource("3_omh1e")
+stretch_mode = 1
+script = ExtResource("4_87r55")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 5.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("5_8wupa")
+theme_override_font_sizes/font_size = 22
+text = "Toggle Audio - Off"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_tt4cw")
+volume_db = 8.0
+bus = &"UI"

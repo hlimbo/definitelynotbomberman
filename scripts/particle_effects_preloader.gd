@@ -20,6 +20,7 @@ func _process(_delta: float):
 		
 	loading_progress = float(particle_effect_loaded_count) / float(particle_effects_count)
 	if loading_progress >= 1.0:
+		delete_all_temporary_particles()
 		toggle_processing(false)
 
 func load_particle_effects():
@@ -42,3 +43,11 @@ func on_finished_loading_particle_effect():
 func toggle_processing(is_processing: bool):
 	set_process(is_processing)
 	set_physics_process(is_processing)
+	
+func delete_all_temporary_particles():
+	var children: Array[Node] = self.get_children()
+	while len(children) > 0:
+		var child: Node = children.pop_back()
+		if child == null or !is_instance_valid(child):
+			continue
+		child.queue_free()
