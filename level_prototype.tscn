@@ -1,4 +1,4 @@
-[gd_scene load_steps=89 format=4 uid="uid://cm8h24l78l07d"]
+[gd_scene load_steps=90 format=4 uid="uid://cm8h24l78l07d"]
 
 [ext_resource type="TileSet" uid="uid://m0ie6u7rp81y" path="res://tiles/maze_tileset.tres" id="1_emoqq"]
 [ext_resource type="PackedScene" uid="uid://deh3txb4jfjc5" path="res://nodes/Player.tscn" id="2_8c3is"]
@@ -57,6 +57,7 @@
 [ext_resource type="Resource" uid="uid://dhpjv5mqjyjfv" path="res://resources/room_5_bomb_pickup_weight_table.tres" id="45_ii5en"]
 [ext_resource type="AudioStream" uid="uid://bbw05qpmd4uq6" path="res://assets/winner-is/winneris.ogg" id="47_bx43x"]
 [ext_resource type="AudioStream" uid="uid://eelm85i5y0c8" path="res://assets/game-over-sound/GameOver.wav" id="48_bx43x"]
+[ext_resource type="PackedScene" uid="uid://dybtg7wfmjkgy" path="res://nodes/ui/WebMouseCursor.tscn" id="58_5oanb"]
 
 [sub_resource type="Animation" id="Animation_mdrk0"]
 length = 0.001
@@ -1566,6 +1567,9 @@ libraries = {
 [node name="audio_crossfade_timer" type="Timer" parent="CanvasLayer"]
 wait_time = 0.06
 
+[node name="WebMouseCursor" parent="CanvasLayer" instance=ExtResource("58_5oanb")]
+position = Vector2(652, 406)
+
 [node name="GameRoot" type="Node2D" parent="."]
 
 [node name="ParallaxBg" type="Node2D" parent="GameRoot"]
@@ -1993,6 +1997,7 @@ parameters/looping = true
 [node name="Menu_Music" type="AudioStreamPlayer" parent="GameRoot"]
 stream = ExtResource("44_uste2")
 volume_db = -24.0
+autoplay = true
 bus = &"BG"
 parameters/looping = true
 

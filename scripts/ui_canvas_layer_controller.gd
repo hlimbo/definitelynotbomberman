@@ -56,6 +56,7 @@ func _ready():
 	
 	event_bus.on_game_end.connect(on_game_end)
 
+# on web, this has crackling issues when using the audio stream mode...
 func transition_track(outgoing_player: AudioStreamPlayer, incoming_player: AudioStreamPlayer, fade_time: float = 2.0):
 	incoming_player.play()
 	
@@ -78,6 +79,8 @@ func transition_track(outgoing_player: AudioStreamPlayer, incoming_player: Audio
 	# Stop menu music
 	outgoing_player.stop()
 	audio_crossfade_timer.stop()
+
+
 
 func on_play_pressed():
 	toggle_start_game_screen()

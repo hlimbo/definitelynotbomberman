@@ -264,7 +264,7 @@ func _physics_process(delta_time: float):
 		self.velocity = self.velocity - (self.velocity * slow_factor)
 	
 	
-	if ![AI_State.PREP_ATTACK, AI_State.ATTACK].has(ai_state):
+	if ![AI_State.PREP_ATTACK, AI_State.ATTACK].has(ai_state) and !applied_status_effects.has(GRAVITY):
 		# steering behavior - separation
 		var enemies: Array[BaseEnemy] = self.find_all_nearby_enemies()
 		var separation_force: Vector2 = self.separate_steering_behavior(enemies)
@@ -273,8 +273,8 @@ func _physics_process(delta_time: float):
 		steer = steer.limit_length(50.0)
 		self.velocity += steer
 	
-	# prevent moving enemy
-	if [AI_State.DEATH, AI_State.HURT, AI_State.INACTIVE].has(ai_state):
+	# prevent moving enemy if not gravity bomb
+	if [AI_State.DEATH, AI_State.HURT, AI_State.INACTIVE].has(ai_state) and !applied_status_effects.has(GRAVITY):
 		self.velocity = Vector2.ZERO
 	
 	# draw debug line to see separation distance
@@ -386,27 +386,6 @@ func handle_enter_explosion_area(explosion: BaseExplosion):
 	
 func handle_exit_explosion_area(_explosion: BaseExplosion):
 	pass
-
-# Separation Pseudocode
-# 1. search for all nearby enemies -> store in array
-#	circle circle overlap check
-#	for every other enemy
-#		dist = (self.position - other.position).length()
-#		if dist < desired_separation_distance
-#			add enemy to list
-#	return enemy list
-# 2. separate function(array of enemies)
-# for each other enemy
-#    compute vector diff between current enemy position and other enemy position
-#    check 0 < distance < desired_separation_distance
-#		unit vector = normalize vector diff
-#		divide unit vector by the distance --> the further away, the less unit vector changes, closer, the more unit vector changes
-# 		add to unit vector weighted to velocity sum
-#		increment count by 1
-# if count == 0 return zero velocity
-# if count > 0
-# 	compute average velocity = velocity_sum / count
-# 	return average velocity
 
 # can be a slow function depending on how many enemies are in the current scene
 # optimizations that can be explored later on are spatial partitioning
