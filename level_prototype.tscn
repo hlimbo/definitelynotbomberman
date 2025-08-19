@@ -1910,6 +1910,7 @@ wait_time = 10.0
 [node name="BombContainer" type="Node2D" parent="GameRoot"]
 
 [node name="Marker2D" type="Marker2D" parent="GameRoot"]
+visible = false
 position = Vector2(224, 2144)
 gizmo_extents = 1000.0
 

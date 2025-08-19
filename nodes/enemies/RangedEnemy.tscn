@@ -123,6 +123,7 @@ material = SubResource("ShaderMaterial_twncv")
 texture = ExtResource("6_iv11w")
 
 [node name="AimLine" type="Line2D" parent="."]
+visible = false
 width = 2.0
 
 [node name="RangeLine" type="Line2D" parent="."]
@@ -179,5 +180,6 @@ libraries = {
 }
 
 [node name="SeparationRadius" type="Line2D" parent="."]
+visible = false
 width = 2.0
 default_color = Color(0.45098, 0.65098, 0, 1)
