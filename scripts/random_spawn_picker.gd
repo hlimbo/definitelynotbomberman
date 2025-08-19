@@ -80,7 +80,7 @@ func convert_tile_coords_to_world_coords(tile_coord: Vector2i) -> Vector2:
 # assumption: all tilemap layers are positioned at (0,0) world coordinates
 func convert_world_coords_to_tile_coords(coord: Vector2) -> Vector2i:
 	assert(tile_dimensions.x != 0 and tile_dimensions.y != 0)
-	var scaled_dimensions = Vector2i(tile_dimensions.x * tile_map_layer.scale.x, tile_dimensions.y * tile_map_layer.scale.y)
+	var scaled_dimensions = Vector2i(tile_dimensions.x * int(tile_map_layer.scale.x), tile_dimensions.y * int(tile_map_layer.scale.y))
 	return Vector2i(int(coord.x / scaled_dimensions.x), int(coord.y / scaled_dimensions.y))
 
 func pick_random_world_position(excluded_tile_positions_set: Dictionary[Vector2i, bool] = {}) -> Vector2:

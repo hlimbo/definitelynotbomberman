@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://deh3txb4jfjc5"]
+[gd_scene load_steps=33 format=3 uid="uid://deh3txb4jfjc5"]
 
 [ext_resource type="Script" uid="uid://1exh2jhj3f7n" path="res://scripts/Player.gd" id="1_d16bx"]
 [ext_resource type="Shader" uid="uid://caw6qgxxaapj4" path="res://shaders/color_blinking.gdshader" id="2_1ockd"]
@@ -13,8 +13,12 @@
 [ext_resource type="AudioStream" uid="uid://7x6r0i7n6wm0" path="res://assets/Shapeforms Audio Free Sound Effects/Hit and Punch Preview/PUNCH_DESIGNED_HEAVY_74.wav" id="7_ok34x"]
 [ext_resource type="Texture2D" uid="uid://dk5slhp45a01f" path="res://assets/sparks.png" id="8_586vk"]
 [ext_resource type="Shader" uid="uid://byua1e4pl8whg" path="res://shaders/swirl.gdshader" id="8_nisan"]
+[ext_resource type="Material" uid="uid://813up7crscyn" path="res://particle_effects/player/player_move_particle_effects.tres" id="10_2e2qa"]
 [ext_resource type="AudioStream" uid="uid://co2r7c14dl4ti" path="res://assets/Shapeforms Audio Free Sound Effects/Hit and Punch Preview/WHOOSH_AIRY_FLUTTER_01.wav" id="11_pgw6w"]
 [ext_resource type="AudioStream" uid="uid://ba8ij1nyuc4mp" path="res://assets/JDSherbert-PixelExplosionsSFXPackFree/JDSherbert - Pixel Explosions SFX Pack - Flashbang (2).ogg" id="12_a66cn"]
+[ext_resource type="Material" uid="uid://lp50i4iesrcc" path="res://particle_effects/player/death1_particle_effects.tres" id="12_dlfyt"]
+[ext_resource type="Material" uid="uid://dg4nenucgvwmt" path="res://particle_effects/player/death3_particle_effects.tres" id="13_vddq6"]
+[ext_resource type="Material" uid="uid://ce1u5qq2upm7o" path="res://particle_effects/player/death2_particle_effects.tres" id="15_aj7h3"]
 [ext_resource type="AudioStream" uid="uid://0lsa613mow71" path="res://assets/JDSherbert-UltimateUISFXPack/JDSherbert - Ultimate UI SFX Pack - Swipe - 2.ogg" id="16_sw78d"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_b5sd1"]
@@ -22,108 +26,13 @@
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_u71v6"]
 blend_mode = 1
 
-[sub_resource type="Curve" id="Curve_1b2qv"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_u71v6"]
-curve = SubResource("Curve_1b2qv")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1b2qv"]
-particle_flag_disable_z = true
-emission_shape_offset = Vector3(0, 40, 0)
-direction = Vector3(-1, 0, 0)
-spread = 30.0
-initial_velocity_min = 80.0
-initial_velocity_max = 80.0
-gravity = Vector3(0, 0, 0)
-linear_accel_min = 20.0
-linear_accel_max = 20.0
-scale_min = 0.12
-scale_max = 0.25
-alpha_curve = SubResource("CurveTexture_u71v6")
-
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_586vk"]
 blend_mode = 1
 light_mode = 1
 
-[sub_resource type="Curve" id="Curve_pgw6w"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.829146, 0.573034), -1.11798, -1.11798, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_a66cn"]
-curve = SubResource("Curve_pgw6w")
-
-[sub_resource type="Curve" id="Curve_2yb4q"]
-_limits = [0.0, 2.0, 0.0, 1.0]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 2), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_586vk"]
-curve = SubResource("Curve_2yb4q")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_2yb4q"]
-particle_flag_disable_z = true
-emission_shape_offset = Vector3(0, -10, 0)
-gravity = Vector3(0, 0, 0)
-scale_curve = SubResource("CurveTexture_586vk")
-alpha_curve = SubResource("CurveTexture_a66cn")
-
-[sub_resource type="Curve" id="Curve_qkc5w"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.723618, 0.876405), -1.18374, -1.18374, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_v54eb"]
-curve = SubResource("Curve_qkc5w")
-
-[sub_resource type="Curve" id="Curve_e7i14"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_sw78d"]
-curve = SubResource("Curve_e7i14")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ok34x"]
-particle_flag_disable_z = true
-emission_shape_offset = Vector3(0, -10, 0)
-gravity = Vector3(0, 0, 0)
-scale_curve = SubResource("CurveTexture_sw78d")
-alpha_curve = SubResource("CurveTexture_v54eb")
-
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_pgw6w"]
 blend_mode = 1
 light_mode = 1
-
-[sub_resource type="Curve" id="Curve_t34tv"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_te7ow"]
-curve = SubResource("Curve_t34tv")
-
-[sub_resource type="Curve" id="Curve_586vk"]
-_data = [Vector2(0, 0.0449438), 0.0, 0.0, 0, 0, Vector2(1, 0.157303), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_pgw6w"]
-curve = SubResource("Curve_586vk")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_a66cn"]
-particle_flag_disable_z = true
-emission_shape_offset = Vector3(0, -10, 0)
-emission_shape = 1
-emission_sphere_radius = 5.0
-spread = 180.0
-initial_velocity_min = 50.0
-initial_velocity_max = 50.0
-gravity = Vector3(0, 0, 0)
-linear_accel_min = 20.0
-linear_accel_max = 20.0
-radial_accel_min = 100.0
-radial_accel_max = 100.0
-scale_curve = SubResource("CurveTexture_pgw6w")
-color = Color(1, 0.588235, 0.0666667, 1)
-alpha_curve = SubResource("CurveTexture_te7ow")
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_glv2v"]
 radius = 16.0
@@ -452,7 +361,7 @@ amount = 12
 texture = ExtResource("4_1b2qv")
 lifetime = 0.4
 fixed_fps = 60
-process_material = SubResource("ParticleProcessMaterial_1b2qv")
+process_material = ExtResource("10_2e2qa")
 
 [node name="DeathParticles" type="GPUParticles2D" parent="Sprite2D"]
 modulate = Color(0.901961, 1, 0.309804, 1)
@@ -462,7 +371,7 @@ amount = 2
 texture = ExtResource("7_2yb4q")
 one_shot = true
 fixed_fps = 60
-process_material = SubResource("ParticleProcessMaterial_2yb4q")
+process_material = ExtResource("12_dlfyt")
 
 [node name="DeathParticles3" type="GPUParticles2D" parent="Sprite2D"]
 modulate = Color(0.901279, 1, 0.309994, 1)
@@ -472,7 +381,7 @@ amount = 2
 texture = ExtResource("7_2yb4q")
 one_shot = true
 fixed_fps = 60
-process_material = SubResource("ParticleProcessMaterial_ok34x")
+process_material = ExtResource("13_vddq6")
 
 [node name="DeathParticles2" type="GPUParticles2D" parent="Sprite2D"]
 material = SubResource("CanvasItemMaterial_pgw6w")
@@ -482,7 +391,7 @@ texture = ExtResource("8_586vk")
 lifetime = 0.5
 one_shot = true
 fixed_fps = 60
-process_material = SubResource("ParticleProcessMaterial_a66cn")
+process_material = ExtResource("15_aj7h3")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false

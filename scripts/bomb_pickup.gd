@@ -31,8 +31,7 @@ func move_to_target(body: Node2D, delta: float):
 	var player = body as Player
 	assert(player != null)
 	if diff.length() <= player.get_collision_shape().radius:
-		# return a random range of bombs
-		var count: int = randi_range(3,6)
+		var count: int = get_random_bomb_pickup_count(bomb_type)
 		event_bus.on_bomb_picked_up.emit(bomb_type, count)
 		is_moving_to_target = false
 	
@@ -44,3 +43,17 @@ func _process(delta: float):
 
 func on_shrink_tween_finished():
 	can_safely_delete_self = true
+	
+func get_random_bomb_pickup_count(_bomb_type: Constants.BombType) -> int:
+	var count: int = 1
+	match _bomb_type:
+		Constants.BombType.GOO:
+			count = randi_range(1,2)
+		Constants.BombType.ROOT:
+			count = randi_range(2,4)
+		Constants.BombType.POISON:
+			count = randi_range(1,3)
+		Constants.BombType.GRAVITY:
+			count = randi_range(1,6)
+		
+	return count

@@ -495,12 +495,11 @@ bomb_ui_picker_view = NodePath("../../CanvasLayer/GameHUD/BombUiPicker")
 [node name="BombPickupsSpawnChanceTimer" type="Timer" parent="GameRoot/WaveManager"]
 wait_time = 10.0
 
-[node name="Player" parent="GameRoot" node_paths=PackedStringArray("camera_controller", "bomb_container", "hp_bar") groups=["player"] instance=ExtResource("7_8pr8v")]
+[node name="Player" parent="GameRoot" node_paths=PackedStringArray("camera_controller", "bomb_container") groups=["player"] instance=ExtResource("7_8pr8v")]
 position = Vector2(531, 486)
 camera_controller = NodePath("../CameraController")
 bomb_container = NodePath("../BombContainer")
 starting_hp = 150.0
-hp_bar = NodePath("")
 
 [node name="CameraController" parent="GameRoot" instance=ExtResource("1_8k62k")]
 movement_delay_duration = 0.25

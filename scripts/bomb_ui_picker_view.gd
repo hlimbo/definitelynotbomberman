@@ -10,10 +10,10 @@ class BombUIData:
 	var count_delta: int
 	
 	# count of 999 represents infinity
-	func _init(name: String = "default bomb", color: Color = Color.WHITE, count: int = 999):
-		self.name = name
-		self.color = color
-		self.count = count
+	func _init(_name: String = "default bomb", _color: Color = Color.WHITE, _count: int = 999):
+		self.name = _name
+		self.color = _color
+		self.count = _count
 		self.count_delta = 0
 
 ### dependencies
@@ -100,8 +100,8 @@ func view_next_bomb(is_arrow_up: bool):
 	event_bus.on_player_bomb_switched.emit(view_index)
 	audio_stream_player.play()
 
-func set_bomb_type(view_index: int):
-	self.view_index = view_index
+func set_bomb_type(_view_index: int):
+	self.view_index = _view_index
 	bomb_texture.modulate = bomb_inventory[view_index].color
 	counter_label.text = "%d" % bomb_inventory[view_index].count
 	
@@ -152,8 +152,8 @@ func update_bomb_count_by_index(index: int):
 	if index == view_index:
 		counter_label.text = "%d" % bomb_inventory[view_index].count
 		
-func toggle_text_counter(is_visible: bool):
-	counter_label.visible = is_visible
+func toggle_text_counter(_is_visible: bool):
+	counter_label.visible = _is_visible
 	
 func get_bomb_count() -> int:
 	var total: int = 0

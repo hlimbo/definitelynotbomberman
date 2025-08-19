@@ -1,12 +1,17 @@
-[gd_scene load_steps=38 format=3 uid="uid://30i420qrdnkw"]
+[gd_scene load_steps=20 format=3 uid="uid://30i420qrdnkw"]
 
 [ext_resource type="Script" uid="uid://cs02h8ib40hig" path="res://scripts/base_explosion.gd" id="1_bb5nk"]
 [ext_resource type="Texture2D" uid="uid://by2rr752grisi" path="res://assets/smoke.png" id="3_1iyps"]
+[ext_resource type="Material" uid="uid://cmgsb3uheepu1" path="res://particle_effects/explosion/smoke_particle_effects.tres" id="3_s5leu"]
 [ext_resource type="Texture2D" uid="uid://bvqc21p3eh4i1" path="res://assets/smoke2.png" id="4_tn508"]
 [ext_resource type="Texture2D" uid="uid://dk5slhp45a01f" path="res://assets/sparks.png" id="5_o8px0"]
-[ext_resource type="Material" uid="uid://slrphm1eqsr" path="res://nodes/BaseExplosion_vfx.tres" id="6_1iyps"]
+[ext_resource type="Material" uid="uid://na2n6s6cin25" path="res://particle_effects/explosion/sparks_particle_effects.tres" id="5_sm1li"]
+[ext_resource type="Material" uid="uid://7ws2fd21hg8q" path="res://particle_effects/explosion/flare1_particle_effects.tres" id="7_362do"]
 [ext_resource type="AudioStream" uid="uid://bd3xspxauq4wc" path="res://assets/JDSherbert-PixelExplosionsSFXPackFree/JDSherbert - Pixel Explosions SFX Pack - EMP (1).ogg" id="7_tds8v"]
 [ext_resource type="Texture2D" uid="uid://cvgw5kt3ow462" path="res://assets/ring.png" id="7_tn508"]
+[ext_resource type="Material" uid="uid://bq40ud3dod44h" path="res://particle_effects/explosion/flare2_particle_effects.tres" id="8_1jblj"]
+[ext_resource type="Material" uid="uid://m7ebkmbqk0ih" path="res://particle_effects/explosion/flare3_particle_effects.tres" id="9_eot04"]
+[ext_resource type="Material" uid="uid://sfhnrsyux1io" path="res://particle_effects/explosion/ring_particle_effects.tres" id="11_870jv"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1iyps"]
 radius = 50.0
@@ -15,75 +20,9 @@ radius = 50.0
 blend_mode = 1
 light_mode = 1
 
-[sub_resource type="Curve" id="Curve_bu348"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.118941), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_1iyps"]
-curve = SubResource("Curve_bu348")
-
-[sub_resource type="Gradient" id="Gradient_1iyps"]
-offsets = PackedFloat32Array(0, 0.490956, 1)
-colors = PackedColorArray(1, 0, 0, 1, 0.635294, 0.380392, 0, 1, 1, 1, 1, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_tn508"]
-gradient = SubResource("Gradient_1iyps")
-
-[sub_resource type="Curve" id="Curve_o8px0"]
-_limits = [0.0, 1.5, 0.0, 1.0]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1.5), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_o8px0"]
-curve = SubResource("Curve_o8px0")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3v85f"]
-particle_flag_disable_z = true
-gravity = Vector3(0, 0, 0)
-scale_curve = SubResource("CurveTexture_o8px0")
-color_ramp = SubResource("GradientTexture1D_tn508")
-alpha_curve = SubResource("CurveTexture_1iyps")
-
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_5osga"]
 blend_mode = 1
 light_mode = 1
-
-[sub_resource type="Curve" id="Curve_5osga"]
-_limits = [0.0, 0.5, 0.0, 1.0]
-_data = [Vector2(0, 0.5), 0.0, 0.0, 0, 0, Vector2(1, 0.252783), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_bu348"]
-curve = SubResource("Curve_5osga")
-
-[sub_resource type="Curve" id="Curve_4y7ov"]
-_limits = [0.0, 0.48, 0.0, 1.0]
-_data = [Vector2(0, 0.48), 0.0, 0.0, 0, 0, Vector2(1, 0.0256029), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_3v85f"]
-curve = SubResource("Curve_4y7ov")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_5osga"]
-particle_flag_disable_z = true
-emission_shape_scale = Vector3(1.5, 1.5, 1)
-emission_shape = 1
-emission_sphere_radius = 34.64
-initial_velocity_min = -80.0
-initial_velocity_max = 80.0
-angular_velocity_min = -1.60933e-05
-angular_velocity_max = -1.60933e-05
-orbit_velocity_min = 9.49949e-08
-orbit_velocity_max = 9.49949e-08
-radial_velocity_min = -2.23517e-05
-radial_velocity_max = -2.23517e-05
-gravity = Vector3(0, 0, 0)
-linear_accel_min = 800.0
-linear_accel_max = 800.0
-radial_accel_min = -2.23517e-06
-radial_accel_max = -2.23517e-06
-scale_curve = SubResource("CurveTexture_3v85f")
-alpha_curve = SubResource("CurveTexture_bu348")
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_vcxpt"]
 blend_mode = 1
@@ -93,61 +32,13 @@ light_mode = 1
 blend_mode = 1
 light_mode = 1
 
-[sub_resource type="Curve" id="Curve_1iyps"]
-_data = [Vector2(0.00726392, 0), 0.0, 0.0, 0, 0, Vector2(1, 0.499536), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_5osga"]
-curve = SubResource("Curve_1iyps")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_o8px0"]
-particle_flag_disable_z = true
-gravity = Vector3(0, 0, 0)
-scale_curve = SubResource("CurveTexture_5osga")
-
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_tn508"]
 blend_mode = 1
 light_mode = 1
 
-[sub_resource type="Curve" id="Curve_tn508"]
-_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_eobhj"]
-curve = SubResource("Curve_tn508")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_bu348"]
-particle_flag_disable_z = true
-angle_min = 45.0
-angle_max = 45.0
-gravity = Vector3(0, 0, 0)
-scale_curve = SubResource("CurveTexture_eobhj")
-color = Color(1, 0.290196, 0, 1)
-
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_3v85f"]
 blend_mode = 1
 light_mode = 1
-
-[sub_resource type="Gradient" id="Gradient_tn508"]
-offsets = PackedFloat32Array(0, 0.178295, 0.49354, 0.979328)
-colors = PackedColorArray(1, 0.962771, 0.899523, 1, 0.704341, 0.315051, 0, 1, 1, 0.730089, 0.271541, 1, 0, 0, 0, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_4y7ov"]
-gradient = SubResource("Gradient_tn508")
-
-[sub_resource type="Curve" id="Curve_3v85f"]
-_limits = [0.25, 2.0, 0.0, 1.0]
-_data = [Vector2(0, 0.25), 0.0, 0.0, 0, 0, Vector2(1, 2), 0.0, 0.0, 0, 0]
-point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_k1i3s"]
-curve = SubResource("Curve_3v85f")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_tn508"]
-particle_flag_disable_z = true
-gravity = Vector3(0, 0, 0)
-scale_curve = SubResource("CurveTexture_k1i3s")
-color_ramp = SubResource("GradientTexture1D_4y7ov")
 
 [node name="BaseExplosion" type="Node2D"]
 script = ExtResource("1_bb5nk")
@@ -173,7 +64,7 @@ one_shot = true
 explosiveness = 1.0
 fixed_fps = 60
 draw_order = 2
-process_material = SubResource("ParticleProcessMaterial_3v85f")
+process_material = ExtResource("3_s5leu")
 
 [node name="sparks" type="GPUParticles2D" parent="."]
 modulate = Color(0.96673, 0.275868, 1.92523e-07, 1)
@@ -183,7 +74,7 @@ texture = ExtResource("4_tn508")
 lifetime = 0.35
 one_shot = true
 fixed_fps = 60
-process_material = SubResource("ParticleProcessMaterial_5osga")
+process_material = ExtResource("5_sm1li")
 
 [node name="flare1" type="GPUParticles2D" parent="."]
 material = SubResource("CanvasItemMaterial_vcxpt")
@@ -194,7 +85,7 @@ lifetime = 0.35
 one_shot = true
 fixed_fps = 60
 draw_order = 0
-process_material = ExtResource("6_1iyps")
+process_material = ExtResource("7_362do")
 
 [node name="flare2" type="GPUParticles2D" parent="."]
 material = SubResource("CanvasItemMaterial_1iyps")
@@ -205,7 +96,7 @@ lifetime = 0.35
 one_shot = true
 fixed_fps = 60
 draw_order = 0
-process_material = SubResource("ParticleProcessMaterial_o8px0")
+process_material = ExtResource("8_1jblj")
 
 [node name="flare3" type="GPUParticles2D" parent="."]
 material = SubResource("CanvasItemMaterial_tn508")
@@ -216,7 +107,7 @@ lifetime = 0.35
 one_shot = true
 fixed_fps = 60
 draw_order = 0
-process_material = SubResource("ParticleProcessMaterial_bu348")
+process_material = ExtResource("9_eot04")
 
 [node name="ring" type="GPUParticles2D" parent="."]
 material = SubResource("CanvasItemMaterial_3v85f")
@@ -227,7 +118,7 @@ lifetime = 0.35
 one_shot = true
 fixed_fps = 60
 draw_order = 0
-process_material = SubResource("ParticleProcessMaterial_tn508")
+process_material = ExtResource("11_870jv")
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("7_tds8v")

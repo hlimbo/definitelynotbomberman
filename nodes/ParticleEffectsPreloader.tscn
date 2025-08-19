@@ -1,0 +1,17 @@
+[gd_scene load_steps=12 format=3 uid="uid://dseb7t01mvwg2"]
+
+[ext_resource type="Script" uid="uid://fevc5mgchv7d" path="res://scripts/particle_effects_preloader.gd" id="1_ynp5v"]
+[ext_resource type="Material" uid="uid://7ws2fd21hg8q" path="res://particle_effects/explosion/flare1_particle_effects.tres" id="2_xor0f"]
+[ext_resource type="Material" uid="uid://bq40ud3dod44h" path="res://particle_effects/explosion/flare2_particle_effects.tres" id="3_soae2"]
+[ext_resource type="Material" uid="uid://m7ebkmbqk0ih" path="res://particle_effects/explosion/flare3_particle_effects.tres" id="4_24awn"]
+[ext_resource type="Material" uid="uid://sfhnrsyux1io" path="res://particle_effects/explosion/ring_particle_effects.tres" id="5_7bvb3"]
+[ext_resource type="Material" uid="uid://cmgsb3uheepu1" path="res://particle_effects/explosion/smoke_particle_effects.tres" id="6_wn543"]
+[ext_resource type="Material" uid="uid://na2n6s6cin25" path="res://particle_effects/explosion/sparks_particle_effects.tres" id="7_7kxbl"]
+[ext_resource type="Material" uid="uid://lp50i4iesrcc" path="res://particle_effects/player/death1_particle_effects.tres" id="8_5vsxa"]
+[ext_resource type="Material" uid="uid://ce1u5qq2upm7o" path="res://particle_effects/player/death2_particle_effects.tres" id="9_6cyrb"]
+[ext_resource type="Material" uid="uid://dg4nenucgvwmt" path="res://particle_effects/player/death3_particle_effects.tres" id="10_k73fm"]
+[ext_resource type="Material" uid="uid://813up7crscyn" path="res://particle_effects/player/player_move_particle_effects.tres" id="11_tnj2a"]
+
+[node name="ParticleEffectsPreloader" type="Node2D"]
+script = ExtResource("1_ynp5v")
+particle_effects = Array[ParticleProcessMaterial]([ExtResource("2_xor0f"), ExtResource("3_soae2"), ExtResource("4_24awn"), ExtResource("5_7bvb3"), ExtResource("6_wn543"), ExtResource("7_7kxbl"), ExtResource("8_5vsxa"), ExtResource("9_6cyrb"), ExtResource("10_k73fm"), ExtResource("11_tnj2a")])
