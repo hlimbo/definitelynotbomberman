@@ -481,12 +481,12 @@ libraries = {
 [node name="TitleBorder" type="NinePatchRect" parent="CanvasLayer/StartGameScreen"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.844
-anchor_right = 1.003
+anchor_top = 0.796
+anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 1.0
-offset_top = 0.319946
-offset_right = -0.599976
+offset_top = -0.120056
+offset_right = -1.0
 grow_horizontal = 2
 grow_vertical = 0
 texture = ExtResource("14_efb0n")
@@ -497,13 +497,13 @@ axis_stretch_horizontal = 1
 [node name="BombIcon" type="TextureRect" parent="CanvasLayer/StartGameScreen/TitleBorder"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = -1.045
-anchor_right = 0.183
+anchor_top = -0.476
+anchor_right = 0.184
 anchor_bottom = 1.0
-offset_left = -22.0
-offset_top = 0.0401306
-offset_right = 0.0339813
-offset_bottom = 13.0
+offset_left = -12.0
+offset_top = -0.0279694
+offset_right = -0.432022
+offset_bottom = 12.9999
 grow_vertical = 0
 texture = ExtResource("15_ja18n")
 expand_mode = 3
@@ -530,42 +530,40 @@ stretch_mode = 5
 [node name="Title" type="Label" parent="CanvasLayer/StartGameScreen/TitleBorder"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.144
-anchor_right = 0.782
-anchor_bottom = 1.0
-offset_left = -0.0880127
-offset_top = 10.0001
-offset_right = 0.0359497
-offset_bottom = -13.0
-grow_horizontal = 2
+anchor_left = 0.151085
+anchor_top = 0.0340136
+anchor_right = 0.806344
+anchor_bottom = 0.863945
+grow_horizontal = 0
+grow_vertical = 2
 theme = ExtResource("17_yga73")
 theme_override_colors/font_shadow_color = Color(0.645501, 0.430219, 0, 1)
 theme_override_constants/shadow_offset_y = 6
 theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 32
-text = "Definitely Not Bomberman...."
+theme_override_font_sizes/font_size = 34
+text = "Definitely Not Bomberman !"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
+metadata/_edit_use_anchors_ = true
 
 [node name="PlayButton" type="TextureButton" parent="CanvasLayer/StartGameScreen/TitleBorder"]
+custom_minimum_size = Vector2(229, 52)
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.767
-anchor_right = 1.0
-anchor_bottom = 0.937
-offset_left = 0.065979
-offset_top = 20.0001
-offset_right = -18.0
-offset_bottom = -13.944
+anchor_left = 0.799501
+anchor_top = 0.116788
+anchor_right = 0.990017
+anchor_bottom = 0.49635
 grow_horizontal = 0
 grow_vertical = 0
 focus_mode = 0
 texture_normal = ExtResource("18_37106")
 texture_pressed = ExtResource("19_fxrpe")
 texture_hover = ExtResource("20_onc2j")
-stretch_mode = 1
+stretch_mode = 5
 script = ExtResource("21_64koe")
+metadata/_edit_use_anchors_ = true
 
 [node name="Label" type="Label" parent="CanvasLayer/StartGameScreen/TitleBorder/PlayButton"]
 layout_mode = 1
@@ -577,7 +575,7 @@ offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("17_yga73")
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 28
 text = "Play"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -586,6 +584,20 @@ vertical_alignment = 1
 stream = ExtResource("22_x6rbd")
 volume_db = 8.0
 bus = &"UI"
+
+[node name="AudioToggleButton" parent="CanvasLayer/StartGameScreen/TitleBorder" node_paths=PackedStringArray("menu_music") instance=ExtResource("17_jvbxh")]
+custom_minimum_size = Vector2(229, 52)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.799501
+anchor_top = 0.518248
+anchor_right = 0.990017
+anchor_bottom = 0.89781
+grow_horizontal = 0
+grow_vertical = 0
+stretch_mode = 5
+menu_music = NodePath("../../../../GameRoot/Menu_Music")
+metadata/_edit_use_anchors_ = true
 
 [node name="HowToPlayContainer" type="Control" parent="CanvasLayer/StartGameScreen"]
 layout_mode = 1
@@ -890,10 +902,6 @@ theme_override_font_sizes/font_size = 30
 text = "switch bomb type"
 vertical_alignment = 1
 autowrap_mode = 3
-
-[node name="AudioToggleButton" parent="CanvasLayer/StartGameScreen/HowToPlayContainer/GridContainer" node_paths=PackedStringArray("menu_music") instance=ExtResource("17_jvbxh")]
-layout_mode = 2
-menu_music = NodePath("../../../../../GameRoot/Menu_Music")
 
 [node name="PlayAgainButtonAudio" type="AudioStreamPlayer" parent="CanvasLayer"]
 stream = ExtResource("28_1ekq6")
@@ -1721,16 +1729,15 @@ scale = Vector2(3, 3)
 tile_map_data = PackedByteArray("AAALAHIAAAAUAAAAAAAOAHIAAAAWAAAAAAAOAHUAAAAWAAIAAAALAHUAAAAUAAIAAAALAHQAAAAUAAEAAAALAHMAAAAUAAEAAAAMAHQAAAAVAAEAAAAMAHUAAAAVAAIAAAANAHQAAAAVAAEAAAANAHUAAAAVAAIAAAAOAHQAAAAWAAEAAAAOAHMAAAAWAAEAAAANAHIAAAAVAAAAAAAMAHIAAAAVAAAAAAANAHMAAAAVAAEAAAAMAHMAAAAVAAEAAAALAFgAAAAUAAAAAAALAFkAAAAUAAEAAAALAFoAAAAUAAEAAAALAFsAAAAUAAIAAAAMAFgAAAAVAAAAAAAMAFkAAAAVAAEAAAAMAFoAAAAVAAEAAAAMAFsAAAAVAAIAAAANAFgAAAAVAAAAAAANAFkAAAAVAAEAAAANAFoAAAAVAAEAAAANAFsAAAAVAAIAAAAOAFgAAAAWAAAAAAAOAFkAAAAWAAEAAAAOAFoAAAAWAAEAAAAOAFsAAAAWAAIAAAALAD4AAAAUAAAAAAALAD8AAAAUAAEAAAALAEAAAAAUAAEAAAALAEEAAAAUAAIAAAAMAD4AAAAVAAAAAAAMAD8AAAAVAAEAAAAMAEAAAAAVAAEAAAAMAEEAAAAVAAIAAAANAD4AAAAVAAAAAAANAD8AAAAVAAEAAAANAEAAAAAVAAEAAAANAEEAAAAVAAIAAAAOAD4AAAAWAAAAAAAOAD8AAAAWAAEAAAAOAEAAAAAWAAEAAAAOAEEAAAAWAAIAAAALACQAAAAUAAAAAAALACUAAAAUAAEAAAALACYAAAAUAAEAAAALACcAAAAUAAIAAAAMACQAAAAVAAAAAAAMACUAAAAVAAEAAAAMACYAAAAVAAEAAAAMACcAAAAVAAIAAAANACQAAAAVAAAAAAANACUAAAAVAAEAAAANACYAAAAVAAEAAAANACcAAAAVAAIAAAAOACQAAAAWAAAAAAAOACUAAAAWAAEAAAAOACYAAAAWAAEAAAAOACcAAAAWAAIAAAA=")
 tile_set = ExtResource("1_emoqq")
 
-[node name="Player" parent="GameRoot" node_paths=PackedStringArray("camera_controller", "bomb_container", "hp_bar") groups=["player"] instance=ExtResource("2_8c3is")]
-position = Vector2(634, 7954)
-camera_controller = NodePath("../CameraController")
-bomb_container = NodePath("../BombContainer")
-starting_hp = 150.0
-hp_bar = NodePath("../../CanvasLayer/GameHUD/HpBar")
-
 [node name="CameraController" parent="GameRoot" instance=ExtResource("3_g7twh")]
 position = Vector2(634, 7954)
 movement_delay_duration = 0.25
+
+[node name="Player" parent="GameRoot" node_paths=PackedStringArray("camera_controller", "bomb_container", "hp_bar") groups=["player"] instance=ExtResource("2_8c3is")]
+position = Vector2(621, 7949)
+camera_controller = NodePath("../CameraController")
+bomb_container = NodePath("../BombContainer")
+hp_bar = NodePath("../../CanvasLayer/GameHUD/HpBar")
 
 [node name="MobsContainer" type="Node2D" parent="GameRoot"]
 

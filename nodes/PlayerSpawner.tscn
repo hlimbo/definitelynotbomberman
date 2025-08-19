@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://c00pt07va8hak"]
+
+[sub_resource type="GDScript" id="GDScript_uaeyd"]
+script/source = "extends Node2D
+
+@export var player: Player
+
+func _ready():
+	spawn()
+
+# plays the spawn animation - does not instantiate node into scene
+func spawn():
+	player._spawn()
+"
+
+[node name="PlayerSpawner" type="Node2D"]
+script = SubResource("GDScript_uaeyd")

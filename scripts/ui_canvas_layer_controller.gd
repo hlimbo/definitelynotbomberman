@@ -13,7 +13,6 @@ extends Node
 @onready var hp_bar: HpUiView = $GameHUD/HpBar
 @onready var bomb_ui_picker: BombUIPickerView = $GameHUD/BombUiPicker
 
-
 #region Animation Names
 const HIDE_START_GAME_SCREEN: StringName = &"ui_canvas_layer/hide_start_game_screen"
 const TOGGLE_PLAYER_HUD: StringName = &"game_hud/toggle_player_hud"

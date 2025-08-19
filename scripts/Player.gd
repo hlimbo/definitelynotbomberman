@@ -13,6 +13,7 @@ const EXPLOSION_TYPE_COUNT = 5
 # ─────────────────────────────────────────────────────────────────────────────
 @export var event_bus: EventBus = EventBus
 @export var camera_controller: CameraController
+@export var bomb_container: Node2D
 
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Movement ──
@@ -36,7 +37,7 @@ var _dash_dir: Vector2     = Vector2.ZERO
 @export var max_launch_speed: float = 800.0  # px/s
 @export var min_launch_speed: float = 200.0  # px/s
 @export var max_bounces: int = 4
-@export var bomb_container: Node2D
+
 
 var _charge: float    = 0.0
 var _charging: bool   = false
@@ -65,7 +66,7 @@ var _aim_dir: Vector2 = Vector2.ZERO
 @onready var particle_process_mat: ParticleProcessMaterial = ($Sprite2D/MoveParticles.process_material as ParticleProcessMaterial)
 
 @onready var damage_text_root: Node2D = $Sprite2D/DamageTextRoot
-@export var damage_text_node: PackedScene
+@export var damage_text_node: PackedScene = preload("res://nodes/ui/DamageText.tscn")
 
 @export var knockback_force: float = 250.0
 @export var knockback_force_vector: Vector2 = Vector2.ZERO
@@ -81,6 +82,7 @@ var _aim_dir: Vector2 = Vector2.ZERO
 @export var is_hurt: bool = false
 @export var is_dead: bool = false
 @export var is_alive: bool = true
+@export var _is_spawning: bool = false
 
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Timers ──
@@ -124,15 +126,16 @@ func get_collision_shape() -> CapsuleShape2D:
 	var shape: CapsuleShape2D = $CollisionShape2D.shape as CapsuleShape2D
 	assert(shape != null)
 	return shape
-
+	
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Life‑cycle ──
 # ─────────────────────────────────────────────────────────────────────────────
 func _ready() -> void:
 	assert(bomb_container != null)
+	
+	# 1 second is added to the death audio player stream to allow the death visual effect to fully play out
 	death_timer.wait_time = death_audio_player.stream.get_length() + 1.0
 	
-	#Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	event_bus.on_start_attack.connect(_on_attacked)
 	event_bus.on_projectile_hit.connect(_on_projectile_hit)
 	event_bus.on_player_bomb_switched.connect(_on_bomb_switched)
@@ -152,9 +155,13 @@ func _ready() -> void:
 	current_hp = starting_hp
 	
 	camera_controller.add_target(self)
-	
+	visible = false
+	event_bus.on_game_start.connect(_play_spawn_animation)
 
 func _input(event: InputEvent) -> void:
+	if _is_spawning:
+		return
+	
 	# Bomb charge / release handling
 	if event.is_action_pressed("throw_bomb"):
 		_start_charging()
@@ -173,6 +180,9 @@ func _input(event: InputEvent) -> void:
 		_begin_dash()
 
 func _physics_process(delta: float) -> void:
+	if _is_spawning:
+		return
+	
 	_update_dash(delta)
 	_update_walk(delta)
 	_update_knockback(delta)
@@ -349,6 +359,9 @@ func _update_aim_line(_delta: float) -> void:
 #   ── Animation ──
 # ─────────────────────────────────────────────────────────────────────────────
 func _update_animation() -> void:
+	if _is_spawning:
+		return
+	
 	if is_hurt:
 		_anim.play(&"hurt")
 		move_particles.emitting = false
@@ -368,12 +381,25 @@ func _update_animation() -> void:
 		_anim.stop()
 		move_particles.emitting = false
 
+func _play_spawn_animation():
+	if _is_spawning:
+		return
+	
+	_is_spawning = true
+	visible = true
+	_anim.animation_finished.connect(_on_animation_finished, ConnectFlags.CONNECT_ONE_SHOT)
+	_anim.play(&"spawn")
+
+func _on_animation_finished(_anim_name: StringName):
+	_is_spawning = false
+	_anim.play(&"RESET")
+
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Camera ──
 # ─────────────────────────────────────────────────────────────────────────────
 func _update_camera() -> void:
 	var dist: float = (self.position - camera_controller.position).length()
-	var tolerance: float = 16.0 # 8.0
+	var tolerance: float = 16.0
 	if dist > tolerance:
 		camera_controller.move_to_position_by_index(0)
 

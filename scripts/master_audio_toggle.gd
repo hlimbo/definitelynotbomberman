@@ -47,6 +47,6 @@ func set_audio_toggle(toggle: bool):
 func _on_mute_setting_changed():
 	var is_audio_playing: bool = !AudioServer.is_bus_mute(master_index)
 	if is_audio_playing:
-		label.text = "Toggle Audio - On"
+		label.text = "Audio - On"
 	else:
-		label.text = "Toggle Audio - Off"
+		label.text = "Audio - Off"

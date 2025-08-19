@@ -40,9 +40,9 @@ func load_particle_effects():
 func on_finished_loading_particle_effect():
 	particle_effect_loaded_count += 1
 
-func toggle_processing(is_processing: bool):
-	set_process(is_processing)
-	set_physics_process(is_processing)
+func toggle_processing(_is_processing: bool):
+	set_process(_is_processing)
+	set_physics_process(_is_processing)
 	
 func delete_all_temporary_particles():
 	var children: Array[Node] = self.get_children()

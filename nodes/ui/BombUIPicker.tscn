@@ -17,6 +17,7 @@ blend_mode = 1
 layout_mode = 3
 anchors_preset = 0
 script = ExtResource("1_41iq3")
+text_animation_duration = 0.25
 
 [node name="BombTexture" type="TextureRect" parent="."]
 layout_mode = 0

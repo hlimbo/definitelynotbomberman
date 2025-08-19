@@ -13,5 +13,5 @@ func _ready():
 		set_process(false)
 		set_physics_process(false)
 		
-func _process(delta: float):
+func _process(_delta: float):
 	self.global_position = get_viewport().get_mouse_position()
