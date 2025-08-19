@@ -121,6 +121,9 @@ func check_if_targets_valid():
 func update_positions():
 	assert(len(target_positions) == len(targets))
 	for i in range(len(target_positions)):
+		# if the previous check for validity is missed, skip setting its position for this frame
+		if !is_instance_valid(targets[i]) or targets[i].is_queued_for_deletion():
+			continue
 		target_positions[i] = targets[i].position
 
 func _process(delta: float):

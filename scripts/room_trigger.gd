@@ -11,7 +11,6 @@ func _ready():
 	event_bus.on_game_start.connect(disable_hazards)
 
 func on_body_entered(body: Node2D):
-	print("body entered is ", body.name)
 	if body is Player:
 		on_enter_room.emit()
 		

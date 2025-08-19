@@ -132,9 +132,7 @@ func _ready():
 		animation_player.play(&"ranged_enemy/spawn")
 	
 	# this is to ensure enemies are disabled until their spawn animation completes
-	if target == null:
-		ai_state = AI_State.INACTIVE
-	
+	ai_state = AI_State.INACTIVE
 	animation_player.animation_finished.connect(on_animation_finished)
 
 func check_for_overlapping_bodies():
@@ -145,7 +143,7 @@ func check_for_overlapping_bodies():
 func on_animation_finished(anim_name: StringName):
 	if anim_name.ends_with("spawn"):
 		# add a delay before ai starts doing its own thing
-		await get_tree().create_timer(2.0).timeout
+		await get_tree().create_timer(4.0).timeout
 		ai_state = AI_State.IDLE
 		check_for_overlapping_bodies()
 

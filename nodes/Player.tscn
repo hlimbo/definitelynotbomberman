@@ -399,7 +399,6 @@ shape = SubResource("CapsuleShape2D_glv2v")
 debug_color = Color(0, 0.501961, 0.647059, 1)
 
 [node name="AimLine" type="Line2D" parent="."]
-visible = false
 z_index = 2
 texture_repeat = 2
 width = 20.0
