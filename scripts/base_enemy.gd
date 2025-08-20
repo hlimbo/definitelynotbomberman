@@ -28,8 +28,8 @@ enum AI_State
 @export var ai_state: AI_State = AI_State.INACTIVE
 @export var target: Node2D
 @export var damage_text_node: PackedScene
-@export var hurt_shader: Shader
-@export var death_shader: Shader
+@export var hurt_shader: Shader = preload("res://shaders/color_blinking.gdshader")
+@export var death_shader: Shader = preload("res://shaders/wave_death.gdshader")
 
 @export var curr_move_velocity: Vector2 = Vector2(0.0, 0.0)
 
