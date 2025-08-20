@@ -31,7 +31,9 @@ func on_enter_room():
 		wave_manager.start_bomb_pickup_chance_timer()
 		if room_index - 1 < len(next_arrows):
 			# set the previous room's arrows to be invisible
-			next_arrows[room_index - 1].visible = false
+			next_arrows[room_index-1].visible = false
+			var next_arrow: NextArrow = next_arrows[room_index-1] as NextArrow
+			next_arrow.toggle_shader_mat(true)
 	
 	if room_index < len(room_center_points):
 		camera_controller.add_target(room_center_points[room_index])
@@ -54,6 +56,8 @@ func on_all_waves_finished():
 	if room_index - 1 < len(next_arrows):
 		# set the arrows as visible for the room the player is about to leave
 		next_arrows[room_index-1].visible = true
+		var next_arrow: NextArrow = next_arrows[room_index-1] as NextArrow
+		next_arrow.toggle_shader_mat(true)
 	
 	if room_index >= len(room_triggers):
 		event_bus.on_game_end.emit("GameWon")

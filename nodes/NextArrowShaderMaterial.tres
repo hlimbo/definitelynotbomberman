@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://bn8s6g56ickvs"]
+
+[ext_resource type="Shader" uid="uid://caw6qgxxaapj4" path="res://shaders/color_blinking.gdshader" id="1_65xib"]
+
+[resource]
+shader = ExtResource("1_65xib")
+shader_parameter/blink_frequency = 2.0
+shader_parameter/color_fill = Color(0.870588, 1, 1, 1)

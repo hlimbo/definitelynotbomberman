@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dv6re8a0stc2o" path="res://assets/mindless_blob2.png" id="2_p6qla"]
 [ext_resource type="PackedScene" uid="uid://dlryu3u30yhb3" path="res://nodes/ui/DamageText.tscn" id="3_iqw6n"]
 [ext_resource type="Theme" uid="uid://g8ijm1c5d00t" path="res://ui_theme.tres" id="5_khcju"]
+[ext_resource type="Material" uid="uid://cieav4j16wm2y" path="res://nodes/enemies/BaseEnemyShaderMaterial.tres" id="5_rpb3k"]
 [ext_resource type="PackedScene" uid="uid://bwfxeyu3w3xo3" path="res://nodes/ui/EnemyHpBar.tscn" id="7_rpb3k"]
 [ext_resource type="AudioStream" uid="uid://h8ogsv2e6qjq" path="res://assets/Shapeforms Audio Free Sound Effects/Hit and Punch Preview/HIT_METAL_WRENCH_HEAVIEST_02.wav" id="7_xdvsm"]
 [ext_resource type="AudioStream" uid="uid://ba8ij1nyuc4mp" path="res://assets/JDSherbert-PixelExplosionsSFXPackFree/JDSherbert - Pixel Explosions SFX Pack - Flashbang (2).ogg" id="8_viiky"]
@@ -17,8 +18,6 @@ radius = 42.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1msfx"]
 radius = 240.0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_viiky"]
 
 [sub_resource type="Animation" id="Animation_kmp48"]
 length = 0.001
@@ -112,7 +111,7 @@ shape = SubResource("CircleShape2D_1msfx")
 debug_color = Color(0.949586, 2.88785e-06, 0.572767, 0.42)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-material = SubResource("ShaderMaterial_viiky")
+material = ExtResource("5_rpb3k")
 texture = ExtResource("2_p6qla")
 
 [node name="AimLine" type="Line2D" parent="."]
