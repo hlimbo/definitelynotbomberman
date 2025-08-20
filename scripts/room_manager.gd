@@ -5,10 +5,16 @@ class_name RoomManager extends Node
 @export var wave_manager: WaveManager
 @export var room_index: int = 0
 @export var room_triggers: Array[RoomTrigger] = []
+@export var next_arrows: Array[Node2D] = []
+
+@export var camera_controller: CameraController
+@export var room_center_points: Array[Marker2D] = []
+@export var room_exit_points: Array[Marker2D] = []
 
 func _ready():
 	for room_trigger in room_triggers:
 		room_trigger.on_enter_room.connect(on_enter_room)
+		room_trigger.on_exit_room.connect(on_exit_room)
 	
 	assert(wave_manager != null)
 	wave_manager.on_all_waves_finished.connect(on_all_waves_finished)
@@ -23,14 +29,31 @@ func on_enter_room():
 	# isn't introduced to it yet until the 2nd room
 	if room_index > 0:
 		wave_manager.start_bomb_pickup_chance_timer()
+		if room_index - 1 < len(next_arrows):
+			# set the previous room's arrows to be invisible
+			next_arrows[room_index - 1].visible = false
+	
+	if room_index < len(room_center_points):
+		camera_controller.add_target(room_center_points[room_index])
+
+func on_exit_room():
+	if room_index - 1 > -1 and room_index - 1 < len(room_exit_points):
+		camera_controller.remove_target(room_exit_points[room_index - 1])
 
 func on_all_waves_finished():
 	wave_manager.stop_bomb_pickup_chance_timer()
+	if room_index < len(room_center_points):
+		camera_controller.remove_target(room_center_points[room_index])
+	if room_index < len(room_exit_points):
+		camera_controller.add_target(room_exit_points[room_index])
 	if room_index > 0:
 		wave_manager.bomb_pickups_spawn_index += 1
 	
 	room_triggers[room_index].disable_hazards()
 	room_index += 1
+	if room_index - 1 < len(next_arrows):
+		# set the arrows as visible for the room the player is about to leave
+		next_arrows[room_index-1].visible = true
 	
 	if room_index >= len(room_triggers):
 		event_bus.on_game_end.emit("GameWon")

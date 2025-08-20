@@ -6,6 +6,12 @@ enum MotionKind {
 	PHYSICS, # use velocity and forces to move camera each frame
 }
 
+enum TargetType {
+	SINGLE,
+	AVERAGE,
+	MEDIAN,
+}
+
 @onready var camera_2d: Camera2D = $Camera2D
 
 # last target is the most recent target to follow
@@ -128,6 +134,11 @@ func _process(delta: float):
 	check_if_targets_valid()
 	update_positions()
 	
+	if len(targets) == 1:
+		move_to_position_by_index(0)
+	else:
+		move_to_average_position()
+	
 	if is_new_position_set:
 		match motion_kind:
 			MotionKind.INSTANT:
@@ -137,7 +148,6 @@ func _process(delta: float):
 				interpolate_to_next_position(delta)
 			MotionKind.PHYSICS:
 				apply_velocity_towards_next_position(delta)
-				
 
 func interpolate_to_next_position(delta: float):
 	var ratio: float = curr_interpolation_time / movement_delay_duration

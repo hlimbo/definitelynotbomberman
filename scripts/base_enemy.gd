@@ -145,7 +145,8 @@ func on_animation_finished(anim_name: StringName):
 		# add a delay before ai starts doing its own thing
 		await get_tree().create_timer(4.0).timeout
 		ai_state = AI_State.IDLE
-		check_for_overlapping_bodies()
+		if hp > 0.0:
+			check_for_overlapping_bodies()
 
 # gets called when about to leave the SceneTree
 func _exit_tree():

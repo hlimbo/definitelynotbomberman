@@ -398,10 +398,11 @@ func _on_animation_finished(_anim_name: StringName):
 #   ── Camera ──
 # ─────────────────────────────────────────────────────────────────────────────
 func _update_camera() -> void:
-	var dist: float = (self.position - camera_controller.position).length()
-	var tolerance: float = 16.0
-	if dist > tolerance:
-		camera_controller.move_to_position_by_index(0)
+	pass
+	#var dist: float = (self.position - camera_controller.position).length()
+	#var tolerance: float = 16.0
+	#if dist > tolerance:
+		#camera_controller.move_to_position_by_index(0)
 
 # ─────────────────────────────────────────────────────────────────────────────
 #   ── Signal Callbacks ──

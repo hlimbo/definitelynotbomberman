@@ -92,6 +92,7 @@ position = Vector2(0, -95)
 position = Vector2(-49, -73)
 
 [node name="DebugTextRoot" type="Node2D" parent="."]
+visible = false
 position = Vector2(0, 46)
 
 [node name="AIStateLabel" type="Label" parent="DebugTextRoot"]
