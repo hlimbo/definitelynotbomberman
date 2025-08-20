@@ -114,7 +114,7 @@ var _aim_dir: Vector2 = Vector2.ZERO
 # ─────────────────────────────────────────────────────────────────────────────
 func _get_move_input() -> Vector2:
 	"""Return normalized WASD / arrow‑key vector."""
-	return float(is_alive) * float(!is_dead) * Vector2(
+	return float(visible) * float(is_alive) * float(!is_dead) * Vector2(
 		Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
 		Input.get_action_strength("move_down")  - Input.get_action_strength("move_up")
 	).normalized()
@@ -159,7 +159,7 @@ func _ready() -> void:
 	event_bus.on_game_start.connect(_play_spawn_animation)
 
 func _input(event: InputEvent) -> void:
-	if _is_spawning:
+	if _is_spawning or !is_visible:
 		return
 	
 	# Bomb charge / release handling
@@ -198,7 +198,7 @@ func _process(delta: float) -> void:
 #   ── Dash logic ──
 # ─────────────────────────────────────────────────────────────────────────────
 func _begin_dash() -> void:
-	if is_dead or _is_dashing:
+	if is_dead or _is_dashing or !visible or _is_spawning:
 		return
 	
 	dash_audio_player.play()
@@ -210,7 +210,7 @@ func _begin_dash() -> void:
 		_dash_dir = _aim_dir   # default to aim direction
 
 func _update_dash(delta: float) -> void:
-	if is_dead:
+	if is_dead or _is_spawning or !visible:
 		_is_dashing = false
 		_cooldown_timer = 0.0
 	

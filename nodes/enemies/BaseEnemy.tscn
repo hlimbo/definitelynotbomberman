@@ -128,6 +128,7 @@ width = 2.0
 default_color = Color(0.45098, 0.65098, 0, 1)
 
 [node name="hurt_timer" type="Timer" parent="."]
+wait_time = 0.5
 one_shot = true
 
 [node name="death_timer" type="Timer" parent="."]

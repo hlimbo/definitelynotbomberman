@@ -55,6 +55,8 @@ func disable():
 	dash_line.visible = false
 	dash_attack_timer.stop()
 	cooldown_timer.stop()
+	attack_area.set_deferred("monitoring", false)
+	attack_area.set_deferred("monitorable", false)
 
 func interrupt():
 	can_dash = true
@@ -83,6 +85,9 @@ func handle_states():
 func start_attack():
 	# if dash attack on cooldown, don't dash
 	if not can_dash and [AI_State.HURT, AI_State.DEATH].has(ai_state):
+		return
+		
+	if applied_status_effects.has(ROOT):
 		return
 	
 	ai_state = AI_State.PREP_ATTACK

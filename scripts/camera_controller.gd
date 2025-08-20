@@ -106,17 +106,15 @@ func remove_target(target: Node2D) -> bool:
 # to ensure only non-null node targets are being tracked
 func check_if_targets_valid():
 	assert(len(target_positions) == len(targets))
-	var removed_targets: Array[Node2D] = []
-	var removed_positions: Array[Vector2] = []
+	var removed_target_indices: Array[int] = []
 	
 	for i in range(len(target_positions)):
 		if targets[i] == null or !is_instance_valid(targets[i]) or targets[i].is_queued_for_deletion():
-			removed_targets.append(targets[i])
-			removed_positions.append(target_positions[i])
+			removed_target_indices.append(i)
 			
-	for i in range(len(removed_targets)):
-		targets.erase(removed_targets[i])
-		target_positions.erase(removed_positions[i])
+	for remove_index in removed_target_indices:
+		targets.remove_at(remove_index)
+		target_positions.remove_at(remove_index)
 
 func update_positions():
 	assert(len(target_positions) == len(targets))

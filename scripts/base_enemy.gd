@@ -159,8 +159,16 @@ func on_body_entered(body: Node2D):
 		target = body
 		
 func on_iframes_completed():
-	ai_state = AI_State.FOLLOW
-	clear_shader()
+	if hp <= 0.0:
+		ai_state = AI_State.DEATH
+		set_shader(death_shader)
+		death_timer.start()
+		if !death_audio_player.playing:
+			death_audio_player.play()
+		self.disable()
+	else:
+		ai_state = AI_State.FOLLOW
+		clear_shader()
 	
 func on_death_completed():
 	self.set_process(false)
@@ -212,7 +220,8 @@ func on_debuff_applied(dmg: float):
 		self.velocity = Vector2(0.0, 0.0)
 		set_shader(death_shader)
 		death_timer.start()
-		death_audio_player.play()
+		if !death_audio_player.playing:
+			death_audio_player.play()
 		self.disable()
 	
 	# final tick
@@ -222,6 +231,11 @@ func on_debuff_applied(dmg: float):
 		remove_all_signal_connections(debuff_frequency_timer.timeout)
 
 func _physics_process(delta_time: float):
+	# this is to ensure enemies don't change their state when marked for deletion
+	# without this, it causes graphical issues where they appear idle for a few frames then get deleted
+	if hp <= 0.0 or is_queued_for_deletion():
+		return
+	
 	self.handle_states()
 	
 	# handle status effects
@@ -262,7 +276,7 @@ func _physics_process(delta_time: float):
 		self.velocity = self.velocity - (self.velocity * slow_factor)
 	
 	
-	if ![AI_State.PREP_ATTACK, AI_State.ATTACK].has(ai_state) and !applied_status_effects.has(GRAVITY):
+	if ![AI_State.PREP_ATTACK, AI_State.ATTACK].has(ai_state) and !applied_status_effects.has(GRAVITY) and !applied_status_effects.has(ROOT):
 		# steering behavior - separation
 		var enemies: Array[BaseEnemy] = self.find_all_nearby_enemies()
 		var separation_force: Vector2 = self.separate_steering_behavior(enemies)
@@ -327,9 +341,10 @@ func handle_enter_explosion_area(explosion: BaseExplosion):
 			debuff_timer.wait_time = poison_explosion.debuff_duration
 			debuff_frequency_timer.wait_time = poison_explosion.debuff_frequency
 			
-			debuff_frequency_timer.timeout.connect(on_debuff_applied.bind(poison_explosion.dot_dmg))
-			debuff_timer.start()
-			debuff_frequency_timer.start()
+			if debuff_timer.is_stopped():
+				debuff_frequency_timer.timeout.connect(on_debuff_applied.bind(poison_explosion.dot_dmg))
+				debuff_timer.start()
+				debuff_frequency_timer.start()
 	elif explosion is GravityExplosion:
 		if not applied_status_effects.has(GRAVITY):
 			applied_status_effects.append(GRAVITY)
@@ -378,7 +393,8 @@ func handle_enter_explosion_area(explosion: BaseExplosion):
 		ai_state = AI_State.DEATH
 		self.velocity = Vector2(0.0, 0.0)
 		set_shader(death_shader)
-		death_audio_player.play()
+		if !death_audio_player.playing:
+			death_audio_player.play()
 		self.disable()
 		death_timer.start()
 	
@@ -436,17 +452,16 @@ func disable():
 	
 	hp_ui_view.visible = false
 	
+	hit_area.set_deferred("monitoring", false)
+	hit_area.set_deferred("monitorable", false)
+	detection_area.set_deferred("monitoring", false)
+	detection_area.set_deferred("monitorable", false)
 
 # used to stop timers that aren't in the BaseEnemy class such as DashingEnemy timers
 func interrupt():
 	pass
 
 func handle_states():
-	# this is to ensure enemies don't change their state when marked for deletion
-	# without this, it causes graphical issues where they appear idle for a few frames then get deleted
-	if hp <= 0.0 or is_queued_for_deletion():
-		return
-	
 	if ai_state == AI_State.INACTIVE:
 		self.velocity = Vector2.ZERO
 		self.accumulated_pull_force = Vector2.ZERO
