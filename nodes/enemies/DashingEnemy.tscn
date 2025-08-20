@@ -1,9 +1,7 @@
-[gd_scene load_steps=19 format=3 uid="uid://n7630g0ehwof"]
+[gd_scene load_steps=17 format=3 uid="uid://n7630g0ehwof"]
 
 [ext_resource type="Script" uid="uid://b0dw3tatxpru6" path="res://scripts/dashing_enemy.gd" id="1_xc3d4"]
 [ext_resource type="PackedScene" uid="uid://dlryu3u30yhb3" path="res://nodes/ui/DamageText.tscn" id="2_ijalk"]
-[ext_resource type="Shader" uid="uid://caw6qgxxaapj4" path="res://shaders/color_blinking.gdshader" id="3_tc80p"]
-[ext_resource type="Shader" uid="uid://b1cldd7wx5mnx" path="res://shaders/wave_death.gdshader" id="4_hlsnw"]
 [ext_resource type="Theme" uid="uid://g8ijm1c5d00t" path="res://ui_theme.tres" id="5_ijalk"]
 [ext_resource type="PackedScene" uid="uid://bwfxeyu3w3xo3" path="res://nodes/ui/EnemyHpBar.tscn" id="5_oqkmh"]
 [ext_resource type="Texture2D" uid="uid://da4h3jou13i3f" path="res://assets/mindless_blob.png" id="6_ijalk"]
@@ -79,8 +77,6 @@ follow_speed = 125.0
 follow_distance = 200.0
 ai_state = 1
 damage_text_node = ExtResource("2_ijalk")
-hurt_shader = ExtResource("3_tc80p")
-death_shader = ExtResource("4_hlsnw")
 hp_ui_view_node = ExtResource("5_oqkmh")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

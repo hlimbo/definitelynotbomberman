@@ -159,7 +159,7 @@ func _ready() -> void:
 	event_bus.on_game_start.connect(_play_spawn_animation)
 
 func _input(event: InputEvent) -> void:
-	if _is_spawning or !is_visible:
+	if _is_spawning or !visible:
 		return
 	
 	# Bomb charge / release handling

@@ -1,10 +1,8 @@
-[gd_scene load_steps=17 format=3 uid="uid://dyubwq4v4oedp"]
+[gd_scene load_steps=15 format=3 uid="uid://dyubwq4v4oedp"]
 
 [ext_resource type="Script" uid="uid://bydjmwa1oxxwt" path="res://scripts/base_enemy.gd" id="1_tsmau"]
-[ext_resource type="Shader" uid="uid://b1cldd7wx5mnx" path="res://shaders/wave_death.gdshader" id="1_u2ds8"]
 [ext_resource type="Texture2D" uid="uid://dv6re8a0stc2o" path="res://assets/mindless_blob2.png" id="2_p6qla"]
 [ext_resource type="PackedScene" uid="uid://dlryu3u30yhb3" path="res://nodes/ui/DamageText.tscn" id="3_iqw6n"]
-[ext_resource type="Shader" uid="uid://caw6qgxxaapj4" path="res://shaders/color_blinking.gdshader" id="4_dbob3"]
 [ext_resource type="Theme" uid="uid://g8ijm1c5d00t" path="res://ui_theme.tres" id="5_khcju"]
 [ext_resource type="PackedScene" uid="uid://bwfxeyu3w3xo3" path="res://nodes/ui/EnemyHpBar.tscn" id="7_rpb3k"]
 [ext_resource type="AudioStream" uid="uid://h8ogsv2e6qjq" path="res://assets/Shapeforms Audio Free Sound Effects/Hit and Punch Preview/HIT_METAL_WRENCH_HEAVIEST_02.wav" id="7_xdvsm"]
@@ -74,8 +72,6 @@ max_hp = 300.0
 follow_speed = 150.0
 ai_state = 1
 damage_text_node = ExtResource("3_iqw6n")
-hurt_shader = ExtResource("4_dbob3")
-death_shader = ExtResource("1_u2ds8")
 base_damage = 25.0
 hp_ui_view_node = ExtResource("7_rpb3k")
 
