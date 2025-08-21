@@ -102,12 +102,15 @@ text = "IDLE"
 
 [node name="HitArea" type="Area2D" parent="."]
 collision_mask = 3
+monitoring = false
+monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitArea"]
 shape = SubResource("CircleShape2D_u2ds8")
 
 [node name="DetectionArea" type="Area2D" parent="."]
 collision_mask = 3
+monitoring = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
@@ -136,7 +139,7 @@ width = 2.0
 default_color = Color(0.984577, 0, 0.328501, 1)
 
 [node name="hurt_timer" type="Timer" parent="."]
-wait_time = 0.5
+wait_time = 0.85
 one_shot = true
 
 [node name="death_timer" type="Timer" parent="."]

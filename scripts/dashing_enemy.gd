@@ -84,7 +84,7 @@ func handle_states():
 
 func start_attack():
 	# if dash attack on cooldown, don't dash
-	if not can_dash and [AI_State.HURT, AI_State.DEATH].has(ai_state):
+	if not can_dash and [AI_State.DEATH].has(ai_state):
 		return
 		
 	if applied_status_effects.has(ROOT):

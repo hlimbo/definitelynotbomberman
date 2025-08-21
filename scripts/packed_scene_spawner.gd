@@ -80,6 +80,12 @@ func on_spawn_node():
 		on_spawning_finished.emit()
 	else:
 		var node: Node = nodes[spawn_index]
+		
+		if node is BaseEnemy:
+			var base = node as BaseEnemy
+			#base.ai_state = BaseEnemy.AI_State.INACTIVE
+			print("AI State on spawn? ", base.ai_state)
+		
 		parent_spawner_node.add_child(node)
 		var position: Vector2 = random_spawn_picker.pick_random_world_position(excluded_tile_positions_set)
 		node.position = position

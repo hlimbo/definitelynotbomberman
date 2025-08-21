@@ -78,6 +78,8 @@ var slow_factor: float = 0.0
 @export var enemy_separation_distance: float = 256.0
 @onready var separation_radius: Line2D = $SeparationRadius
 
+@export var is_spawning: bool = false
+
 func set_shader(shader: Shader):
 	var shader_mat: ShaderMaterial = sprite_2d.material as ShaderMaterial
 	assert(shader_mat != null)
@@ -95,6 +97,11 @@ func remove_all_signal_connections(signal_ref: Signal):
 
 func can_attack() -> bool:
 	return AI_State.FOLLOW == ai_state and (is_instance_valid(target) and position.distance_to(target.position) < follow_distance)
+
+func _init():
+	# this is to ensure enemies are disabled until their spawn animation completes
+	ai_state = AI_State.INACTIVE
+	is_spawning = true
 
 func _ready():
 	detection_area.body_entered.connect(on_body_entered)
@@ -131,8 +138,6 @@ func _ready():
 	elif animation_player.has_animation_library(&"ranged_enemy"):
 		animation_player.play(&"ranged_enemy/spawn")
 	
-	# this is to ensure enemies are disabled until their spawn animation completes
-	ai_state = AI_State.INACTIVE
 	animation_player.animation_finished.connect(on_animation_finished)
 
 func check_for_overlapping_bodies():
@@ -143,10 +148,11 @@ func check_for_overlapping_bodies():
 func on_animation_finished(anim_name: StringName):
 	if anim_name.ends_with("spawn"):
 		# add a delay before ai starts doing its own thing
-		await get_tree().create_timer(4.0).timeout
-		ai_state = AI_State.IDLE
+		await get_tree().create_timer(2.0).timeout
+		toggle_overlap_areas(true)
+		set_deferred(&"ai_state", AI_State.IDLE)
 		if hp > 0.0:
-			check_for_overlapping_bodies()
+			call_deferred(&"check_for_overlapping_bodies")
 
 # gets called when about to leave the SceneTree
 func _exit_tree():
@@ -518,3 +524,11 @@ func start_attack():
 	ai_state = AI_State.FOLLOW
 	
 #endregion
+
+func toggle_overlap_areas(toggle: bool):
+	if toggle:
+		hit_area.set_deferred(&"monitorable", true)
+		detection_area.set_deferred(&"monitoring", true)
+	else:
+		hit_area.set_deferred(&"monitorable", false)
+		detection_area.set_deferred(&"monitoring", false)
