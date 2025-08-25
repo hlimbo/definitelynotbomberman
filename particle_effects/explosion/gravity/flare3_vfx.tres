@@ -1,0 +1,18 @@
+[gd_resource type="ParticleProcessMaterial" load_steps=3 format=3 uid="uid://b2k06m2axcoh0"]
+
+[sub_resource type="Curve" id="Curve_wseh2"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_eobhj"]
+curve = SubResource("Curve_wseh2")
+
+[resource]
+particle_flag_disable_z = true
+angle_min = 45.0
+angle_max = 45.0
+gravity = Vector3(0, 0, 0)
+scale_min = 6.0
+scale_max = 6.0
+scale_curve = SubResource("CurveTexture_eobhj")
+color = Color(0.345675, 0.224697, 0.490404, 1)

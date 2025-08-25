@@ -1,20 +1,20 @@
-[gd_resource type="ParticleProcessMaterial" load_steps=5 format=3 uid="uid://na2n6s6cin25"]
+[gd_resource type="ParticleProcessMaterial" load_steps=5 format=3 uid="uid://bx43nqbk60bns"]
 
-[sub_resource type="Curve" id="Curve_5osga"]
+[sub_resource type="Curve" id="Curve_jokc5"]
 _limits = [0.0, 0.5, 0.0, 1.0]
 _data = [Vector2(0, 0.5), 0.0, 0.0, 0, 0, Vector2(1, 0.252783), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_bu348"]
-curve = SubResource("Curve_5osga")
+[sub_resource type="CurveTexture" id="CurveTexture_eobhj"]
+curve = SubResource("Curve_jokc5")
 
-[sub_resource type="Curve" id="Curve_4y7ov"]
+[sub_resource type="Curve" id="Curve_jxrmx"]
 _limits = [0.0, 0.48, 0.0, 1.0]
 _data = [Vector2(0, 0.48), 0.0, 0.0, 0, 0, Vector2(1, 0.0256029), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_3v85f"]
-curve = SubResource("Curve_4y7ov")
+[sub_resource type="CurveTexture" id="CurveTexture_k1i3s"]
+curve = SubResource("Curve_jxrmx")
 
 [resource]
 particle_flag_disable_z = true
@@ -34,7 +34,5 @@ linear_accel_min = 800.0
 linear_accel_max = 800.0
 radial_accel_min = -2.23517e-06
 radial_accel_max = -2.23517e-06
-scale_min = 0.5
-scale_max = 0.5
-scale_curve = SubResource("CurveTexture_3v85f")
-alpha_curve = SubResource("CurveTexture_bu348")
+scale_curve = SubResource("CurveTexture_k1i3s")
+alpha_curve = SubResource("CurveTexture_eobhj")

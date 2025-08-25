@@ -2,16 +2,16 @@
 
 [ext_resource type="Script" uid="uid://cs02h8ib40hig" path="res://scripts/base_explosion.gd" id="1_bb5nk"]
 [ext_resource type="Texture2D" uid="uid://by2rr752grisi" path="res://assets/smoke.png" id="3_1iyps"]
-[ext_resource type="Material" uid="uid://cmgsb3uheepu1" path="res://particle_effects/explosion/smoke_particle_effects.tres" id="3_s5leu"]
+[ext_resource type="Material" uid="uid://cmgsb3uheepu1" path="res://particle_effects/explosion/base/smoke_particle_effects.tres" id="3_s5leu"]
 [ext_resource type="Texture2D" uid="uid://bvqc21p3eh4i1" path="res://assets/smoke2.png" id="4_tn508"]
 [ext_resource type="Texture2D" uid="uid://dk5slhp45a01f" path="res://assets/sparks.png" id="5_o8px0"]
-[ext_resource type="Material" uid="uid://na2n6s6cin25" path="res://particle_effects/explosion/sparks_particle_effects.tres" id="5_sm1li"]
-[ext_resource type="Material" uid="uid://7ws2fd21hg8q" path="res://particle_effects/explosion/flare1_particle_effects.tres" id="7_362do"]
+[ext_resource type="Material" uid="uid://na2n6s6cin25" path="res://particle_effects/explosion/base/sparks_particle_effects.tres" id="5_sm1li"]
+[ext_resource type="Material" uid="uid://7ws2fd21hg8q" path="res://particle_effects/explosion/base/flare1_particle_effects.tres" id="7_362do"]
 [ext_resource type="AudioStream" uid="uid://bd3xspxauq4wc" path="res://assets/JDSherbert-PixelExplosionsSFXPackFree/JDSherbert - Pixel Explosions SFX Pack - EMP (1).ogg" id="7_tds8v"]
 [ext_resource type="Texture2D" uid="uid://cvgw5kt3ow462" path="res://assets/ring.png" id="7_tn508"]
-[ext_resource type="Material" uid="uid://bq40ud3dod44h" path="res://particle_effects/explosion/flare2_particle_effects.tres" id="8_1jblj"]
-[ext_resource type="Material" uid="uid://m7ebkmbqk0ih" path="res://particle_effects/explosion/flare3_particle_effects.tres" id="9_eot04"]
-[ext_resource type="Material" uid="uid://sfhnrsyux1io" path="res://particle_effects/explosion/ring_particle_effects.tres" id="11_870jv"]
+[ext_resource type="Material" uid="uid://bq40ud3dod44h" path="res://particle_effects/explosion/base/flare2_particle_effects.tres" id="8_1jblj"]
+[ext_resource type="Material" uid="uid://m7ebkmbqk0ih" path="res://particle_effects/explosion/base/flare3_particle_effects.tres" id="9_eot04"]
+[ext_resource type="Material" uid="uid://sfhnrsyux1io" path="res://particle_effects/explosion/base/ring_particle_effects.tres" id="11_870jv"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1iyps"]
 
@@ -42,7 +42,7 @@ light_mode = 1
 [node name="BaseExplosion" type="Node2D"]
 script = ExtResource("1_bb5nk")
 min_hit_radius = 10.0
-max_hit_radius = 50.0
+max_hit_radius = 80.0
 
 [node name="ExplosionTimer" type="Timer" parent="."]
 process_callback = 0

@@ -10,6 +10,6 @@ curve = SubResource("Curve_1iyps")
 [resource]
 particle_flag_disable_z = true
 gravity = Vector3(0, 0, 0)
-scale_min = 0.5
-scale_max = 0.5
+scale_min = 0.75
+scale_max = 0.75
 scale_curve = SubResource("CurveTexture_5osga")

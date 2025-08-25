@@ -1,0 +1,16 @@
+[gd_resource type="ParticleProcessMaterial" load_steps=3 format=3 uid="uid://j57kwtqk27wx"]
+
+[sub_resource type="Curve" id="Curve_i85ay"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_b64u1"]
+curve = SubResource("Curve_i85ay")
+
+[resource]
+particle_flag_disable_z = true
+angle_min = 45.0
+angle_max = 45.0
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_b64u1")
+color = Color(0.418817, 0.297158, 0.0649382, 1)
