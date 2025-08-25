@@ -74,34 +74,35 @@ Average Session - about 10 minutes
 Inputs: Keyboards and Mouse
 
 
-Game Goal?
-* Beat all the rooms before time runs out!
+Can you beat all the rooms before time runs out?
 
-Features
+### Features
 
-* 4 Bomb Types (Add gifs per each one)
+#### 4 Bomb Types (Add gifs per each one)
 * Goo - slows down enemies hit by explosion
 * Root - roots enemies down for X seconds hit by explosion
 * Poison - deals damage over time for enemies hit by explosion
 * Gravity - pulls enemies towards explosion's center
 
+####  Bomb Auto Switcher
 * Bomb auto-switches to the last bomb type you picked up - add gif to showcase this by running through a bomb pickup
 
 * Use Scroll wheel to switch between different bomb types - (add gif of player cycling through different bomb types)
 
+#### Random Enemy Generations
 * Random enemy and wave generation per room
 * As you progress through more rooms, different kinds of enemies appear
 
-* 3 Enemy Types
+### 3 Enemy Types
 * Noob Slime
 * Ranger Slime
 * Dasher Slime
 
-* 1 Level - 5 rooms
 
+### Background Info
+* This was originally made during a 2 day game jam on July 2025 and was extended over the course of 2 months to continuously add features/polish/refinement to the game. Game serves mostly as a tech demo to discover what's possible in the Godot 4.4 game engine.
 
-Stretch Goals
-* Implement different explosion vfx for each bomb explosion type
+### Stretch Goals
 * Add Root, Slow, Poison and Gravity visuals on enemies affected by these status effects
 * Add dust particles as enemies move around. Enemies should hop around similar to how the bomb bounces
 * Add shadows underneath enemies
@@ -119,5 +120,4 @@ enemies appear in front of or behind the player to keep things visually consiste
 
 ### Known Issues
 * Audio on while playing web isn't the best quality due to link here: (It's a known issue on Godot Engine's end as of v4.4). Using the stream mode on web rather than samples as samples doesn't allow me to crossfade between the 2 audio tracks when transitioning between the menu music and bg music.
-* Hitboxes of enemies, explosions and players need adjustments to match actual visual sizes
 * Game Balance on Mobs -- needs further tweaking but that task is an infinite time sink

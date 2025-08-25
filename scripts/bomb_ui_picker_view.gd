@@ -34,10 +34,10 @@ var text_update_delay: float = 0.0
 const DEFAULT_BOMB_INDEX: int = 0
 var bomb_inventory: Array[BombUIData] = [
 	BombUIData.new(), # default bomb
-	BombUIData.new("poison bomb", Color.VIOLET, 10),
-	BombUIData.new("gravity bomb", Color.DARK_SLATE_BLUE, 10),
-	BombUIData.new("goo bomb", Color.GREEN, 10),
-	BombUIData.new("root bomb",  Color.GOLDENROD, 10)
+	BombUIData.new("poison bomb", Color.VIOLET, 0),
+	BombUIData.new("gravity bomb", Color.DARK_SLATE_BLUE, 0),
+	BombUIData.new("goo bomb", Color.GREEN, 0),
+	BombUIData.new("root bomb",  Color.GOLDENROD, 0)
 ]
 
 func _ready():

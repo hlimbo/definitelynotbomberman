@@ -52,8 +52,8 @@ func get_random_bomb_pickup_count(_bomb_type: Constants.BombType) -> int:
 		Constants.BombType.ROOT:
 			count = randi_range(2,4)
 		Constants.BombType.POISON:
-			count = randi_range(1,3)
-		Constants.BombType.GRAVITY:
 			count = randi_range(1,6)
+		Constants.BombType.GRAVITY:
+			count = randi_range(1,2)
 		
 	return count
