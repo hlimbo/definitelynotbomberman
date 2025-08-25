@@ -43,3 +43,81 @@ LLMs like ChatGPT was used to create the following:
 * Bomb Sprite
 * Shadow Sprite underneath fox player character
 * Boilerplate code for `Player.gd` (player controller) and `Bomb.gd` scripts. The rest were hand-coded and used LLM tooling like ChatGPT or Claude to plan, brainstorm, and verify ideas for correctness.
+
+
+### What to put on front itch.io page
+
+--- Use this copy to when publishing the game to itch.io
+--- create gifs / screenshots for game for background images
+--- create main screenshot to preview the game (capsule screenshot)
+
+https://www.steamcapsule.com/guide
+
+https://hedgiespresso.itch.io/itch-page-image-templates
+
+https://www.youtube.com/watch?v=IS7bA7ep9qc
+
+
+
+
+### Content on itch.io page to include
+
+Made with - Godot
+
+Genre - Action, Arcade, Survival
+
+Tags - Action, Arcade, 2D, Topdown, Pixel Art, Single Player, Short, Godot, Indie, Survival
+
+Average Session - about 10 minutes
+
+
+Inputs: Keyboards and Mouse
+
+
+Game Goal?
+* Beat all the rooms before time runs out!
+
+Features
+
+* 4 Bomb Types (Add gifs per each one)
+* Goo - slows down enemies hit by explosion
+* Root - roots enemies down for X seconds hit by explosion
+* Poison - deals damage over time for enemies hit by explosion
+* Gravity - pulls enemies towards explosion's center
+
+* Bomb auto-switches to the last bomb type you picked up - add gif to showcase this by running through a bomb pickup
+
+* Use Scroll wheel to switch between different bomb types - (add gif of player cycling through different bomb types)
+
+* Random enemy and wave generation per room
+* As you progress through more rooms, different kinds of enemies appear
+
+* 3 Enemy Types
+* Noob Slime
+* Ranger Slime
+* Dasher Slime
+
+* 1 Level - 5 rooms
+
+
+Stretch Goals
+* Implement different explosion vfx for each bomb explosion type
+* Add Root, Slow, Poison and Gravity visuals on enemies affected by these status effects
+* Add dust particles as enemies move around. Enemies should hop around similar to how the bomb bounces
+* Add shadows underneath enemies
+* Implement a system to dynamically change the draw order layers of moving actors in the game. This will help keep
+enemies appear in front of or behind the player to keep things visually consistent
+* Draw different sprite for Ranger Slime
+* Draw slime pellet for Ranger Slime and add line renderer to show pellet trajectory
+* Add bomb spawn pickup animation - bomb pickups should land from the sky as if it was a care package
+* Add a background random generator for adding mushrooms, rocks, grass to give each room more character
+* Add a boss in the last room
+* Add Forcefield Bomb
+* Add falling tiles
+* Add jumping
+* Add Multiplayer
+
+### Known Issues
+* Audio on while playing web isn't the best quality due to link here: (It's a known issue on Godot Engine's end as of v4.4). Using the stream mode on web rather than samples as samples doesn't allow me to crossfade between the 2 audio tracks when transitioning between the menu music and bg music.
+* Hitboxes of enemies, explosions and players need adjustments to match actual visual sizes
+* Game Balance on Mobs -- needs further tweaking but that task is an infinite time sink

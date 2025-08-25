@@ -14,7 +14,6 @@
 [ext_resource type="Material" uid="uid://sfhnrsyux1io" path="res://particle_effects/explosion/ring_particle_effects.tres" id="11_870jv"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1iyps"]
-radius = 50.0
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_o8px0"]
 blend_mode = 1
@@ -42,6 +41,8 @@ light_mode = 1
 
 [node name="BaseExplosion" type="Node2D"]
 script = ExtResource("1_bb5nk")
+min_hit_radius = 10.0
+max_hit_radius = 50.0
 
 [node name="ExplosionTimer" type="Timer" parent="."]
 process_callback = 0

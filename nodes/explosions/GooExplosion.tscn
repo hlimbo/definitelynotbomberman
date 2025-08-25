@@ -150,7 +150,7 @@ script = ExtResource("1_vxdis")
 slow_factor = 0.5
 slow_duration = 5.0
 min_dmg = 48.0
-explosion_duration = 1.25
+explosion_duration = 0.5
 
 [node name="ExplosionTimer" type="Timer" parent="."]
 process_callback = 0

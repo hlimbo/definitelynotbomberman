@@ -11,6 +11,10 @@ class_name BaseExplosion extends Node2D
 # since toggling off collision happens at the end of the frame causing some delays
 @export var is_disabled: bool = false
 
+# measured in pixels
+@export var min_hit_radius: float = 50.0
+@export var max_hit_radius: float = 100.0
+
 @onready var explosion_timer: Timer = $ExplosionTimer
 @onready var collision_shape_2d: CollisionShape2D = $Area2D/CollisionShape2D
 @onready var area_2d: Area2D = $Area2D
@@ -22,6 +26,8 @@ class_name BaseExplosion extends Node2D
 ]
 
 func _ready():
+	assert(len(explosion_vfx) == 6)
+	assert(explosion_duration > 0.0)
 	explosion_timer.wait_time = explosion_duration
 	for vfx in explosion_vfx:
 		vfx.lifetime = explosion_duration
@@ -45,18 +51,25 @@ func start(_position: Vector2 = Vector2.ZERO):
 func enable():
 	# enables collision shape at end of frame
 	collision_shape_2d.set_deferred("disabled", false)
-	is_disabled = false
-	play_vfx()
+	self.call_deferred("enable_deferred")
 	
 func disable():
 	# disables collision shape at end of frame
 	collision_shape_2d.set_deferred("disabled", true)
-	is_disabled = true
+	self.set_deferred("is_disabled", true)
+
+func enable_deferred():
+	var circle_area: CircleShape2D = collision_shape_2d.shape as CircleShape2D
+	assert(circle_area != null)
+	circle_area.radius = min_hit_radius
+	
+	is_disabled = false
+	play_vfx()
 
 func play_vfx():
 	for vfx in explosion_vfx:
 		vfx.emitting = true
-		
+	
 func on_area_entered(area: Area2D):
 	if is_disabled:
 		return
@@ -69,3 +82,11 @@ func on_area_exited(area: Area2D):
 		return
 		
 	event_bus.on_exit_impact_area.emit(self, area.owner)
+	
+func _physics_process(delta: float):
+	if explosion_vfx[0].emitting:
+		var impact_circle: CircleShape2D = collision_shape_2d.shape as CircleShape2D
+		assert(impact_circle != null)
+		var t: float = clampf(1.0 - (explosion_timer.time_left / explosion_duration), 0.0, 1.0)
+		var smooth: float = smoothstep(0.0, 1.0, t)
+		impact_circle.radius = lerpf(min_hit_radius, max_hit_radius, smooth)

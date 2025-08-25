@@ -154,6 +154,8 @@ flat_dmg = 500.0
 min_dmg = 256.0
 max_dmg = 384.0
 explosion_duration = 1.25
+min_hit_radius = 400.0
+max_hit_radius = 800.0
 
 [node name="ExplosionTimer" type="Timer" parent="."]
 process_callback = 0

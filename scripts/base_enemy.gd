@@ -78,8 +78,6 @@ var slow_factor: float = 0.0
 @export var enemy_separation_distance: float = 256.0
 @onready var separation_radius: Line2D = $SeparationRadius
 
-@export var is_spawning: bool = false
-
 func set_shader(shader: Shader):
 	var shader_mat: ShaderMaterial = sprite_2d.material as ShaderMaterial
 	assert(shader_mat != null)
@@ -101,7 +99,6 @@ func can_attack() -> bool:
 func _init():
 	# this is to ensure enemies are disabled until their spawn animation completes
 	ai_state = AI_State.INACTIVE
-	is_spawning = true
 
 func _ready():
 	detection_area.body_entered.connect(on_body_entered)
@@ -129,7 +126,7 @@ func _ready():
 	
 	enemy_id = self.get_canvas_item().get_id()
 	event_bus.on_initialize_hp.emit(enemy_id, max_hp, max_hp)
-	
+
 	# not ideal code, it may be better if the animation reference is stored in a single library instead... if planning on using the same exact spawn animation for all enemies
 	if animation_player.has_animation_library(&"base_enemy"):
 		animation_player.play(&"base_enemy/spawn")
@@ -147,9 +144,12 @@ func check_for_overlapping_bodies():
 
 func on_animation_finished(anim_name: StringName):
 	if anim_name.ends_with("spawn"):
+		# enable hit area for the AI at the end of the frame after the spawn animation ends
+		# this is done to ensure as soon as it spawns, that the player should be able to damage the enemy
+		hit_area.set_deferred(&"monitorable", true)
 		# add a delay before ai starts doing its own thing
 		await get_tree().create_timer(2.0).timeout
-		toggle_overlap_areas(true)
+		detection_area.set_deferred(&"monitoring", true)
 		set_deferred(&"ai_state", AI_State.IDLE)
 		if hp > 0.0:
 			call_deferred(&"check_for_overlapping_bodies")
@@ -349,6 +349,8 @@ func handle_enter_explosion_area(explosion: BaseExplosion):
 			debuff_frequency_timer.wait_time = poison_explosion.debuff_frequency
 			
 			if debuff_timer.is_stopped():
+				# remove previous connections from frequency timer
+				remove_all_signal_connections(debuff_frequency_timer.timeout)
 				debuff_frequency_timer.timeout.connect(on_debuff_applied.bind(poison_explosion.dot_dmg))
 				debuff_timer.start()
 				debuff_frequency_timer.start()
@@ -390,7 +392,7 @@ func handle_enter_explosion_area(explosion: BaseExplosion):
 	event_bus.on_hp_updated.emit(enemy_id, flat_dmg)
 	
 	# default hurt and death logic
-	if hp > 0 and ![AI_State.HURT, AI_State.INACTIVE, AI_State.DEATH].has(ai_state):
+	if hp > 0 and ![AI_State.INACTIVE, AI_State.HURT, AI_State.DEATH].has(ai_state):
 		ai_state = AI_State.HURT
 		set_shader(hurt_shader)
 		hurt_timer.start()
@@ -459,10 +461,10 @@ func disable():
 	
 	hp_ui_view.visible = false
 	
-	hit_area.set_deferred("monitoring", false)
-	hit_area.set_deferred("monitorable", false)
-	detection_area.set_deferred("monitoring", false)
-	detection_area.set_deferred("monitorable", false)
+	hit_area.set_deferred(&"monitoring", false)
+	hit_area.set_deferred(&"monitorable", false)
+	detection_area.set_deferred(&"monitoring", false)
+	detection_area.set_deferred(&"monitorable", false)
 
 # used to stop timers that aren't in the BaseEnemy class such as DashingEnemy timers
 func interrupt():
@@ -474,8 +476,6 @@ func handle_states():
 		self.accumulated_pull_force = Vector2.ZERO
 	elif ai_state == AI_State.FOLLOW:
 		if not is_instance_valid(target):
-			if is_queued_for_deletion():
-				print("queued for deletion")
 			ai_state = AI_State.IDLE
 		else:
 			_aim_dir = (target.position - position).normalized()
@@ -493,7 +493,7 @@ func on_enter_impact_area(explosion: BaseExplosion, actor: Node):
 		return
 	
 	# enemies have i-frames or is dead
-	if [AI_State.HURT, AI_State.DEATH, AI_State.INACTIVE].has(ai_state):
+	if [AI_State.HURT, AI_State.DEATH].has(ai_state):
 		return
 	
 	# handle specific explosion type
@@ -524,11 +524,3 @@ func start_attack():
 	ai_state = AI_State.FOLLOW
 	
 #endregion
-
-func toggle_overlap_areas(toggle: bool):
-	if toggle:
-		hit_area.set_deferred(&"monitorable", true)
-		detection_area.set_deferred(&"monitoring", true)
-	else:
-		hit_area.set_deferred(&"monitorable", false)
-		detection_area.set_deferred(&"monitoring", false)

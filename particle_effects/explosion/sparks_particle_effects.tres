@@ -34,5 +34,7 @@ linear_accel_min = 800.0
 linear_accel_max = 800.0
 radial_accel_min = -2.23517e-06
 radial_accel_max = -2.23517e-06
+scale_min = 0.5
+scale_max = 0.5
 scale_curve = SubResource("CurveTexture_3v85f")
 alpha_curve = SubResource("CurveTexture_bu348")
