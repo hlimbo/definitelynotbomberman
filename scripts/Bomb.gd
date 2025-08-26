@@ -104,6 +104,7 @@ func _update_shadow(h: float) -> void:
 
 func _explode() -> void:
 	var explosion: BaseExplosion = explosion_nodes[_explosion_index].instantiate()
+	explosion.base_impact_color = colors[_explosion_index]
 	# call at the end of the frame as Godot returns error messages recommending to do so
 	self.get_tree().current_scene.call_deferred(&"add_child", explosion)
 	explosion.call_deferred(&"start", _shadow.global_position)

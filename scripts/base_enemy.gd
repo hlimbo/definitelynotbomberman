@@ -179,15 +179,19 @@ func on_hurt_completed():
 		self.disable()
 	else:
 		ai_state = AI_State.FOLLOW
-		# have blink color be transparent to visually indicate it is invincible
-		sprite_2d.set_instance_shader_parameter(&"color_fill_instance", Vector4(1.0, 1.0, 1.0, 0.0))
 		iframes_timer.start()
 
 func on_iframes_completed():
 	has_iframes = false
-	# reset hurt shader color back to white
-	sprite_2d.set_instance_shader_parameter(&"color_fill_instance", Vector4(1.0, 1.0, 1.0, 1.0))
-	clear_shader()
+	if hp <= 0.0:
+		ai_state = AI_State.DEATH
+		set_shader(death_shader)
+		death_timer.start()
+		if !death_audio_player.playing:
+			death_audio_player.play()
+		self.disable()
+	else:
+		clear_shader()
 	
 func on_death_completed():
 	self.set_process(false)

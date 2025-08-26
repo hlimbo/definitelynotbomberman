@@ -15,6 +15,8 @@ class_name BaseExplosion extends Node2D
 @export var min_hit_radius: float = 50.0
 @export var max_hit_radius: float = 100.0
 
+@export var base_impact_color: Color = Color.WHITE
+
 @onready var explosion_timer: Timer = $ExplosionTimer
 @onready var collision_shape_2d: CollisionShape2D = $Area2D/CollisionShape2D
 @onready var area_2d: Area2D = $Area2D

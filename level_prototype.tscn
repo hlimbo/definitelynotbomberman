@@ -2074,3 +2074,5 @@ bus = &"BG"
 stream = ExtResource("48_bx43x")
 volume_db = -8.0
 bus = &"BG"
+
+[node name="ProjectileContainer" type="Node2D" parent="GameRoot" groups=["projectile_container"]]

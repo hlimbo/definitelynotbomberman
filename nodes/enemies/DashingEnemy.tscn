@@ -175,7 +175,7 @@ one_shot = true
 
 [node name="iframes_timer" type="Timer" parent="."]
 process_callback = 0
-wait_time = 2.0
+wait_time = 2.5
 one_shot = true
 
 [node name="hurt_audio_player" type="AudioStreamPlayer2D" parent="."]
