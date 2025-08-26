@@ -78,6 +78,9 @@ var slow_factor: float = 0.0
 @export var enemy_separation_distance: float = 256.0
 @onready var separation_radius: Line2D = $SeparationRadius
 
+@export var has_iframes: bool = false
+@onready var iframes_timer: Timer = $iframes_timer
+
 func set_shader(shader: Shader):
 	var shader_mat: ShaderMaterial = sprite_2d.material as ShaderMaterial
 	assert(shader_mat != null)
@@ -105,12 +108,13 @@ func _ready():
 	event_bus.on_enter_impact_area.connect(on_enter_impact_area)
 	event_bus.on_exit_impact_area.connect(on_exit_impact_area)
 	
-	hurt_timer.timeout.connect(on_iframes_completed)
+	hurt_timer.timeout.connect(on_hurt_completed)
 	death_timer.timeout.connect(on_death_completed)
 	debuff_timer.timeout.connect(on_debuff_completed)
 	gravity_timer.timeout.connect(on_gravity_completed)
 	root_timer.timeout.connect(on_root_completed)
 	slow_timer.timeout.connect(on_slow_completed)
+	iframes_timer.timeout.connect(on_iframes_completed)
 	
 	# create a separate shader material instance from other enemies that get spawned in
 	var shader_mat: ShaderMaterial = ShaderMaterial.new()
@@ -165,7 +169,7 @@ func on_body_entered(body: Node2D):
 		ai_state = AI_State.FOLLOW
 		target = body
 		
-func on_iframes_completed():
+func on_hurt_completed():
 	if hp <= 0.0:
 		ai_state = AI_State.DEATH
 		set_shader(death_shader)
@@ -175,7 +179,15 @@ func on_iframes_completed():
 		self.disable()
 	else:
 		ai_state = AI_State.FOLLOW
-		clear_shader()
+		# have blink color be transparent to visually indicate it is invincible
+		sprite_2d.set_instance_shader_parameter(&"color_fill_instance", Vector4(1.0, 1.0, 1.0, 0.0))
+		iframes_timer.start()
+
+func on_iframes_completed():
+	has_iframes = false
+	# reset hurt shader color back to white
+	sprite_2d.set_instance_shader_parameter(&"color_fill_instance", Vector4(1.0, 1.0, 1.0, 1.0))
+	clear_shader()
 	
 func on_death_completed():
 	self.set_process(false)
@@ -393,6 +405,7 @@ func handle_enter_explosion_area(explosion: BaseExplosion):
 	
 	# default hurt and death logic
 	if hp > 0 and ![AI_State.INACTIVE, AI_State.HURT, AI_State.DEATH].has(ai_state):
+		has_iframes = true
 		ai_state = AI_State.HURT
 		set_shader(hurt_shader)
 		hurt_timer.start()
@@ -493,7 +506,7 @@ func on_enter_impact_area(explosion: BaseExplosion, actor: Node):
 		return
 	
 	# enemies have i-frames or is dead
-	if [AI_State.HURT, AI_State.DEATH].has(ai_state):
+	if has_iframes or [AI_State.HURT, AI_State.DEATH].has(ai_state):
 		return
 	
 	# handle specific explosion type
